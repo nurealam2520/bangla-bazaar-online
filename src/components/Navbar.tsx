@@ -3,6 +3,7 @@ import { ShoppingCart, User, Search, Heart, Home, Store, Dog, Cat, Phone, Shield
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
+import { motion } from "framer-motion";
 
 const mobileNavItems = [
   { label: "Home", href: "/", icon: Home },
@@ -71,9 +72,14 @@ const Navbar = () => {
             >
               <ShoppingCart className="h-[18px] w-[18px]" />
               {totalItems > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 bg-accent text-accent-foreground text-[10px] font-bold rounded-full w-[18px] h-[18px] flex items-center justify-center shadow-sm">
+                <motion.span
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  transition={{ type: "spring", stiffness: 500, damping: 20 }}
+                  className="absolute -top-0.5 -right-0.5 bg-accent text-accent-foreground text-[10px] font-bold rounded-full w-[18px] h-[18px] flex items-center justify-center shadow-sm"
+                >
                   {totalItems}
-                </span>
+                </motion.span>
               )}
             </Button>
             {isAdmin && (
@@ -98,20 +104,50 @@ const Navbar = () => {
               <Link
                 key={item.href}
                 to={item.href}
-                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-200 min-w-[56px] ${
-                  isActive
-                    ? "text-primary"
-                    : "text-muted-foreground active:scale-95"
-                }`}
+                className="relative flex flex-col items-center gap-0.5 px-3 py-1.5 min-w-[56px]"
               >
-                <div className={`p-1.5 rounded-xl transition-all duration-200 ${
-                  isActive ? "bg-primary/10" : ""
-                }`}>
-                  <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 2} />
-                </div>
-                <span className={`text-[10px] font-medium ${isActive ? "text-primary" : ""}`}>
+                {/* Active background pill */}
+                {isActive && (
+                  <motion.div
+                    layoutId="mobile-nav-active"
+                    className="absolute inset-x-1 -top-1 bottom-1 rounded-2xl bg-primary/10"
+                    transition={{ type: "spring", stiffness: 400, damping: 30 }}
+                  />
+                )}
+
+                {/* Icon with bounce */}
+                <motion.div
+                  className="relative z-10 p-1.5 rounded-xl"
+                  animate={isActive ? { y: -2 } : { y: 0 }}
+                  transition={{ type: "spring", stiffness: 400, damping: 20 }}
+                  whileTap={{ scale: 0.85 }}
+                >
+                  <Icon
+                    className={`h-5 w-5 transition-colors duration-200 ${
+                      isActive ? "text-primary" : "text-muted-foreground"
+                    }`}
+                    strokeWidth={isActive ? 2.5 : 1.8}
+                  />
+                </motion.div>
+
+                {/* Label */}
+                <motion.span
+                  className={`relative z-10 text-[10px] font-semibold transition-colors duration-200 ${
+                    isActive ? "text-primary" : "text-muted-foreground"
+                  }`}
+                  animate={isActive ? { scale: 1.05 } : { scale: 1 }}
+                >
                   {item.label}
-                </span>
+                </motion.span>
+
+                {/* Active dot indicator */}
+                {isActive && (
+                  <motion.div
+                    layoutId="mobile-nav-dot"
+                    className="absolute -top-1 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-primary"
+                    transition={{ type: "spring", stiffness: 500, damping: 30 }}
+                  />
+                )}
               </Link>
             );
           })}
