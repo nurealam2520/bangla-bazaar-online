@@ -7,7 +7,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <h3 className="text-2xl font-display font-bold text-gradient-gold mb-4">🐾 PetLux</h3>
+            <h3 className="text-2xl font-display font-bold text-gradient-gold mb-4">🐾 PawNest</h3>
             <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
               Premium pet food & accessories delivered worldwide. Trusted by pet owners across the US, UK, Canada, Australia & New Zealand.
             </p>
@@ -68,7 +68,7 @@ const Footer = () => {
 
       <div className="border-t border-border">
         <div className="container mx-auto px-4 py-5 text-center text-xs text-muted-foreground">
-          © 2026 PetLux. All rights reserved.
+          © 2026 PawNest. All rights reserved.
         </div>
       </div>
     </footer>
