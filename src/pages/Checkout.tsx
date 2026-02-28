@@ -8,20 +8,60 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Minus, Plus, Trash2, ArrowLeft, CreditCard, Truck } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/integrations/supabase/client";
 
 const Checkout = () => {
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
   const [paymentMethod, setPaymentMethod] = useState<"card" | "cod">("card");
+  const [loading, setLoading] = useState(false);
 
   const shipping = totalPrice > 50 ? 0 : 5.99;
   const total = totalPrice + shipping;
 
-  const handlePlaceOrder = (e: React.FormEvent) => {
+  const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("Order placed successfully! 🎉");
-    clearCart();
-    navigate("/");
+    setLoading(true);
+
+    const formData = new FormData(e.target as HTMLFormElement);
+
+    try {
+      const { data, error } = await supabase.functions.invoke("place-order", {
+        body: {
+          items: items.map((i) => ({
+            product_name: i.product.name,
+            product_image: i.product.image,
+            price: i.product.price,
+            quantity: i.quantity,
+          })),
+          payment_method: paymentMethod,
+          shipping_name: `${formData.get("firstName")} ${formData.get("lastName")}`,
+          shipping_email: formData.get("email") as string,
+          shipping_address: formData.get("address") as string,
+          shipping_city: formData.get("city") as string,
+          shipping_postal_code: formData.get("zip") as string,
+          shipping_country: formData.get("country") as string,
+          subtotal: totalPrice,
+          shipping,
+          total,
+        },
+      });
+
+      if (error) throw error;
+
+      if (data?.success) {
+        toast.success(data.message || "Order placed successfully! 🎉");
+        clearCart();
+        navigate("/");
+      } else {
+        toast.error(data?.error || "Something went wrong. Please try again.");
+      }
+    } catch (err: any) {
+      console.error("Order error:", err);
+      toast.error(err?.message || "Failed to place order. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   if (items.length === 0) {
@@ -62,31 +102,31 @@ const Checkout = () => {
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="firstName">First Name</Label>
-                      <Input id="firstName" placeholder="John" required className="mt-1" />
+                      <Input id="firstName" name="firstName" placeholder="John" required className="mt-1" />
                     </div>
                     <div>
                       <Label htmlFor="lastName">Last Name</Label>
-                      <Input id="lastName" placeholder="Doe" required className="mt-1" />
+                      <Input id="lastName" name="lastName" placeholder="Doe" required className="mt-1" />
                     </div>
                     <div className="sm:col-span-2">
                       <Label htmlFor="email">Email</Label>
-                      <Input id="email" type="email" placeholder="john@example.com" required className="mt-1" />
+                      <Input id="email" name="email" type="email" placeholder="john@example.com" required className="mt-1" />
                     </div>
                     <div className="sm:col-span-2">
                       <Label htmlFor="address">Address</Label>
-                      <Input id="address" placeholder="123 Main St" required className="mt-1" />
+                      <Input id="address" name="address" placeholder="123 Main St" required className="mt-1" />
                     </div>
                     <div>
                       <Label htmlFor="city">City</Label>
-                      <Input id="city" placeholder="New York" required className="mt-1" />
+                      <Input id="city" name="city" placeholder="New York" required className="mt-1" />
                     </div>
                     <div>
                       <Label htmlFor="zip">ZIP / Postal Code</Label>
-                      <Input id="zip" placeholder="10001" required className="mt-1" />
+                      <Input id="zip" name="zip" placeholder="10001" required className="mt-1" />
                     </div>
                     <div className="sm:col-span-2">
                       <Label htmlFor="country">Country</Label>
-                      <Input id="country" placeholder="United States" required className="mt-1" />
+                      <Input id="country" name="country" placeholder="United States" required className="mt-1" />
                     </div>
                   </div>
                 </div>
@@ -189,8 +229,12 @@ const Checkout = () => {
                     </div>
                   </div>
 
-                  <Button type="submit" className="w-full mt-6 bg-gradient-gold text-background font-semibold shadow-gold hover:opacity-90">
-                    Place Order — ${total.toFixed(2)}
+                  <Button
+                    type="submit"
+                    disabled={loading}
+                    className="w-full mt-6 bg-gradient-green text-primary-foreground font-semibold shadow-emerald hover:opacity-90"
+                  >
+                    {loading ? "Processing..." : `Place Order — $${total.toFixed(2)}`}
                   </Button>
                   {totalPrice < 50 && (
                     <p className="text-xs text-muted-foreground text-center mt-3">
