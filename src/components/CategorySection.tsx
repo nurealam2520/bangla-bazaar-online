@@ -1,34 +1,20 @@
 import { motion } from "framer-motion";
-import { Dog, Cat, Bird, Fish } from "lucide-react";
+import { Dog, Cat } from "lucide-react";
 
 const categories = [
   {
     icon: Dog,
     name: "Dogs",
-    description: "Food, collars, toys & much more",
+    description: "Food, collars, leashes, toys, beds & grooming essentials",
     count: "120+ Products",
     gradient: "from-amber-500/20 to-orange-500/20",
   },
   {
     icon: Cat,
     name: "Cats",
-    description: "Premium food, litter & accessories",
+    description: "Premium food, litter, scratchers, toys & accessories",
     count: "95+ Products",
     gradient: "from-rose-500/20 to-pink-500/20",
-  },
-  {
-    icon: Bird,
-    name: "Birds",
-    description: "Cages, feed, toys & supplies",
-    count: "60+ Products",
-    gradient: "from-sky-500/20 to-blue-500/20",
-  },
-  {
-    icon: Fish,
-    name: "Fish",
-    description: "Aquariums, food & filters",
-    count: "45+ Products",
-    gradient: "from-teal-500/20 to-emerald-500/20",
   },
 ];
 
@@ -52,7 +38,7 @@ const CategorySection = () => {
             Shop by <span className="text-gradient-gold">Pet Type</span>
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Curated collections for every type of companion
+            Everything your dog or cat needs — all in one place
           </p>
         </div>
 
@@ -61,7 +47,7 @@ const CategorySection = () => {
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto"
         >
           {categories.map((cat) => (
             <motion.div
@@ -69,12 +55,12 @@ const CategorySection = () => {
               variants={item}
               className="group cursor-pointer"
             >
-              <div className={`rounded-2xl bg-gradient-to-br ${cat.gradient} border border-border p-8 text-center hover:shadow-gold hover:-translate-y-1 transition-all duration-300`}>
-                <div className="w-16 h-16 mx-auto mb-5 rounded-2xl bg-background/80 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <cat.icon className="h-8 w-8 text-primary" />
+              <div className={`rounded-2xl bg-gradient-to-br ${cat.gradient} border border-border p-10 text-center hover:shadow-gold hover:-translate-y-1 transition-all duration-300`}>
+                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-background/80 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <cat.icon className="h-10 w-10 text-primary" />
                 </div>
-                <h3 className="text-xl font-display font-semibold mb-2">{cat.name}</h3>
-                <p className="text-sm text-muted-foreground mb-3">{cat.description}</p>
+                <h3 className="text-2xl font-display font-semibold mb-3">{cat.name}</h3>
+                <p className="text-sm text-muted-foreground mb-4">{cat.description}</p>
                 <span className="text-xs font-medium text-primary">{cat.count}</span>
               </div>
             </motion.div>
