@@ -4,30 +4,30 @@ import { Dog, Cat, Bird, Fish } from "lucide-react";
 const categories = [
   {
     icon: Dog,
-    name: "কুকুর",
-    description: "খাবার, কলার, খেলনা ও আরও অনেক কিছু",
-    count: "120+ পণ্য",
+    name: "Dogs",
+    description: "Food, collars, toys & much more",
+    count: "120+ Products",
     gradient: "from-amber-500/20 to-orange-500/20",
   },
   {
     icon: Cat,
-    name: "বিড়াল",
-    description: "প্রিমিয়াম খাবার, লিটার ও এক্সেসরিস",
-    count: "95+ পণ্য",
+    name: "Cats",
+    description: "Premium food, litter & accessories",
+    count: "95+ Products",
     gradient: "from-rose-500/20 to-pink-500/20",
   },
   {
     icon: Bird,
-    name: "পাখি",
-    description: "খাঁচা, খাবার, খেলনা ও আনুষাঙ্গিক",
-    count: "60+ পণ্য",
+    name: "Birds",
+    description: "Cages, feed, toys & supplies",
+    count: "60+ Products",
     gradient: "from-sky-500/20 to-blue-500/20",
   },
   {
     icon: Fish,
-    name: "মাছ",
-    description: "অ্যাকুয়ারিয়াম, খাবার ও ফিল্টার",
-    count: "45+ পণ্য",
+    name: "Fish",
+    description: "Aquariums, food & filters",
+    count: "45+ Products",
     gradient: "from-teal-500/20 to-emerald-500/20",
   },
 ];
@@ -47,12 +47,12 @@ const CategorySection = () => {
     <section className="py-24 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">ক্যাটেগরি</p>
+          <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">Categories</p>
           <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
-            আপনার পোষা প্রাণী <span className="text-gradient-gold">বেছে নিন</span>
+            Shop by <span className="text-gradient-gold">Pet Type</span>
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            প্রতিটি প্রাণীর জন্য আলাদা আলাদা প্রোডাক্ট সংগ্রহ
+            Curated collections for every type of companion
           </p>
         </div>
 
