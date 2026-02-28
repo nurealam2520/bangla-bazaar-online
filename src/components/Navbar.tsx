@@ -3,17 +3,19 @@ import { Link } from "react-router-dom";
 import { ShoppingCart, User, Menu, X, Search, Heart } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
+import { useCart } from "@/contexts/CartContext";
 
 const navLinks = [
   { label: "Home", href: "/" },
-  { label: "Shop", href: "/shop" },
-  { label: "Categories", href: "/categories" },
+  { label: "Dogs", href: "/category/dogs" },
+  { label: "Cats", href: "/category/cats" },
   { label: "About", href: "/about" },
   { label: "Contact", href: "/contact" },
 ];
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { totalItems, setIsCartOpen } = useCart();
 
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
@@ -43,11 +45,13 @@ const Navbar = () => {
           <Button variant="ghost" size="icon" className="hidden md:flex">
             <Heart className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="relative">
+          <Button variant="ghost" size="icon" className="relative" onClick={() => setIsCartOpen(true)}>
             <ShoppingCart className="h-4 w-4" />
-            <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-              0
-            </span>
+            {totalItems > 0 && (
+              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
+                {totalItems}
+              </span>
+            )}
           </Button>
           <Button variant="ghost" size="icon" className="hidden md:flex">
             <User className="h-4 w-4" />
