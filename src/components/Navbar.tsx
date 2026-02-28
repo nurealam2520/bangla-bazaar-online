@@ -1,8 +1,8 @@
-import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, User, Search, Heart, Home, Store, Dog, Cat, Phone } from "lucide-react";
+import { ShoppingCart, User, Search, Heart, Home, Store, Dog, Cat, Phone, Shield } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
+import { useAuth } from "@/contexts/AuthContext";
 
 const mobileNavItems = [
   { label: "Home", href: "/", icon: Home },
@@ -23,6 +23,7 @@ const desktopNavLinks = [
 
 const Navbar = () => {
   const { totalItems, setIsCartOpen } = useCart();
+  const { user, isAdmin } = useAuth();
   const location = useLocation();
 
   return (
@@ -75,8 +76,13 @@ const Navbar = () => {
                 </span>
               )}
             </Button>
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <User className="h-4 w-4" />
+            {isAdmin && (
+              <Button variant="ghost" size="icon" className="hidden md:flex text-amber" asChild>
+                <Link to="/admin"><Shield className="h-4 w-4" /></Link>
+              </Button>
+            )}
+            <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
+              <Link to={user ? "/admin" : "/auth"}><User className="h-4 w-4" /></Link>
             </Button>
           </div>
         </div>
