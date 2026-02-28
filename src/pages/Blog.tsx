@@ -9,21 +9,40 @@ const Blog = () => {
   const { data: posts = [], isLoading } = usePublishedPosts();
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-20 md:pb-0">
       <Navbar />
-      <main className="container mx-auto px-4 py-12">
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
-        >
-          <h1 className="text-4xl md:text-5xl font-display font-bold text-gradient-gold mb-4">
-            🐾 PawNest Blog
-          </h1>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
-            Tips, guides, and stories for pet lovers. Stay updated with the latest in pet care.
-          </p>
-        </motion.div>
+      <main>
+        {/* Hero */}
+        <section className="py-24 bg-secondary/30">
+          <div className="container mx-auto px-4 text-center">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-primary font-medium tracking-widest uppercase text-sm mb-3"
+            >
+              Our Blog
+            </motion.p>
+            <motion.h1
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 }}
+              className="text-4xl md:text-6xl font-display font-bold mb-6"
+            >
+              🐾 <span className="text-gradient-green">PawNest</span> Blog
+            </motion.h1>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2 }}
+              className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed"
+            >
+              Tips, guides, and stories for pet lovers. Stay updated with the latest in pet care.
+            </motion.p>
+          </div>
+        </section>
+
+        <section className="py-24">
+          <div className="container mx-auto px-4">
 
         {isLoading ? (
           <div className="flex justify-center py-20">
@@ -78,6 +97,8 @@ const Blog = () => {
             ))}
           </div>
         )}
+          </div>
+        </section>
       </main>
       <Footer />
     </div>
