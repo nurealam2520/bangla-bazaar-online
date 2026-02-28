@@ -1,10 +1,10 @@
 import { useParams } from "react-router-dom";
 import { motion } from "framer-motion";
-import { Dog, Cat } from "lucide-react";
+import { Dog, Cat, RefreshCw } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { products } from "@/data/products";
+import { useProducts } from "@/hooks/useProducts";
 import { useState } from "react";
 
 const categoryConfig = {
@@ -20,13 +20,11 @@ const container = {
 const CategoryPage = () => {
   const { category } = useParams<{ category: string }>();
   const config = categoryConfig[category as keyof typeof categoryConfig];
-  const categoryProducts = products.filter((p) => p.category === category);
-  const subcategories = ["All", ...new Set(categoryProducts.map((p) => p.subcategory))];
+  const { data: products = [], isLoading } = useProducts(category);
+  const subcategories = ["All", ...new Set(products.map((p) => p.subcategory))];
   const [activeFilter, setActiveFilter] = useState("All");
 
-  const filtered = activeFilter === "All"
-    ? categoryProducts
-    : categoryProducts.filter((p) => p.subcategory === activeFilter);
+  const filtered = activeFilter === "All" ? products : products.filter((p) => p.subcategory === activeFilter);
 
   if (!config) {
     return (
@@ -66,9 +64,7 @@ const CategoryPage = () => {
                   key={sub}
                   onClick={() => setActiveFilter(sub)}
                   className={`px-4 py-2 rounded-full text-sm font-medium transition-colors ${
-                    activeFilter === sub
-                      ? "bg-primary text-primary-foreground"
-                      : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
+                    activeFilter === sub ? "bg-primary text-primary-foreground" : "bg-secondary text-secondary-foreground hover:bg-secondary/80"
                   }`}
                 >
                   {sub}
@@ -76,17 +72,17 @@ const CategoryPage = () => {
               ))}
             </div>
 
-            <motion.div
-              variants={container}
-              initial="hidden"
-              animate="show"
-              key={activeFilter}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
-            >
-              {filtered.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </motion.div>
+            {isLoading ? (
+              <div className="flex justify-center py-20">
+                <RefreshCw className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : (
+              <motion.div variants={container} initial="hidden" animate="show" key={activeFilter} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                {filtered.map((product) => (
+                  <ProductCard key={product.id} product={product} />
+                ))}
+              </motion.div>
+            )}
           </div>
         </section>
       </main>
