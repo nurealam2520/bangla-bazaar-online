@@ -12,7 +12,7 @@ const floatingBadges = [
 
 const HeroSection = () => {
   return (
-    <section className="relative overflow-hidden min-h-[90vh] flex items-center">
+    <section className="relative overflow-hidden min-h-[85vh] md:min-h-[90vh] flex items-center">
       <div className="absolute inset-0">
         <img
           src={heroImage}
@@ -54,7 +54,7 @@ const HeroSection = () => {
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3, duration: 0.6 }}
-            className="text-5xl md:text-7xl font-display font-bold leading-[1.1] mb-6"
+            className="text-4xl md:text-7xl font-display font-bold leading-[1.1] mb-6"
           >
             The Best Care{" "}
             <br className="hidden sm:block" />
@@ -86,7 +86,7 @@ const HeroSection = () => {
             transition={{ delay: 0.7 }}
             className="flex flex-col sm:flex-row gap-4"
           >
-            <Button asChild size="lg" className="bg-gradient-green text-primary-foreground font-semibold shadow-emerald hover:opacity-90 transition-all duration-300 rounded-xl px-8 h-12">
+            <Button asChild size="lg" className="bg-gradient-warm text-primary-foreground font-semibold shadow-warm hover:opacity-90 transition-all duration-300 rounded-xl px-8 h-12">
               <Link to="/shop">
                 Start Shopping
                 <ArrowRight className="ml-2 h-4 w-4" />

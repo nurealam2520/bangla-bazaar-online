@@ -1,11 +1,18 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
-import { ShoppingCart, User, Menu, X, Search, Heart } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { ShoppingCart, User, Search, Heart, Home, Store, Dog, Cat, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { motion, AnimatePresence } from "framer-motion";
 import { useCart } from "@/contexts/CartContext";
 
-const navLinks = [
+const mobileNavItems = [
+  { label: "Home", href: "/", icon: Home },
+  { label: "Shop", href: "/shop", icon: Store },
+  { label: "Dogs", href: "/category/dogs", icon: Dog },
+  { label: "Cats", href: "/category/cats", icon: Cat },
+  { label: "Contact", href: "/contact", icon: Phone },
+];
+
+const desktopNavLinks = [
   { label: "Home", href: "/" },
   { label: "Shop", href: "/shop" },
   { label: "Dogs", href: "/category/dogs" },
@@ -15,83 +22,96 @@ const navLinks = [
 ];
 
 const Navbar = () => {
-  const [mobileOpen, setMobileOpen] = useState(false);
   const { totalItems, setIsCartOpen } = useCart();
+  const location = useLocation();
 
   return (
-    <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
-      <div className="container mx-auto flex items-center justify-between h-16 px-4">
-        <Link to="/" className="flex items-center gap-2">
-          <span className="text-2xl font-display font-bold text-gradient-green">
-            🐾 PawNest
-          </span>
-        </Link>
+    <>
+      {/* Top bar */}
+      <nav className="sticky top-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border">
+        <div className="container mx-auto flex items-center justify-between h-14 md:h-16 px-4">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2">
+            <span className="text-xl md:text-2xl font-display font-bold text-gradient-green">
+              🐾 PawNest
+            </span>
+          </Link>
 
-        <div className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              to={link.href}
-              className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+          {/* Desktop nav links */}
+          <div className="hidden md:flex items-center gap-8">
+            {desktopNavLinks.map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                className={`text-sm font-medium transition-colors ${
+                  location.pathname === link.href
+                    ? "text-primary"
+                    : "text-muted-foreground hover:text-primary"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          {/* Right icons — always visible */}
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
+              <Link to="/shop"><Search className="h-4 w-4" /></Link>
+            </Button>
+            <Button variant="ghost" size="icon" className="hidden md:flex">
+              <Heart className="h-4 w-4" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="relative"
+              onClick={() => setIsCartOpen(true)}
             >
-              {link.label}
-            </Link>
-          ))}
+              <ShoppingCart className="h-[18px] w-[18px]" />
+              {totalItems > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 bg-accent text-accent-foreground text-[10px] font-bold rounded-full w-[18px] h-[18px] flex items-center justify-center shadow-sm">
+                  {totalItems}
+                </span>
+              )}
+            </Button>
+            <Button variant="ghost" size="icon" className="hidden md:flex">
+              <User className="h-4 w-4" />
+            </Button>
+          </div>
         </div>
+      </nav>
 
-        <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
-            <Link to="/shop"><Search className="h-4 w-4" /></Link>
-          </Button>
-          <Button variant="ghost" size="icon" className="hidden md:flex">
-            <Heart className="h-4 w-4" />
-          </Button>
-          <Button variant="ghost" size="icon" className="relative" onClick={() => setIsCartOpen(true)}>
-            <ShoppingCart className="h-4 w-4" />
-            {totalItems > 0 && (
-              <span className="absolute -top-1 -right-1 bg-primary text-primary-foreground text-[10px] font-bold rounded-full w-4 h-4 flex items-center justify-center">
-                {totalItems}
-              </span>
-            )}
-          </Button>
-          <Button variant="ghost" size="icon" className="hidden md:flex">
-            <User className="h-4 w-4" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="md:hidden"
-            onClick={() => setMobileOpen(!mobileOpen)}
-          >
-            {mobileOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
-          </Button>
+      {/* Mobile Bottom Tab Bar */}
+      <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-t border-border pb-mobile-nav">
+        <div className="flex items-center justify-around h-16 px-2">
+          {mobileNavItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = location.pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                to={item.href}
+                className={`flex flex-col items-center gap-0.5 px-3 py-1.5 rounded-xl transition-all duration-200 min-w-[56px] ${
+                  isActive
+                    ? "text-primary"
+                    : "text-muted-foreground active:scale-95"
+                }`}
+              >
+                <div className={`p-1.5 rounded-xl transition-all duration-200 ${
+                  isActive ? "bg-primary/10" : ""
+                }`}>
+                  <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 2} />
+                </div>
+                <span className={`text-[10px] font-medium ${isActive ? "text-primary" : ""}`}>
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
         </div>
       </div>
-
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: "auto" }}
-            exit={{ opacity: 0, height: 0 }}
-            className="md:hidden border-t border-border bg-background"
-          >
-            <div className="flex flex-col p-4 gap-3">
-              {navLinks.map((link) => (
-                <Link
-                  key={link.href}
-                  to={link.href}
-                  className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors py-2"
-                  onClick={() => setMobileOpen(false)}
-                >
-                  {link.label}
-                </Link>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </nav>
+    </>
   );
 };
 

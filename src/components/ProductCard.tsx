@@ -145,7 +145,7 @@ const ProductCard = ({ product }: { product: Product }) => {
                 className={`rounded-xl px-4 transition-all duration-300 ${
                   justAdded
                     ? "bg-primary text-primary-foreground"
-                    : "bg-gradient-green text-primary-foreground shadow-emerald hover:opacity-90"
+                    : "bg-gradient-warm text-primary-foreground shadow-warm hover:opacity-90"
                 }`}
                 onClick={handleAddToCart}
               >

@@ -33,7 +33,7 @@ const Shop = () => {
   if (sortBy === "rating") filtered = [...filtered].sort((a, b) => b.rating - a.rating);
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-20 md:pb-0">
       <Navbar />
       <main>
         <section className="py-16 bg-secondary/30">
