@@ -5,7 +5,7 @@ const Footer = () => {
   return (
     <footer className="bg-card border-t border-border">
       <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
             <h3 className="text-2xl font-display font-bold text-gradient-gold mb-4">🐾 PawNest</h3>
             <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
@@ -27,9 +27,15 @@ const Footer = () => {
           <div>
             <h4 className="font-display font-semibold mb-4">Quick Links</h4>
             <ul className="space-y-3 text-sm text-muted-foreground">
-              {["All Products", "New Arrivals", "Deals & Offers", "Blog", "About Us"].map((link) => (
-                <li key={link}>
-                  <Link to="#" className="hover:text-primary transition-colors">{link}</Link>
+              {[
+                { label: "All Products", to: "/shop" },
+                { label: "New Arrivals", to: "/shop" },
+                { label: "Deals & Offers", to: "/shop" },
+                { label: "Blog", to: "/blog" },
+                { label: "About Us", to: "/about" },
+              ].map((link) => (
+                <li key={link.label}>
+                  <Link to={link.to} className="hover:text-primary transition-colors">{link.label}</Link>
                 </li>
               ))}
             </ul>

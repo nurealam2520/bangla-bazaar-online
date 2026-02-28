@@ -8,12 +8,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ShoppingCart, Users, Shield, AlertTriangle, Package,
   LogOut, ArrowLeft, RefreshCw, Eye, CheckCircle, XCircle,
-  Clock, Plus, Pencil, Trash2, X, Save
+  Clock, Plus, Pencil, Trash2, X, Save, FileText, Globe, EyeOff
 } from "lucide-react";
+import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAllProducts, useCreateProduct, useUpdateProduct, useDeleteProduct, type Product, type ProductInsert } from "@/hooks/useProducts";
+import { useAllBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost, type BlogPost, type BlogPostInsert } from "@/hooks/useBlogPosts";
 
 interface Order {
   id: string;
@@ -93,6 +95,65 @@ const AdminDashboard = () => {
   const updateProduct = useUpdateProduct();
   const deleteProduct = useDeleteProduct();
   const [editingProduct, setEditingProduct] = useState<(Partial<Product> & { isNew?: boolean }) | null>(null);
+
+  // Blog management state
+  const { data: blogPosts = [], isLoading: blogLoading } = useAllBlogPosts();
+  const createBlogPost = useCreateBlogPost();
+  const updateBlogPost = useUpdateBlogPost();
+  const deleteBlogPost = useDeleteBlogPost();
+  const [editingPost, setEditingPost] = useState<(Partial<BlogPost> & { isNew?: boolean }) | null>(null);
+
+  const generateSlug = (title: string) =>
+    title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+  const handleSaveBlogPost = async () => {
+    if (!editingPost) return;
+    if (!editingPost.title || !editingPost.content) {
+      toast.error("Title and content are required");
+      return;
+    }
+    try {
+      const slug = editingPost.slug || generateSlug(editingPost.title);
+      if (editingPost.isNew) {
+        await createBlogPost.mutateAsync({
+          title: editingPost.title,
+          slug,
+          excerpt: editingPost.excerpt || "",
+          content: editingPost.content,
+          cover_image: editingPost.cover_image || "",
+          author_id: user!.id,
+          is_published: editingPost.is_published || false,
+          published_at: editingPost.is_published ? new Date().toISOString() : null,
+        });
+        toast.success("Blog post created!");
+      } else {
+        await updateBlogPost.mutateAsync({
+          id: editingPost.id!,
+          title: editingPost.title,
+          slug,
+          excerpt: editingPost.excerpt,
+          content: editingPost.content,
+          cover_image: editingPost.cover_image,
+          is_published: editingPost.is_published,
+          published_at: editingPost.is_published && !editingPost.published_at ? new Date().toISOString() : editingPost.published_at,
+        });
+        toast.success("Blog post updated!");
+      }
+      setEditingPost(null);
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
+
+  const handleDeleteBlogPost = async (id: string) => {
+    if (!confirm("Delete this blog post?")) return;
+    try {
+      await deleteBlogPost.mutateAsync(id);
+      toast.success("Blog post deleted!");
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+  };
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
@@ -237,6 +298,9 @@ const AdminDashboard = () => {
             </TabsTrigger>
             <TabsTrigger value="orders" className="rounded-lg gap-1.5 text-xs md:text-sm">
               <ShoppingCart className="h-3.5 w-3.5" /> অর্ডার
+            </TabsTrigger>
+            <TabsTrigger value="blog" className="rounded-lg gap-1.5 text-xs md:text-sm">
+              <FileText className="h-3.5 w-3.5" /> ব্লগ
             </TabsTrigger>
             <TabsTrigger value="profiles" className="rounded-lg gap-1.5 text-xs md:text-sm">
               <Users className="h-3.5 w-3.5" /> ইউজার
@@ -512,6 +576,159 @@ const AdminDashboard = () => {
                         ))}
                       </motion.div>
                     )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Blog Tab */}
+          <TabsContent value="blog" className="space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-display font-bold text-lg">Blog Management</h3>
+              <Button
+                size="sm"
+                onClick={() => setEditingPost({ isNew: true, title: "", slug: "", excerpt: "", content: "", cover_image: "", is_published: false, published_at: null })}
+                className="gap-1.5 bg-gradient-warm text-primary-foreground"
+              >
+                <Plus className="h-4 w-4" /> New Post
+              </Button>
+            </div>
+
+            <AnimatePresence>
+              {editingPost && (
+                <motion.div
+                  initial={{ opacity: 0, height: 0 }}
+                  animate={{ opacity: 1, height: "auto" }}
+                  exit={{ opacity: 0, height: 0 }}
+                  className="bg-card border border-border rounded-xl p-5 space-y-4"
+                >
+                  <div className="flex items-center justify-between">
+                    <h4 className="font-semibold">
+                      {editingPost.isNew ? "Create New Post" : "Edit Post"}
+                    </h4>
+                    <Button variant="ghost" size="icon" onClick={() => setEditingPost(null)}>
+                      <X className="h-4 w-4" />
+                    </Button>
+                  </div>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="md:col-span-2">
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Title *</label>
+                      <Input
+                        value={editingPost.title || ""}
+                        onChange={(e) => setEditingPost({ ...editingPost, title: e.target.value, slug: generateSlug(e.target.value) })}
+                        placeholder="Blog post title"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Slug</label>
+                      <Input
+                        value={editingPost.slug || ""}
+                        onChange={(e) => setEditingPost({ ...editingPost, slug: e.target.value })}
+                        placeholder="auto-generated-slug"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Cover Image URL</label>
+                      <Input
+                        value={editingPost.cover_image || ""}
+                        onChange={(e) => setEditingPost({ ...editingPost, cover_image: e.target.value })}
+                        placeholder="https://..."
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Excerpt</label>
+                      <Input
+                        value={editingPost.excerpt || ""}
+                        onChange={(e) => setEditingPost({ ...editingPost, excerpt: e.target.value })}
+                        placeholder="Brief description of the post"
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Content *</label>
+                      <Textarea
+                        value={editingPost.content || ""}
+                        onChange={(e) => setEditingPost({ ...editingPost, content: e.target.value })}
+                        className="min-h-[200px] resize-y"
+                        placeholder="Write your blog post content here..."
+                      />
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <label className="text-sm font-medium text-muted-foreground">Published</label>
+                      <button
+                        type="button"
+                        onClick={() => setEditingPost({ ...editingPost, is_published: !editingPost.is_published })}
+                        className={`w-10 h-6 rounded-full transition-colors ${editingPost.is_published ? "bg-primary" : "bg-muted"} relative`}
+                      >
+                        <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${editingPost.is_published ? "left-[18px]" : "left-0.5"}`} />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="flex justify-end gap-2">
+                    <Button variant="outline" onClick={() => setEditingPost(null)}>Cancel</Button>
+                    <Button
+                      onClick={handleSaveBlogPost}
+                      disabled={createBlogPost.isPending || updateBlogPost.isPending}
+                      className="gap-1.5 bg-gradient-warm text-primary-foreground"
+                    >
+                      <Save className="h-4 w-4" />
+                      {createBlogPost.isPending || updateBlogPost.isPending ? "Saving..." : "Save Post"}
+                    </Button>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {blogLoading ? (
+              <div className="flex justify-center py-16">
+                <RefreshCw className="h-8 w-8 animate-spin text-primary" />
+              </div>
+            ) : blogPosts.length === 0 ? (
+              <div className="text-center py-16 text-muted-foreground">
+                <FileText className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                <p>No blog posts yet</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {blogPosts.map((post) => (
+                  <div key={post.id} className="bg-card border border-border rounded-xl p-4 hover:shadow-sm transition-shadow">
+                    <div className="flex items-center gap-4">
+                      {post.cover_image && (
+                        <img src={post.cover_image} alt={post.title} className="w-14 h-14 rounded-xl object-cover flex-shrink-0" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <h4 className="font-medium text-sm truncate">{post.title}</h4>
+                          {post.is_published ? (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-primary/10 text-primary flex items-center gap-1">
+                              <Globe className="h-2.5 w-2.5" /> Published
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-muted text-muted-foreground flex items-center gap-1">
+                              <EyeOff className="h-2.5 w-2.5" /> Draft
+                            </span>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                          {post.excerpt || "No excerpt"}
+                        </p>
+                        <p className="text-xs text-muted-foreground mt-0.5">
+                          {new Date(post.created_at).toLocaleDateString("en-US")}
+                        </p>
+                      </div>
+                      <div className="flex items-center gap-2 flex-shrink-0">
+                        <Button variant="outline" size="icon" className="h-8 w-8" onClick={() => setEditingPost({ ...post })}>
+                          <Pencil className="h-3.5 w-3.5" />
+                        </Button>
+                        <Button
+                          variant="outline" size="icon"
+                          className="h-8 w-8 text-destructive hover:bg-destructive/10"
+                          onClick={() => handleDeleteBlogPost(post.id)}
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
                   </div>
                 ))}
               </div>
