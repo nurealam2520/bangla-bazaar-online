@@ -33,7 +33,7 @@ const Auth = () => {
       if (error) {
         toast.error(error.message);
       } else {
-        toast.success("সফলভাবে লগইন হয়েছে!");
+        toast.success("Logged in successfully!");
         navigate("/");
       }
     } else {
@@ -45,7 +45,7 @@ const Auth = () => {
       if (error) {
         toast.error(error.message);
       } else {
-        toast.success("অ্যাকাউন্ট তৈরি হয়েছে! ইমেইল ভেরিফাই করুন।");
+        toast.success("Account created! Please verify your email.");
       }
     }
     setLoading(false);
@@ -59,7 +59,7 @@ const Auth = () => {
         className="w-full max-w-md"
       >
         <Link to="/" className="inline-flex items-center gap-2 text-muted-foreground hover:text-foreground mb-8 text-sm">
-          <ArrowLeft className="h-4 w-4" /> হোমে ফিরে যান
+          <ArrowLeft className="h-4 w-4" /> Back to Home
         </Link>
 
         <div className="bg-card border border-border rounded-2xl p-8 shadow-warm">
@@ -68,21 +68,21 @@ const Auth = () => {
               🐾 PawNest
             </h1>
             <p className="text-muted-foreground mt-2">
-              {isLogin ? "আপনার অ্যাকাউন্টে লগইন করুন" : "নতুন অ্যাকাউন্ট তৈরি করুন"}
+              {isLogin ? "Sign in to your account" : "Create a new account"}
             </p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
             {!isLogin && (
               <div>
-                <Label htmlFor="fullName">পুরো নাম</Label>
+                <Label htmlFor="fullName">Full Name</Label>
                 <div className="relative mt-1">
                   <User className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="fullName"
                     value={fullName}
                     onChange={(e) => setFullName(e.target.value)}
-                    placeholder="আপনার নাম"
+                    placeholder="Your name"
                     className="pl-10"
                     required
                   />
@@ -90,7 +90,7 @@ const Auth = () => {
               </div>
             )}
             <div>
-              <Label htmlFor="email">ইমেইল</Label>
+              <Label htmlFor="email">Email</Label>
               <div className="relative mt-1">
                 <Mail className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -105,7 +105,7 @@ const Auth = () => {
               </div>
             </div>
             <div>
-              <Label htmlFor="password">পাসওয়ার্ড</Label>
+              <Label htmlFor="password">Password</Label>
               <div className="relative mt-1">
                 <Lock className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                 <Input
@@ -126,17 +126,17 @@ const Auth = () => {
               disabled={loading}
               className="w-full bg-gradient-warm text-primary-foreground shadow-warm h-11 rounded-xl"
             >
-              {loading ? "অপেক্ষা করুন..." : isLogin ? "লগইন" : "সাইন আপ"}
+              {loading ? "Please wait..." : isLogin ? "Sign In" : "Sign Up"}
             </Button>
           </form>
 
           <p className="text-center text-sm text-muted-foreground mt-6">
-            {isLogin ? "অ্যাকাউন্ট নেই?" : "আগে থেকে অ্যাকাউন্ট আছে?"}{" "}
+            {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
             <button
               onClick={() => setIsLogin(!isLogin)}
               className="text-primary font-medium hover:underline"
             >
-              {isLogin ? "সাইন আপ করুন" : "লগইন করুন"}
+              {isLogin ? "Sign Up" : "Sign In"}
             </button>
           </p>
         </div>

@@ -127,7 +127,7 @@ const Navbar = () => {
               </Button>
             )}
 
-            <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
+            <Button variant="ghost" size="icon" asChild>
               <Link to="/shop"><Search className="h-4 w-4" /></Link>
             </Button>
             <Button variant="ghost" size="icon" className="hidden md:flex">
