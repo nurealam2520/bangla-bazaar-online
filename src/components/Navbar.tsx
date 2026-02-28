@@ -1,9 +1,11 @@
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, User, Search, Heart, Home, Store, Dog, Cat, Phone, Shield } from "lucide-react";
+import { ShoppingCart, User, Search, Heart, Home, Store, Dog, Cat, Phone, Shield, Menu, X, Moon, Sun, Info, LogIn } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
+import { useState, useEffect } from "react";
+import { useTheme } from "next-themes";
 
 const mobileNavItems = [
   { label: "Home", href: "/", icon: Home },
@@ -22,10 +24,48 @@ const desktopNavLinks = [
   { label: "Contact", href: "/contact" },
 ];
 
+const mobileMenuLinks = [
+  { label: "About Us", href: "/about", icon: Info },
+  { label: "Sign In / Sign Up", href: "/auth", icon: LogIn },
+  { label: "Admin Dashboard", href: "/admin", icon: Shield, adminOnly: true },
+];
+
+const menuOverlayVariants = {
+  hidden: { opacity: 0 },
+  visible: { opacity: 1 },
+};
+
+const menuPanelVariants = {
+  hidden: { x: "100%" },
+  visible: { x: 0, transition: { type: "spring" as const, damping: 28, stiffness: 300 } },
+  exit: { x: "100%", transition: { duration: 0.25 } },
+};
+
+const menuItemVariants = {
+  hidden: { opacity: 0, x: 30 },
+  visible: (i: number) => ({
+    opacity: 1,
+    x: 0,
+    transition: { delay: 0.1 + i * 0.06, duration: 0.3 },
+  }),
+};
+
 const Navbar = () => {
   const { totalItems, setIsCartOpen } = useCart();
   const { user, isAdmin } = useAuth();
   const location = useLocation();
+  const [menuOpen, setMenuOpen] = useState(false);
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
+
+  // Close menu on route change
+  useEffect(() => {
+    setMenuOpen(false);
+  }, [location.pathname]);
+
+  const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
   return (
     <>
@@ -56,8 +96,37 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Right icons — always visible */}
+          {/* Right icons */}
           <div className="flex items-center gap-1">
+            {/* Dark mode toggle */}
+            {mounted && (
+              <Button variant="ghost" size="icon" onClick={toggleTheme} className="relative">
+                <AnimatePresence mode="wait">
+                  {theme === "dark" ? (
+                    <motion.div
+                      key="sun"
+                      initial={{ rotate: -90, scale: 0 }}
+                      animate={{ rotate: 0, scale: 1 }}
+                      exit={{ rotate: 90, scale: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Sun className="h-4 w-4" />
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="moon"
+                      initial={{ rotate: 90, scale: 0 }}
+                      animate={{ rotate: 0, scale: 1 }}
+                      exit={{ rotate: -90, scale: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <Moon className="h-4 w-4" />
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </Button>
+            )}
+
             <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
               <Link to="/shop"><Search className="h-4 w-4" /></Link>
             </Button>
@@ -90,9 +159,136 @@ const Navbar = () => {
             <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
               <Link to={user ? "/admin" : "/auth"}><User className="h-4 w-4" /></Link>
             </Button>
+
+            {/* Hamburger (mobile) */}
+            <Button
+              variant="ghost"
+              size="icon"
+              className="md:hidden"
+              onClick={() => setMenuOpen(true)}
+            >
+              <Menu className="h-5 w-5" />
+            </Button>
           </div>
         </div>
       </nav>
+
+      {/* Mobile Slide-Out Menu */}
+      <AnimatePresence>
+        {menuOpen && (
+          <>
+            {/* Overlay */}
+            <motion.div
+              variants={menuOverlayVariants}
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              className="fixed inset-0 z-[60] bg-foreground/30 backdrop-blur-sm"
+              onClick={() => setMenuOpen(false)}
+            />
+
+            {/* Panel */}
+            <motion.div
+              variants={menuPanelVariants}
+              initial="hidden"
+              animate="visible"
+              exit="exit"
+              className="fixed right-0 top-0 bottom-0 z-[70] w-[280px] bg-background border-l border-border shadow-2xl flex flex-col"
+            >
+              {/* Header */}
+              <div className="flex items-center justify-between h-14 px-5 border-b border-border">
+                <span className="font-display font-bold text-lg text-gradient-green">Menu</span>
+                <Button variant="ghost" size="icon" onClick={() => setMenuOpen(false)}>
+                  <X className="h-5 w-5" />
+                </Button>
+              </div>
+
+              {/* User info */}
+              {user && (
+                <div className="px-5 py-4 border-b border-border">
+                  <div className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
+                      <User className="h-5 w-5 text-primary" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">
+                        {user.email?.split("@")[0]}
+                      </p>
+                      <p className="text-xs text-muted-foreground">{user.email}</p>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* Links */}
+              <div className="flex-1 overflow-y-auto py-4 px-3">
+                {mobileMenuLinks
+                  .filter((link) => !link.adminOnly || isAdmin)
+                  .map((link, i) => {
+                    const Icon = link.icon;
+                    const isActive = location.pathname === link.href;
+                    return (
+                      <motion.div
+                        key={link.href}
+                        custom={i}
+                        variants={menuItemVariants}
+                        initial="hidden"
+                        animate="visible"
+                      >
+                        <Link
+                          to={link.href}
+                          className={`flex items-center gap-3 px-4 py-3.5 rounded-xl mb-1 transition-all duration-200 ${
+                            isActive
+                              ? "bg-primary/10 text-primary font-semibold"
+                              : "text-foreground hover:bg-muted"
+                          }`}
+                        >
+                          <Icon className="h-5 w-5" strokeWidth={isActive ? 2.5 : 1.8} />
+                          <span className="text-sm">{link.label}</span>
+                        </Link>
+                      </motion.div>
+                    );
+                  })}
+
+                {/* Divider */}
+                <div className="h-px bg-border mx-4 my-3" />
+
+                {/* Quick links */}
+                <motion.div custom={mobileMenuLinks.length} variants={menuItemVariants} initial="hidden" animate="visible">
+                  <Link
+                    to="/shop"
+                    className="flex items-center gap-3 px-4 py-3.5 rounded-xl text-foreground hover:bg-muted transition-colors"
+                  >
+                    <Search className="h-5 w-5" strokeWidth={1.8} />
+                    <span className="text-sm">Search Products</span>
+                  </Link>
+                </motion.div>
+                <motion.div custom={mobileMenuLinks.length + 1} variants={menuItemVariants} initial="hidden" animate="visible">
+                  <button
+                    onClick={() => { setIsCartOpen(true); setMenuOpen(false); }}
+                    className="w-full flex items-center gap-3 px-4 py-3.5 rounded-xl text-foreground hover:bg-muted transition-colors"
+                  >
+                    <ShoppingCart className="h-5 w-5" strokeWidth={1.8} />
+                    <span className="text-sm">Cart</span>
+                    {totalItems > 0 && (
+                      <span className="ml-auto bg-accent text-accent-foreground text-xs font-bold rounded-full w-5 h-5 flex items-center justify-center">
+                        {totalItems}
+                      </span>
+                    )}
+                  </button>
+                </motion.div>
+              </div>
+
+              {/* Footer */}
+              <div className="px-5 py-4 border-t border-border">
+                <p className="text-xs text-muted-foreground text-center">
+                  🐾 PawNest — Premium Pet Shop
+                </p>
+              </div>
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
 
       {/* Mobile Bottom Tab Bar */}
       <div className="md:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur-xl border-t border-border pb-mobile-nav">
@@ -106,7 +302,6 @@ const Navbar = () => {
                 to={item.href}
                 className="relative flex flex-col items-center gap-0.5 px-3 py-1.5 min-w-[56px]"
               >
-                {/* Active background pill */}
                 {isActive && (
                   <motion.div
                     layoutId="mobile-nav-active"
@@ -114,8 +309,6 @@ const Navbar = () => {
                     transition={{ type: "spring", stiffness: 400, damping: 30 }}
                   />
                 )}
-
-                {/* Icon with bounce */}
                 <motion.div
                   className="relative z-10 p-1.5 rounded-xl"
                   animate={isActive ? { y: -2 } : { y: 0 }}
@@ -129,8 +322,6 @@ const Navbar = () => {
                     strokeWidth={isActive ? 2.5 : 1.8}
                   />
                 </motion.div>
-
-                {/* Label */}
                 <motion.span
                   className={`relative z-10 text-[10px] font-semibold transition-colors duration-200 ${
                     isActive ? "text-primary" : "text-muted-foreground"
@@ -139,8 +330,6 @@ const Navbar = () => {
                 >
                   {item.label}
                 </motion.span>
-
-                {/* Active dot indicator */}
                 {isActive && (
                   <motion.div
                     layoutId="mobile-nav-dot"
