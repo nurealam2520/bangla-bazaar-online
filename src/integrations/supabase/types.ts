@@ -14,7 +14,185 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      order_items: {
+        Row: {
+          created_at: string
+          id: string
+          order_id: string
+          price: number
+          product_image: string | null
+          product_name: string
+          quantity: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          order_id: string
+          price: number
+          product_image?: string | null
+          product_name: string
+          quantity?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          order_id?: string
+          price?: number
+          product_image?: string | null
+          product_name?: string
+          quantity?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "order_items_order_id_fkey"
+            columns: ["order_id"]
+            isOneToOne: false
+            referencedRelation: "orders"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      order_rate_limits: {
+        Row: {
+          created_at: string
+          id: string
+          identifier: string
+          identifier_type: string
+          order_count: number
+          window_start: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          identifier: string
+          identifier_type: string
+          order_count?: number
+          window_start?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          identifier?: string
+          identifier_type?: string
+          order_count?: number
+          window_start?: string
+        }
+        Relationships: []
+      }
+      orders: {
+        Row: {
+          created_at: string
+          fraud_reasons: string[] | null
+          fraud_score: number
+          guest_email: string | null
+          id: string
+          ip_address: string | null
+          is_suspicious: boolean
+          payment_method: string
+          shipping: number
+          shipping_address: string
+          shipping_city: string
+          shipping_country: string
+          shipping_email: string
+          shipping_name: string
+          shipping_postal_code: string
+          status: string
+          subtotal: number
+          total: number
+          updated_at: string
+          user_agent: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          fraud_reasons?: string[] | null
+          fraud_score?: number
+          guest_email?: string | null
+          id?: string
+          ip_address?: string | null
+          is_suspicious?: boolean
+          payment_method: string
+          shipping?: number
+          shipping_address: string
+          shipping_city: string
+          shipping_country: string
+          shipping_email: string
+          shipping_name: string
+          shipping_postal_code: string
+          status?: string
+          subtotal: number
+          total: number
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          fraud_reasons?: string[] | null
+          fraud_score?: number
+          guest_email?: string | null
+          id?: string
+          ip_address?: string | null
+          is_suspicious?: boolean
+          payment_method?: string
+          shipping?: number
+          shipping_address?: string
+          shipping_city?: string
+          shipping_country?: string
+          shipping_email?: string
+          shipping_name?: string
+          shipping_postal_code?: string
+          status?: string
+          subtotal?: number
+          total?: number
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          address: string | null
+          city: string | null
+          country: string | null
+          created_at: string
+          email: string | null
+          full_name: string | null
+          id: string
+          phone: string | null
+          postal_code: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          postal_code?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          address?: string | null
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          email?: string | null
+          full_name?: string | null
+          id?: string
+          phone?: string | null
+          postal_code?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
