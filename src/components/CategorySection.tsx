@@ -9,7 +9,7 @@ const categories = [
     slug: "dogs",
     description: "Food, collars, leashes, toys, beds & grooming essentials",
     count: "120+ Products",
-    gradient: "from-amber-500/20 to-orange-500/20",
+    image: "https://images.unsplash.com/photo-1587300003388-59208cc962cb?w=600&h=400&fit=crop",
   },
   {
     icon: Cat,
@@ -17,19 +17,9 @@ const categories = [
     slug: "cats",
     description: "Premium food, litter, scratchers, toys & accessories",
     count: "95+ Products",
-    gradient: "from-rose-500/20 to-pink-500/20",
+    image: "https://images.unsplash.com/photo-1514888286974-6c03e2ca1dba?w=600&h=400&fit=crop",
   },
 ];
-
-const container = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.15 } },
-};
-
-const item = {
-  hidden: { opacity: 0, y: 30 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.5 } },
-};
 
 const CategorySection = () => {
   return (
@@ -38,35 +28,54 @@ const CategorySection = () => {
         <div className="text-center mb-16">
           <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">Categories</p>
           <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
-            Shop by <span className="text-gradient-gold">Pet Type</span>
+            Shop by <span className="text-gradient-green">Pet Type</span>
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
             Everything your dog or cat needs — all in one place
           </p>
         </div>
 
-        <motion.div
-          variants={container}
-          initial="hidden"
-          whileInView="show"
-          viewport={{ once: true, margin: "-100px" }}
-          className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto"
-        >
-          {categories.map((cat) => (
-            <motion.div key={cat.name} variants={item}>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+          {categories.map((cat, i) => (
+            <motion.div
+              key={cat.name}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.15, duration: 0.5 }}
+            >
               <Link to={`/category/${cat.slug}`} className="group block">
-                <div className={`rounded-2xl bg-gradient-to-br ${cat.gradient} border border-border p-10 text-center hover:shadow-gold hover:-translate-y-1 transition-all duration-300`}>
-                  <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-background/80 flex items-center justify-center group-hover:scale-110 transition-transform">
-                    <cat.icon className="h-10 w-10 text-primary" />
+                <div className="relative rounded-2xl overflow-hidden border border-border h-[320px]">
+                  {/* Background image */}
+                  <img
+                    src={cat.image}
+                    alt={cat.name}
+                    className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
+
+                  {/* Content overlay */}
+                  <div className="absolute inset-0 flex flex-col justify-end p-8">
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="w-12 h-12 rounded-xl bg-background/20 backdrop-blur-md flex items-center justify-center border border-background/10">
+                        <cat.icon className="h-6 w-6 text-background" />
+                      </div>
+                      <span className="text-xs font-medium text-background/70 bg-background/10 backdrop-blur-md px-3 py-1 rounded-full border border-background/10">
+                        {cat.count}
+                      </span>
+                    </div>
+                    <h3 className="text-3xl font-display font-bold text-background mb-2">{cat.name}</h3>
+                    <p className="text-sm text-background/70 max-w-xs">{cat.description}</p>
+                    <div className="mt-4 flex items-center gap-2 text-sm font-medium text-background group-hover:gap-3 transition-all duration-300">
+                      Shop Now →
+                    </div>
                   </div>
-                  <h3 className="text-2xl font-display font-semibold mb-3">{cat.name}</h3>
-                  <p className="text-sm text-muted-foreground mb-4">{cat.description}</p>
-                  <span className="text-xs font-medium text-primary">{cat.count}</span>
                 </div>
               </Link>
             </motion.div>
           ))}
-        </motion.div>
+        </div>
       </div>
     </section>
   );
