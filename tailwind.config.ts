@@ -51,13 +51,19 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        gold: {
-          DEFAULT: "hsl(var(--gold))",
-          light: "hsl(var(--gold-light))",
-          dark: "hsl(var(--gold-dark))",
+        emerald: {
+          DEFAULT: "hsl(var(--emerald))",
+          light: "hsl(var(--emerald-light))",
+          dark: "hsl(var(--emerald-dark))",
         },
-        cream: "hsl(var(--cream))",
-        "warm-gray": "hsl(var(--warm-gray))",
+        // Legacy aliases for gold references
+        gold: {
+          DEFAULT: "hsl(var(--emerald))",
+          light: "hsl(var(--emerald-light))",
+          dark: "hsl(var(--emerald-dark))",
+        },
+        mint: "hsl(var(--mint))",
+        sage: "hsl(var(--sage))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
