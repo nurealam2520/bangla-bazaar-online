@@ -1,10 +1,12 @@
 import { motion } from "framer-motion";
 import { Dog, Cat } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const categories = [
   {
     icon: Dog,
     name: "Dogs",
+    slug: "dogs",
     description: "Food, collars, leashes, toys, beds & grooming essentials",
     count: "120+ Products",
     gradient: "from-amber-500/20 to-orange-500/20",
@@ -12,6 +14,7 @@ const categories = [
   {
     icon: Cat,
     name: "Cats",
+    slug: "cats",
     description: "Premium food, litter, scratchers, toys & accessories",
     count: "95+ Products",
     gradient: "from-rose-500/20 to-pink-500/20",
@@ -50,19 +53,17 @@ const CategorySection = () => {
           className="grid grid-cols-1 sm:grid-cols-2 gap-8 max-w-3xl mx-auto"
         >
           {categories.map((cat) => (
-            <motion.div
-              key={cat.name}
-              variants={item}
-              className="group cursor-pointer"
-            >
-              <div className={`rounded-2xl bg-gradient-to-br ${cat.gradient} border border-border p-10 text-center hover:shadow-gold hover:-translate-y-1 transition-all duration-300`}>
-                <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-background/80 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <cat.icon className="h-10 w-10 text-primary" />
+            <motion.div key={cat.name} variants={item}>
+              <Link to={`/category/${cat.slug}`} className="group block">
+                <div className={`rounded-2xl bg-gradient-to-br ${cat.gradient} border border-border p-10 text-center hover:shadow-gold hover:-translate-y-1 transition-all duration-300`}>
+                  <div className="w-20 h-20 mx-auto mb-6 rounded-2xl bg-background/80 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <cat.icon className="h-10 w-10 text-primary" />
+                  </div>
+                  <h3 className="text-2xl font-display font-semibold mb-3">{cat.name}</h3>
+                  <p className="text-sm text-muted-foreground mb-4">{cat.description}</p>
+                  <span className="text-xs font-medium text-primary">{cat.count}</span>
                 </div>
-                <h3 className="text-2xl font-display font-semibold mb-3">{cat.name}</h3>
-                <p className="text-sm text-muted-foreground mb-4">{cat.description}</p>
-                <span className="text-xs font-medium text-primary">{cat.count}</span>
-              </div>
+              </Link>
             </motion.div>
           ))}
         </motion.div>
