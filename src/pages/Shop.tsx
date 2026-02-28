@@ -3,11 +3,10 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
-import { products } from "@/data/products";
-import { Search } from "lucide-react";
+import { useProducts } from "@/hooks/useProducts";
+import { Search, RefreshCw } from "lucide-react";
 import { Input } from "@/components/ui/input";
 
-const allSubcategories = ["All", ...new Set(products.map((p) => p.subcategory))];
 const categories = ["All", "Dogs", "Cats"];
 
 const container = {
@@ -21,11 +20,16 @@ const Shop = () => {
   const [activeSub, setActiveSub] = useState("All");
   const [sortBy, setSortBy] = useState("default");
 
+  const { data: products = [], isLoading } = useProducts(
+    activeCategory === "All" ? undefined : activeCategory.toLowerCase()
+  );
+
+  const allSubcategories = ["All", ...new Set(products.map((p) => p.subcategory))];
+
   let filtered = products.filter((p) => {
     const matchesSearch = p.name.toLowerCase().includes(search.toLowerCase());
-    const matchesCat = activeCategory === "All" || p.category === activeCategory.toLowerCase();
     const matchesSub = activeSub === "All" || p.subcategory === activeSub;
-    return matchesSearch && matchesCat && matchesSub;
+    return matchesSearch && matchesSub;
   });
 
   if (sortBy === "price-low") filtered = [...filtered].sort((a, b) => a.price - b.price);
@@ -46,12 +50,7 @@ const Shop = () => {
             </p>
             <div className="relative max-w-md mx-auto">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-              <Input
-                placeholder="Search products..."
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                className="pl-10"
-              />
+              <Input placeholder="Search products..." value={search} onChange={(e) => setSearch(e.target.value)} className="pl-10" />
             </div>
           </div>
         </section>
@@ -96,24 +95,30 @@ const Shop = () => {
               </select>
             </div>
 
-            <p className="text-sm text-muted-foreground mb-6">{filtered.length} products found</p>
-
-            <motion.div
-              variants={container}
-              initial="hidden"
-              animate="show"
-              key={`${activeCategory}-${activeSub}-${sortBy}-${search}`}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-            >
-              {filtered.map((product) => (
-                <ProductCard key={product.id} product={product} />
-              ))}
-            </motion.div>
-
-            {filtered.length === 0 && (
-              <div className="text-center py-20">
-                <p className="text-muted-foreground">No products found. Try a different search or filter.</p>
+            {isLoading ? (
+              <div className="flex justify-center py-20">
+                <RefreshCw className="h-8 w-8 animate-spin text-primary" />
               </div>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground mb-6">{filtered.length} products found</p>
+                <motion.div
+                  variants={container}
+                  initial="hidden"
+                  animate="show"
+                  key={`${activeCategory}-${activeSub}-${sortBy}-${search}`}
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                >
+                  {filtered.map((product) => (
+                    <ProductCard key={product.id} product={product} />
+                  ))}
+                </motion.div>
+                {filtered.length === 0 && (
+                  <div className="text-center py-20">
+                    <p className="text-muted-foreground">No products found. Try a different search or filter.</p>
+                  </div>
+                )}
+              </>
             )}
           </div>
         </section>

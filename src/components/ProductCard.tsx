@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Star, ShoppingCart, Heart, Eye, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
-import { Product } from "@/data/products";
+import type { Product } from "@/hooks/useProducts";
 
 const item = {
   hidden: { opacity: 0, y: 30 },
@@ -17,13 +17,25 @@ const ProductCard = ({ product }: { product: Product }) => {
   const [justAdded, setJustAdded] = useState(false);
 
   const handleAddToCart = () => {
-    addToCart(product);
+    addToCart({
+      id: product.id as any,
+      name: product.name,
+      price: product.price,
+      originalPrice: product.original_price,
+      rating: product.rating,
+      reviews: product.reviews,
+      image: product.image,
+      badge: product.badge,
+      category: product.category,
+      subcategory: product.subcategory,
+      description: product.description,
+    });
     setJustAdded(true);
     setTimeout(() => setJustAdded(false), 1500);
   };
 
-  const discount = product.originalPrice
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
+  const discount = product.original_price
+    ? Math.round(((product.original_price - product.price) / product.original_price) * 100)
     : null;
 
   return (
@@ -41,11 +53,7 @@ const ProductCard = ({ product }: { product: Product }) => {
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
             loading="lazy"
           />
-
-          {/* Gradient overlay on hover */}
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-
-          {/* Top badges */}
           <div className="absolute top-3 left-3 flex flex-col gap-2">
             {product.badge && (
               <motion.span
@@ -62,8 +70,6 @@ const ProductCard = ({ product }: { product: Product }) => {
               </span>
             )}
           </div>
-
-          {/* Action buttons on right */}
           <div className="absolute top-3 right-3 flex flex-col gap-2">
             <motion.button
               whileTap={{ scale: 0.85 }}
@@ -77,8 +83,6 @@ const ProductCard = ({ product }: { product: Product }) => {
               <Heart className={`h-4 w-4 ${isWished ? "fill-current" : ""}`} />
             </motion.button>
           </div>
-
-          {/* Quick view button */}
           <AnimatePresence>
             {showQuick && (
               <motion.div
@@ -99,16 +103,12 @@ const ProductCard = ({ product }: { product: Product }) => {
 
         {/* Content */}
         <div className="p-5">
-          {/* Category tag */}
           <span className="text-[11px] font-medium text-primary uppercase tracking-wider">
             {product.subcategory}
           </span>
-
           <h3 className="font-semibold text-card-foreground mt-1.5 mb-2 line-clamp-2 text-[15px] leading-snug min-h-[2.5rem]">
             {product.name}
           </h3>
-
-          {/* Rating with filled stars */}
           <div className="flex items-center gap-1.5 mb-3">
             <div className="flex gap-0.5">
               {Array.from({ length: 5 }).map((_, i) => (
@@ -126,13 +126,11 @@ const ProductCard = ({ product }: { product: Product }) => {
               ({product.reviews})
             </span>
           </div>
-
-          {/* Price + Add to Cart */}
           <div className="flex items-end justify-between">
             <div className="flex flex-col">
-              {product.originalPrice && (
+              {product.original_price && (
                 <span className="text-xs text-muted-foreground line-through">
-                  ${product.originalPrice.toFixed(2)}
+                  ${product.original_price.toFixed(2)}
                 </span>
               )}
               <span className="text-xl font-bold text-foreground">
@@ -151,23 +149,11 @@ const ProductCard = ({ product }: { product: Product }) => {
               >
                 <AnimatePresence mode="wait">
                   {justAdded ? (
-                    <motion.span
-                      key="check"
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={{ scale: 1, rotate: 0 }}
-                      exit={{ scale: 0 }}
-                      className="flex items-center gap-1.5"
-                    >
+                    <motion.span key="check" initial={{ scale: 0, rotate: -180 }} animate={{ scale: 1, rotate: 0 }} exit={{ scale: 0 }} className="flex items-center gap-1.5">
                       <Check className="h-4 w-4" /> Added
                     </motion.span>
                   ) : (
-                    <motion.span
-                      key="cart"
-                      initial={{ scale: 0 }}
-                      animate={{ scale: 1 }}
-                      exit={{ scale: 0 }}
-                      className="flex items-center gap-1.5"
-                    >
+                    <motion.span key="cart" initial={{ scale: 0 }} animate={{ scale: 1 }} exit={{ scale: 0 }} className="flex items-center gap-1.5">
                       <ShoppingCart className="h-4 w-4" /> Add
                     </motion.span>
                   )}
