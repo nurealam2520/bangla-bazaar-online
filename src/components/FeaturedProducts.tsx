@@ -25,7 +25,7 @@ const products = [
   },
   {
     id: 3,
-    name: "Cat Scratching Post — Deluxe",
+    name: "Cat Scratching Post — Deluxe Tower",
     price: 59.99,
     originalPrice: 74.99,
     rating: 4.7,
@@ -35,26 +35,16 @@ const products = [
   },
   {
     id: 4,
-    name: "Premium Bird Seed Mix",
-    price: 12.99,
+    name: "Interactive Cat Feather Toy Set",
+    price: 14.99,
     originalPrice: null,
     rating: 4.6,
-    reviews: 34,
-    image: "https://images.unsplash.com/photo-1606567595334-d39972c85dbe?w=400&h=400&fit=crop",
+    reviews: 78,
+    image: "https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13?w=400&h=400&fit=crop",
     badge: null,
   },
   {
     id: 5,
-    name: "Aquarium LED Light Bar",
-    price: 49.99,
-    originalPrice: 59.99,
-    rating: 4.5,
-    reviews: 67,
-    image: "https://images.unsplash.com/photo-1520301255226-bf5f144451c1?w=400&h=400&fit=crop",
-    badge: "Popular",
-  },
-  {
-    id: 6,
     name: "Dog Bed — Memory Foam Orthopedic",
     price: 89.99,
     originalPrice: 109.99,
@@ -62,6 +52,16 @@ const products = [
     reviews: 142,
     image: "https://images.unsplash.com/photo-1601758228041-f3b2795255f1?w=400&h=400&fit=crop",
     badge: "Best Seller",
+  },
+  {
+    id: 6,
+    name: "Premium Cat Food — Salmon & Tuna",
+    price: 29.99,
+    originalPrice: 36.99,
+    rating: 4.8,
+    reviews: 97,
+    image: "https://images.unsplash.com/photo-1574158622682-e40e69881006?w=400&h=400&fit=crop",
+    badge: "Popular",
   },
 ];
 
@@ -85,7 +85,7 @@ const FeaturedProducts = () => {
             Trending <span className="text-gradient-gold">Products</span>
           </h2>
           <p className="text-muted-foreground max-w-md mx-auto">
-            Our most popular and best-selling products loved by pet owners worldwide
+            Top picks for dogs & cats — loved by pet parents worldwide
           </p>
         </div>
 
@@ -97,11 +97,7 @@ const FeaturedProducts = () => {
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8"
         >
           {products.map((product) => (
-            <motion.div
-              key={product.id}
-              variants={item}
-              className="group"
-            >
+            <motion.div key={product.id} variants={item} className="group">
               <div className="rounded-2xl border border-border bg-card overflow-hidden hover:shadow-gold hover:-translate-y-1 transition-all duration-300">
                 <div className="relative aspect-square overflow-hidden bg-muted">
                   <img
