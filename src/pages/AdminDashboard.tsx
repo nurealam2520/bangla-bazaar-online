@@ -8,7 +8,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ShoppingCart, Users, Shield, AlertTriangle, Package,
   LogOut, ArrowLeft, RefreshCw, Eye, CheckCircle, XCircle,
-  Clock, Plus, Pencil, Trash2, X, Save, FileText, Globe, EyeOff
+  Clock, Plus, Pencil, Trash2, X, Save, FileText, Globe, EyeOff,
+  UserCog, UserPlus, UserMinus
 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
@@ -59,6 +60,15 @@ interface RateLimit {
   window_start: string;
 }
 
+interface UserRole {
+  id: string;
+  user_id: string;
+  role: string;
+  created_at: string;
+}
+
+const AVAILABLE_ROLES = ["admin", "moderator", "blog_manager", "user"] as const;
+
 const statusColors: Record<string, string> = {
   pending: "bg-amber/20 text-amber-dark",
   confirmed: "bg-primary/15 text-primary",
@@ -102,6 +112,70 @@ const AdminDashboard = () => {
   const updateBlogPost = useUpdateBlogPost();
   const deleteBlogPost = useDeleteBlogPost();
   const [editingPost, setEditingPost] = useState<(Partial<BlogPost> & { isNew?: boolean }) | null>(null);
+
+  // Role management state
+  const [userRoles, setUserRoles] = useState<UserRole[]>([]);
+  const [roleEmail, setRoleEmail] = useState("");
+  const [selectedRole, setSelectedRole] = useState<string>("blog_manager");
+  const [roleLoading, setRoleLoading] = useState(false);
+
+  const fetchUserRoles = async () => {
+    const { data } = await supabase.from("user_roles").select("*").order("created_at", { ascending: false });
+    if (data) setUserRoles(data as UserRole[]);
+  };
+
+  const handleAssignRole = async () => {
+    if (!roleEmail.trim()) {
+      toast.error("Please enter an email");
+      return;
+    }
+    setRoleLoading(true);
+    try {
+      // Find user by email in profiles
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("user_id")
+        .eq("email", roleEmail.trim())
+        .maybeSingle();
+      
+      if (!profile) {
+        toast.error("User not found with this email");
+        setRoleLoading(false);
+        return;
+      }
+
+      const { error } = await supabase.from("user_roles").insert({
+        user_id: profile.user_id,
+        role: selectedRole as any,
+      });
+
+      if (error) {
+        if (error.code === "23505") {
+          toast.error("This user already has this role");
+        } else {
+          toast.error(error.message);
+        }
+      } else {
+        toast.success(`Role "${selectedRole}" assigned to ${roleEmail}`);
+        setRoleEmail("");
+        fetchUserRoles();
+      }
+    } catch (err: any) {
+      toast.error(err.message);
+    }
+    setRoleLoading(false);
+  };
+
+  const handleRemoveRole = async (roleId: string) => {
+    if (!confirm("Remove this role?")) return;
+    const { error } = await supabase.from("user_roles").delete().eq("id", roleId);
+    if (error) {
+      toast.error(error.message);
+    } else {
+      toast.success("Role removed");
+      fetchUserRoles();
+    }
+  };
 
   const generateSlug = (title: string) =>
     title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
@@ -193,7 +267,10 @@ const AdminDashboard = () => {
   };
 
   useEffect(() => {
-    if (user && isAdmin) fetchAll();
+    if (user && isAdmin) {
+      fetchAll();
+      fetchUserRoles();
+    }
   }, [user, isAdmin]);
 
   const handleSaveProduct = async () => {
@@ -304,6 +381,9 @@ const AdminDashboard = () => {
             </TabsTrigger>
             <TabsTrigger value="profiles" className="rounded-lg gap-1.5 text-xs md:text-sm">
               <Users className="h-3.5 w-3.5" /> ইউজার
+            </TabsTrigger>
+            <TabsTrigger value="roles" className="rounded-lg gap-1.5 text-xs md:text-sm">
+              <UserCog className="h-3.5 w-3.5" /> Roles
             </TabsTrigger>
             <TabsTrigger value="security" className="rounded-lg gap-1.5 text-xs md:text-sm">
               <Shield className="h-3.5 w-3.5" /> সিকিউরিটি
@@ -761,6 +841,93 @@ const AdminDashboard = () => {
                     </div>
                   </div>
                 ))}
+              </div>
+            )}
+          </TabsContent>
+
+          {/* Roles Tab */}
+          <TabsContent value="roles" className="space-y-4">
+            <h3 className="font-display font-bold text-lg">Role Management</h3>
+            
+            {/* Assign Role Form */}
+            <div className="bg-card border border-border rounded-xl p-5 space-y-4">
+              <h4 className="font-semibold flex items-center gap-2">
+                <UserPlus className="h-4 w-4" /> Assign Role
+              </h4>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground mb-1 block">User Email</label>
+                  <Input
+                    value={roleEmail}
+                    onChange={(e) => setRoleEmail(e.target.value)}
+                    placeholder="user@example.com"
+                  />
+                </div>
+                <div>
+                  <label className="text-sm font-medium text-muted-foreground mb-1 block">Role</label>
+                  <select
+                    value={selectedRole}
+                    onChange={(e) => setSelectedRole(e.target.value)}
+                    className="w-full px-3 py-2 rounded-lg border border-input bg-background text-sm"
+                  >
+                    {AVAILABLE_ROLES.map((role) => (
+                      <option key={role} value={role}>{role}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex items-end">
+                  <Button
+                    onClick={handleAssignRole}
+                    disabled={roleLoading}
+                    className="gap-1.5 bg-gradient-warm text-primary-foreground w-full"
+                  >
+                    <UserPlus className="h-4 w-4" />
+                    {roleLoading ? "Assigning..." : "Assign Role"}
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* Current Roles List */}
+            {userRoles.length === 0 ? (
+              <div className="text-center py-16 text-muted-foreground">
+                <UserCog className="h-12 w-12 mx-auto mb-3 opacity-30" />
+                <p>No roles assigned yet</p>
+              </div>
+            ) : (
+              <div className="space-y-3">
+                {userRoles.map((ur) => {
+                  const profile = profiles.find((p) => p.user_id === ur.user_id);
+                  return (
+                    <div key={ur.id} className="bg-card border border-border rounded-xl p-4 hover:shadow-sm transition-shadow">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold">
+                          {(profile?.full_name || "?")[0].toUpperCase()}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <p className="font-medium text-sm">{profile?.full_name || "Unknown User"}</p>
+                          <p className="text-xs text-muted-foreground">{profile?.email || ur.user_id.slice(0, 8)}</p>
+                        </div>
+                        <span className={`text-xs font-bold px-3 py-1 rounded-full ${
+                          ur.role === "admin" ? "bg-destructive/15 text-destructive" :
+                          ur.role === "blog_manager" ? "bg-primary/15 text-primary" :
+                          ur.role === "moderator" ? "bg-accent/15 text-accent" :
+                          "bg-muted text-muted-foreground"
+                        }`}>
+                          {ur.role}
+                        </span>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          className="h-8 w-8 text-destructive hover:bg-destructive/10"
+                          onClick={() => handleRemoveRole(ur.id)}
+                        >
+                          <UserMinus className="h-3.5 w-3.5" />
+                        </Button>
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             )}
           </TabsContent>
