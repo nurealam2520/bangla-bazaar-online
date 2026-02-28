@@ -30,7 +30,7 @@ const CategoryPage = () => {
 
   if (!config) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-20 md:pb-0">
         <Navbar />
         <div className="container mx-auto px-4 py-24 text-center">
           <h1 className="text-3xl font-display font-bold">Category not found</h1>
@@ -43,7 +43,7 @@ const CategoryPage = () => {
   const Icon = config.icon;
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-20 md:pb-0">
       <Navbar />
       <main>
         <section className="py-16 bg-secondary/30">

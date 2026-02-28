@@ -66,7 +66,7 @@ const Checkout = () => {
 
   if (items.length === 0) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background pb-20 md:pb-0">
         <Navbar />
         <div className="container mx-auto px-4 py-24 text-center">
           <h1 className="text-3xl font-display font-bold mb-4">Your cart is empty</h1>
@@ -81,7 +81,7 @@ const Checkout = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background pb-20 md:pb-0">
       <Navbar />
       <main className="py-12">
         <div className="container mx-auto px-4">

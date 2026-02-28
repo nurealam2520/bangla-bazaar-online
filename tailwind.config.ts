@@ -56,6 +56,11 @@ export default {
           light: "hsl(var(--emerald-light))",
           dark: "hsl(var(--emerald-dark))",
         },
+        amber: {
+          DEFAULT: "hsl(var(--amber))",
+          light: "hsl(var(--amber-light))",
+          dark: "hsl(var(--amber-dark))",
+        },
         // Legacy aliases for gold references
         gold: {
           DEFAULT: "hsl(var(--emerald))",
@@ -64,6 +69,7 @@ export default {
         },
         mint: "hsl(var(--mint))",
         sage: "hsl(var(--sage))",
+        warm: "hsl(var(--warm))",
         sidebar: {
           DEFAULT: "hsl(var(--sidebar-background))",
           foreground: "hsl(var(--sidebar-foreground))",
