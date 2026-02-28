@@ -5,11 +5,11 @@ import { Button } from "@/components/ui/button";
 import { motion, AnimatePresence } from "framer-motion";
 
 const navLinks = [
-  { label: "হোম", href: "/" },
-  { label: "শপ", href: "/shop" },
-  { label: "ক্যাটেগরি", href: "/categories" },
-  { label: "আমাদের সম্পর্কে", href: "/about" },
-  { label: "যোগাযোগ", href: "/contact" },
+  { label: "Home", href: "/" },
+  { label: "Shop", href: "/shop" },
+  { label: "Categories", href: "/categories" },
+  { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const Navbar = () => {
@@ -18,14 +18,12 @@ const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
-        {/* Logo */}
         <Link to="/" className="flex items-center gap-2">
           <span className="text-2xl font-display font-bold text-gradient-gold">
             🐾 PetLux
           </span>
         </Link>
 
-        {/* Desktop Nav */}
         <div className="hidden md:flex items-center gap-8">
           {navLinks.map((link) => (
             <Link
@@ -38,7 +36,6 @@ const Navbar = () => {
           ))}
         </div>
 
-        {/* Actions */}
         <div className="flex items-center gap-2">
           <Button variant="ghost" size="icon" className="hidden md:flex">
             <Search className="h-4 w-4" />
@@ -66,7 +63,6 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* Mobile Menu */}
       <AnimatePresence>
         {mobileOpen && (
           <motion.div

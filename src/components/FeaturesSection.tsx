@@ -4,23 +4,23 @@ import { Truck, Shield, Clock, Headphones } from "lucide-react";
 const features = [
   {
     icon: Truck,
-    title: "দ্রুত ডেলিভারি",
-    description: "সারা বাংলাদেশে ২-৫ দিনের মধ্যে ডেলিভারি",
+    title: "Fast Shipping",
+    description: "Free delivery on orders over $50 across the US, UK, CA, AU & NZ",
   },
   {
     icon: Shield,
-    title: "১০০% অরিজিনাল",
-    description: "সকল পণ্য সরাসরি ব্র্যান্ড থেকে সংগ্রহীত",
+    title: "100% Authentic",
+    description: "All products sourced directly from trusted brands",
   },
   {
     icon: Clock,
-    title: "সহজ রিটার্ন",
-    description: "৭ দিনের মধ্যে সহজ রিটার্ন ও রিফান্ড",
+    title: "Easy Returns",
+    description: "Hassle-free returns & refunds within 30 days",
   },
   {
     icon: Headphones,
-    title: "২৪/৭ সাপোর্ট",
-    description: "যেকোনো সময় আমাদের সাথে যোগাযোগ করুন",
+    title: "24/7 Support",
+    description: "Reach our friendly team anytime, anywhere",
   },
 ];
 
