@@ -7,6 +7,7 @@ import { useCart } from "@/contexts/CartContext";
 
 const navLinks = [
   { label: "Home", href: "/" },
+  { label: "Shop", href: "/shop" },
   { label: "Dogs", href: "/category/dogs" },
   { label: "Cats", href: "/category/cats" },
   { label: "About", href: "/about" },
@@ -21,7 +22,7 @@ const Navbar = () => {
     <nav className="sticky top-0 z-50 bg-background/80 backdrop-blur-xl border-b border-border">
       <div className="container mx-auto flex items-center justify-between h-16 px-4">
         <Link to="/" className="flex items-center gap-2">
-          <span className="text-2xl font-display font-bold text-gradient-gold">
+          <span className="text-2xl font-display font-bold text-gradient-green">
             🐾 PawNest
           </span>
         </Link>
@@ -39,8 +40,8 @@ const Navbar = () => {
         </div>
 
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="icon" className="hidden md:flex">
-            <Search className="h-4 w-4" />
+          <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
+            <Link to="/shop"><Search className="h-4 w-4" /></Link>
           </Button>
           <Button variant="ghost" size="icon" className="hidden md:flex">
             <Heart className="h-4 w-4" />
