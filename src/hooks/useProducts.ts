@@ -14,12 +14,18 @@ export interface Product {
   subcategory: string;
   description: string;
   is_active: boolean;
+  supplier_name: string | null;
+  supplier_url: string | null;
+  supplier_price: number | null;
   created_at: string;
   updated_at: string;
 }
 
-export type ProductInsert = Omit<Product, "id" | "created_at" | "updated_at" | "is_active"> & {
+export type ProductInsert = Omit<Product, "id" | "created_at" | "updated_at" | "is_active" | "supplier_name" | "supplier_url" | "supplier_price"> & {
   is_active?: boolean;
+  supplier_name?: string;
+  supplier_url?: string;
+  supplier_price?: number;
 };
 
 export function useProducts(category?: string) {
