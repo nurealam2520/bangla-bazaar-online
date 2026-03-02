@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      app_config: {
+        Row: {
+          created_at: string
+          key: string
+          updated_at: string
+          value: string
+        }
+        Insert: {
+          created_at?: string
+          key: string
+          updated_at?: string
+          value: string
+        }
+        Update: {
+          created_at?: string
+          key?: string
+          updated_at?: string
+          value?: string
+        }
+        Relationships: []
+      }
       blog_posts: {
         Row: {
           author_id: string
@@ -208,6 +229,9 @@ export type Database = {
           rating: number
           reviews: number
           subcategory: string
+          supplier_name: string | null
+          supplier_price: number | null
+          supplier_url: string | null
           updated_at: string
         }
         Insert: {
@@ -224,6 +248,9 @@ export type Database = {
           rating?: number
           reviews?: number
           subcategory?: string
+          supplier_name?: string | null
+          supplier_price?: number | null
+          supplier_url?: string | null
           updated_at?: string
         }
         Update: {
@@ -240,6 +267,9 @@ export type Database = {
           rating?: number
           reviews?: number
           subcategory?: string
+          supplier_name?: string | null
+          supplier_price?: number | null
+          supplier_url?: string | null
           updated_at?: string
         }
         Relationships: []

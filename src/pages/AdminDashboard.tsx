@@ -9,7 +9,7 @@ import {
   ShoppingCart, Users, Shield, AlertTriangle, Package,
   LogOut, ArrowLeft, RefreshCw, Eye, CheckCircle, XCircle,
   Clock, Plus, Pencil, Trash2, X, Save, FileText, Globe, EyeOff,
-  UserCog, UserPlus, UserMinus
+  UserCog, UserPlus, UserMinus, Settings
 } from "lucide-react";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
@@ -17,6 +17,8 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router-dom";
 import { useAllProducts, useCreateProduct, useUpdateProduct, useDeleteProduct, type Product, type ProductInsert } from "@/hooks/useProducts";
 import { useAllBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost, type BlogPost, type BlogPostInsert } from "@/hooks/useBlogPosts";
+import ProductImport from "@/components/admin/ProductImport";
+import StripeSettings from "@/components/admin/StripeSettings";
 
 interface Order {
   id: string;
@@ -388,6 +390,9 @@ const AdminDashboard = () => {
             <TabsTrigger value="security" className="rounded-lg gap-1.5 text-xs md:text-sm">
               <Shield className="h-3.5 w-3.5" /> সিকিউরিটি
             </TabsTrigger>
+            <TabsTrigger value="settings" className="rounded-lg gap-1.5 text-xs md:text-sm">
+              <Settings className="h-3.5 w-3.5" /> সেটিংস
+            </TabsTrigger>
           </TabsList>
 
           {/* Products Tab */}
@@ -402,6 +407,9 @@ const AdminDashboard = () => {
                 <Plus className="h-4 w-4" /> নতুন প্রোডাক্ট
               </Button>
             </div>
+
+            {/* Bulk Import */}
+            <ProductImport />
 
             {/* Product Form Modal */}
             <AnimatePresence>
@@ -502,6 +510,33 @@ const AdminDashboard = () => {
                         placeholder="Product description..."
                       />
                     </div>
+                    {/* Dropshipping Supplier Fields */}
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">সাপ্লায়ার নাম</label>
+                      <Input
+                        value={(editingProduct as any).supplier_name || ""}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, supplier_name: e.target.value } as any)}
+                        placeholder="AliExpress / CJ Dropshipping"
+                      />
+                    </div>
+                    <div>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">সাপ্লায়ার দাম</label>
+                      <Input
+                        type="number"
+                        step="0.01"
+                        value={(editingProduct as any).supplier_price || ""}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, supplier_price: parseFloat(e.target.value) || null } as any)}
+                        placeholder="0.00"
+                      />
+                    </div>
+                    <div className="md:col-span-2">
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">সাপ্লায়ার URL</label>
+                      <Input
+                        value={(editingProduct as any).supplier_url || ""}
+                        onChange={(e) => setEditingProduct({ ...editingProduct, supplier_url: e.target.value } as any)}
+                        placeholder="https://aliexpress.com/item/..."
+                      />
+                    </div>
                   </div>
                   <div className="flex justify-end gap-2">
                     <Button variant="outline" onClick={() => setEditingProduct(null)}>বাতিল</Button>
@@ -554,6 +589,7 @@ const AdminDashboard = () => {
                         </div>
                         <p className="text-xs text-muted-foreground mt-0.5">
                           {product.category} • {product.subcategory} • ⭐ {product.rating} ({product.reviews})
+                          {(product as any).supplier_name && ` • 📦 ${(product as any).supplier_name}`}
                         </p>
                       </div>
                       <div className="flex items-center gap-2 flex-shrink-0">
@@ -957,6 +993,12 @@ const AdminDashboard = () => {
                 ))}
               </div>
             )}
+          </TabsContent>
+
+          {/* Settings Tab */}
+          <TabsContent value="settings" className="space-y-4">
+            <h3 className="font-display font-bold text-lg">সেটিংস</h3>
+            <StripeSettings />
           </TabsContent>
         </Tabs>
       </main>
