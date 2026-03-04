@@ -23,12 +23,12 @@ const Checkout = () => {
   // Handle Stripe success/cancel redirects
   useEffect(() => {
     if (searchParams.get("success") === "true") {
-      toast.success("পেমেন্ট সফল হয়েছে! অর্ডার প্লেস হয়েছে! 🎉");
+      toast.success("Payment successful! Order placed! 🎉");
       clearCart();
       navigate("/", { replace: true });
     }
     if (searchParams.get("canceled") === "true") {
-      toast.error("পেমেন্ট বাতিল হয়েছে।");
+      toast.error("Payment was cancelled.");
     }
   }, [searchParams]);
 
@@ -90,16 +90,16 @@ const Checkout = () => {
         if (error) throw error;
 
         if (data?.success) {
-          toast.success(data.message || "অর্ডার প্লেস হয়েছে! 🎉");
+          toast.success(data.message || "Order placed successfully! 🎉");
           clearCart();
           navigate("/");
         } else {
-          toast.error(data?.error || "কিছু সমস্যা হয়েছে।");
+          toast.error(data?.error || "Something went wrong.");
         }
       }
     } catch (err: any) {
       console.error("Order error:", err);
-      toast.error(err?.message || "অর্ডার প্লেস করতে ব্যর্থ।");
+      toast.error(err?.message || "Failed to place order.");
     } finally {
       setLoading(false);
     }
@@ -110,10 +110,10 @@ const Checkout = () => {
       <div className="min-h-screen bg-background pb-20 md:pb-0">
         <Navbar />
         <div className="container mx-auto px-4 py-24 text-center">
-          <h1 className="text-3xl font-display font-bold mb-4">আপনার কার্ট খালি</h1>
-          <p className="text-muted-foreground mb-8">প্রথমে কিছু প্রোডাক্ট কার্টে যোগ করুন।</p>
+          <h1 className="text-3xl font-display font-bold mb-4">Your Cart is Empty</h1>
+          <p className="text-muted-foreground mb-8">Add some products to your cart first.</p>
           <Button onClick={() => navigate("/")} variant="outline">
-            <ArrowLeft className="h-4 w-4 mr-2" /> শপে ফিরে যান
+            <ArrowLeft className="h-4 w-4 mr-2" /> Back to Shop
           </Button>
         </div>
         <Footer />
@@ -127,9 +127,9 @@ const Checkout = () => {
       <main className="py-12">
         <div className="container mx-auto px-4">
           <button onClick={() => navigate(-1)} className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground mb-6 transition-colors">
-            <ArrowLeft className="h-4 w-4" /> পিছনে
+            <ArrowLeft className="h-4 w-4" /> Back
           </button>
-          <h1 className="text-3xl md:text-4xl font-display font-bold mb-10">চেকআউট</h1>
+          <h1 className="text-3xl md:text-4xl font-display font-bold mb-10">Checkout</h1>
 
           <form onSubmit={handlePlaceOrder}>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
@@ -138,35 +138,35 @@ const Checkout = () => {
                 {/* Shipping Info */}
                 <div className="rounded-2xl border border-border bg-card p-6">
                   <h2 className="font-display font-semibold text-lg mb-6 flex items-center gap-2">
-                    <Truck className="h-5 w-5 text-primary" /> শিপিং তথ্য
+                    <Truck className="h-5 w-5 text-primary" /> Shipping Information
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="firstName">নাম (প্রথম)</Label>
+                      <Label htmlFor="firstName">First Name</Label>
                       <Input id="firstName" name="firstName" placeholder="John" required className="mt-1" />
                     </div>
                     <div>
-                      <Label htmlFor="lastName">নাম (শেষ)</Label>
+                      <Label htmlFor="lastName">Last Name</Label>
                       <Input id="lastName" name="lastName" placeholder="Doe" required className="mt-1" />
                     </div>
                     <div className="sm:col-span-2">
-                      <Label htmlFor="email">ইমেইল</Label>
+                      <Label htmlFor="email">Email</Label>
                       <Input id="email" name="email" type="email" placeholder="john@example.com" required className="mt-1" />
                     </div>
                     <div className="sm:col-span-2">
-                      <Label htmlFor="address">ঠিকানা</Label>
+                      <Label htmlFor="address">Address</Label>
                       <Input id="address" name="address" placeholder="123 Main St" required className="mt-1" />
                     </div>
                     <div>
-                      <Label htmlFor="city">শহর</Label>
+                      <Label htmlFor="city">City</Label>
                       <Input id="city" name="city" placeholder="New York" required className="mt-1" />
                     </div>
                     <div>
-                      <Label htmlFor="zip">ZIP / পোস্টাল কোড</Label>
+                      <Label htmlFor="zip">ZIP / Postal Code</Label>
                       <Input id="zip" name="zip" placeholder="10001" required className="mt-1" />
                     </div>
                     <div className="sm:col-span-2">
-                      <Label htmlFor="country">দেশ</Label>
+                      <Label htmlFor="country">Country</Label>
                       <Input id="country" name="country" placeholder="United States" required className="mt-1" />
                     </div>
                   </div>
@@ -175,7 +175,7 @@ const Checkout = () => {
                 {/* Payment Method */}
                 <div className="rounded-2xl border border-border bg-card p-6">
                   <h2 className="font-display font-semibold text-lg mb-6 flex items-center gap-2">
-                    <CreditCard className="h-5 w-5 text-primary" /> পেমেন্ট মেথড
+                    <CreditCard className="h-5 w-5 text-primary" /> Payment Method
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <button
@@ -188,7 +188,7 @@ const Checkout = () => {
                       }`}
                     >
                       <CreditCard className="h-5 w-5 text-primary mb-2" />
-                      <p className="font-medium text-sm">ক্রেডিট / ডেবিট কার্ড</p>
+                      <p className="font-medium text-sm">Credit / Debit Card</p>
                       <p className="text-xs text-muted-foreground">Visa, Mastercard, Amex (Stripe)</p>
                     </button>
                     <button
@@ -201,13 +201,13 @@ const Checkout = () => {
                       }`}
                     >
                       <Truck className="h-5 w-5 text-primary mb-2" />
-                      <p className="font-medium text-sm">ক্যাশ অন ডেলিভারি</p>
-                      <p className="text-xs text-muted-foreground">ডেলিভারির সময় পেমেন্ট</p>
+                      <p className="font-medium text-sm">Cash on Delivery</p>
+                      <p className="text-xs text-muted-foreground">Pay when you receive</p>
                     </button>
                   </div>
                   {paymentMethod === "card" && (
                     <p className="text-xs text-muted-foreground mt-4 bg-secondary/50 rounded-lg p-3">
-                      💳 কার্ড পেমেন্টে Stripe এর সিকিউর চেকআউট পেজে রিডাইরেক্ট করা হবে।
+                      💳 You will be redirected to Stripe's secure checkout page for card payment.
                     </p>
                   )}
                 </div>
@@ -216,7 +216,7 @@ const Checkout = () => {
               {/* Right: Order Summary */}
               <div>
                 <div className="rounded-2xl border border-border bg-card p-6 sticky top-24">
-                  <h2 className="font-display font-semibold text-lg mb-6">অর্ডার সারসংক্ষেপ</h2>
+                  <h2 className="font-display font-semibold text-lg mb-6">Order Summary</h2>
                   <div className="space-y-4 mb-6">
                     {items.map(({ product, quantity }) => (
                       <div key={product.id} className="flex gap-3">
@@ -243,15 +243,15 @@ const Checkout = () => {
 
                   <div className="border-t border-border pt-4 space-y-2 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">সাবটোটাল</span>
+                      <span className="text-muted-foreground">Subtotal</span>
                       <span>${totalPrice.toFixed(2)}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">শিপিং</span>
-                      <span>{shipping === 0 ? "ফ্রি" : `$${shipping.toFixed(2)}`}</span>
+                      <span className="text-muted-foreground">Shipping</span>
+                       <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
                     </div>
                     <div className="flex justify-between font-bold text-base pt-2 border-t border-border">
-                      <span>মোট</span>
+                      <span>Total</span>
                       <span className="text-primary">${total.toFixed(2)}</span>
                     </div>
                   </div>
@@ -261,11 +261,11 @@ const Checkout = () => {
                     disabled={loading}
                     className="w-full mt-6 bg-gradient-green text-primary-foreground font-semibold shadow-emerald hover:opacity-90"
                   >
-                    {loading ? "প্রসেসিং..." : `অর্ডার প্লেস করুন — $${total.toFixed(2)}`}
+                    {loading ? "Processing..." : `Place Order — $${total.toFixed(2)}`}
                   </Button>
                   {totalPrice < 50 && (
                     <p className="text-xs text-muted-foreground text-center mt-3">
-                      আরো ${(50 - totalPrice).toFixed(2)} যোগ করলে ফ্রি শিপিং!
+                      Add ${(50 - totalPrice).toFixed(2)} more for free shipping!
                     </p>
                   )}
                 </div>

@@ -233,7 +233,7 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     if (!loading && (!user || !isAdmin)) {
-      toast.error("অ্যাডমিন অ্যাক্সেস প্রয়োজন");
+      toast.error("Admin access required");
       navigate("/auth");
     }
   }, [loading, user, isAdmin, navigate]);
@@ -249,7 +249,7 @@ const AdminDashboard = () => {
     if (profilesRes.data) setProfiles(profilesRes.data as Profile[]);
     if (rateLimitsRes.data) setRateLimits(rateLimitsRes.data as RateLimit[]);
     setFetching(false);
-    toast.success("ডাটা রিফ্রেশ হয়েছে");
+    toast.success("Data refreshed");
   };
 
   const fetchOrderItems = async (orderId: string) => {
@@ -261,9 +261,9 @@ const AdminDashboard = () => {
   const updateOrderStatus = async (orderId: string, status: string) => {
     const { error } = await supabase.from("orders").update({ status }).eq("id", orderId);
     if (error) {
-      toast.error("আপডেট ব্যর্থ: " + error.message);
+      toast.error("Update failed: " + error.message);
     } else {
-      toast.success(`অর্ডার ${status} হয়েছে`);
+      toast.success(`Order ${status}`);
       fetchAll();
     }
   };
@@ -278,18 +278,18 @@ const AdminDashboard = () => {
   const handleSaveProduct = async () => {
     if (!editingProduct) return;
     if (!editingProduct.name || !editingProduct.price || !editingProduct.image) {
-      toast.error("নাম, দাম এবং ইমেজ URL আবশ্যক");
+      toast.error("Name, price and image URL are required");
       return;
     }
     try {
       if (editingProduct.isNew) {
         const { isNew, id, created_at, updated_at, is_active, ...data } = editingProduct as any;
         await createProduct.mutateAsync(data as ProductInsert);
-        toast.success("প্রোডাক্ট তৈরি হয়েছে!");
+        toast.success("Product created!");
       } else {
         const { isNew, created_at, updated_at, ...data } = editingProduct as any;
         await updateProduct.mutateAsync(data);
-        toast.success("প্রোডাক্ট আপডেট হয়েছে!");
+        toast.success("Product updated!");
       }
       setEditingProduct(null);
     } catch (err: any) {
@@ -298,10 +298,10 @@ const AdminDashboard = () => {
   };
 
   const handleDeleteProduct = async (id: string) => {
-    if (!confirm("এই প্রোডাক্ট ডিলিট করতে চান?")) return;
+    if (!confirm("Delete this product?")) return;
     try {
       await deleteProduct.mutateAsync(id);
-      toast.success("প্রোডাক্ট ডিলিট হয়েছে!");
+      toast.success("Product deleted!");
     } catch (err: any) {
       toast.error(err.message);
     }
@@ -337,10 +337,10 @@ const AdminDashboard = () => {
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={fetchAll} disabled={fetching} className="gap-1.5">
               <RefreshCw className={`h-3.5 w-3.5 ${fetching ? "animate-spin" : ""}`} />
-              রিফ্রেশ
+              Refresh
             </Button>
             <Button variant="ghost" size="sm" onClick={signOut} className="gap-1.5 text-destructive">
-              <LogOut className="h-3.5 w-3.5" /> লগআউট
+              <LogOut className="h-3.5 w-3.5" /> Logout
             </Button>
           </div>
         </div>
@@ -350,10 +350,10 @@ const AdminDashboard = () => {
         {/* Stats Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
           {[
-            { label: "মোট অর্ডার", value: orders.length, icon: ShoppingCart, color: "text-primary" },
-            { label: "মোট রেভেনিউ", value: `$${totalRevenue.toFixed(2)}`, icon: Package, color: "text-primary" },
-            { label: "পেন্ডিং", value: pendingOrders, icon: Clock, color: "text-accent" },
-            { label: "প্রোডাক্ট", value: products.length, icon: Package, color: "text-primary" },
+            { label: "Total Orders", value: orders.length, icon: ShoppingCart, color: "text-primary" },
+            { label: "Total Revenue", value: `$${totalRevenue.toFixed(2)}`, icon: Package, color: "text-primary" },
+            { label: "Pending", value: pendingOrders, icon: Clock, color: "text-accent" },
+            { label: "Products", value: products.length, icon: Package, color: "text-primary" },
           ].map((stat, i) => (
             <motion.div
               key={i}
@@ -373,38 +373,38 @@ const AdminDashboard = () => {
         <Tabs defaultValue="products" className="space-y-4">
           <TabsList className="bg-secondary/60 p-1 rounded-xl">
             <TabsTrigger value="products" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <Package className="h-3.5 w-3.5" /> প্রোডাক্ট
+              <Package className="h-3.5 w-3.5" /> Products
             </TabsTrigger>
             <TabsTrigger value="orders" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <ShoppingCart className="h-3.5 w-3.5" /> অর্ডার
+              <ShoppingCart className="h-3.5 w-3.5" /> Orders
             </TabsTrigger>
             <TabsTrigger value="blog" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <FileText className="h-3.5 w-3.5" /> ব্লগ
+              <FileText className="h-3.5 w-3.5" /> Blog
             </TabsTrigger>
             <TabsTrigger value="profiles" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <Users className="h-3.5 w-3.5" /> ইউজার
+              <Users className="h-3.5 w-3.5" /> Users
             </TabsTrigger>
             <TabsTrigger value="roles" className="rounded-lg gap-1.5 text-xs md:text-sm">
               <UserCog className="h-3.5 w-3.5" /> Roles
             </TabsTrigger>
             <TabsTrigger value="security" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <Shield className="h-3.5 w-3.5" /> সিকিউরিটি
+              <Shield className="h-3.5 w-3.5" /> Security
             </TabsTrigger>
             <TabsTrigger value="settings" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <Settings className="h-3.5 w-3.5" /> সেটিংস
+              <Settings className="h-3.5 w-3.5" /> Settings
             </TabsTrigger>
           </TabsList>
 
           {/* Products Tab */}
           <TabsContent value="products" className="space-y-4">
             <div className="flex items-center justify-between">
-              <h3 className="font-display font-bold text-lg">প্রোডাক্ট ম্যানেজমেন্ট</h3>
+              <h3 className="font-display font-bold text-lg">Product Management</h3>
               <Button
                 size="sm"
                 onClick={() => setEditingProduct({ ...emptyProduct, isNew: true })}
                 className="gap-1.5 bg-gradient-warm text-primary-foreground"
               >
-                <Plus className="h-4 w-4" /> নতুন প্রোডাক্ট
+                <Plus className="h-4 w-4" /> New Product
               </Button>
             </div>
 
@@ -422,7 +422,7 @@ const AdminDashboard = () => {
                 >
                   <div className="flex items-center justify-between">
                     <h4 className="font-semibold">
-                      {editingProduct.isNew ? "নতুন প্রোডাক্ট যোগ করুন" : "প্রোডাক্ট এডিট করুন"}
+                      {editingProduct.isNew ? "Add New Product" : "Edit Product"}
                     </h4>
                     <Button variant="ghost" size="icon" onClick={() => setEditingProduct(null)}>
                       <X className="h-4 w-4" />
@@ -430,7 +430,7 @@ const AdminDashboard = () => {
                   </div>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">নাম *</label>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Name *</label>
                       <Input
                         value={editingProduct.name || ""}
                         onChange={(e) => setEditingProduct({ ...editingProduct, name: e.target.value })}
@@ -438,7 +438,7 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">ইমেজ URL *</label>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Image URL *</label>
                       <Input
                         value={editingProduct.image || ""}
                         onChange={(e) => setEditingProduct({ ...editingProduct, image: e.target.value })}
@@ -446,7 +446,7 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">দাম *</label>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Price *</label>
                       <Input
                         type="number"
                         step="0.01"
@@ -455,7 +455,7 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">আসল দাম (ঐচ্ছিক)</label>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Original Price (optional)</label>
                       <Input
                         type="number"
                         step="0.01"
@@ -464,7 +464,7 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">ক্যাটাগরি</label>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Category</label>
                       <select
                         value={editingProduct.category || "dogs"}
                         onChange={(e) => setEditingProduct({ ...editingProduct, category: e.target.value as "dogs" | "cats" })}
@@ -475,7 +475,7 @@ const AdminDashboard = () => {
                       </select>
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">সাবক্যাটাগরি</label>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Subcategory</label>
                       <Input
                         value={editingProduct.subcategory || ""}
                         onChange={(e) => setEditingProduct({ ...editingProduct, subcategory: e.target.value })}
@@ -483,7 +483,7 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">ব্যাজ (ঐচ্ছিক)</label>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Badge (optional)</label>
                       <Input
                         value={editingProduct.badge || ""}
                         onChange={(e) => setEditingProduct({ ...editingProduct, badge: e.target.value || null })}
@@ -491,7 +491,7 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">রেটিং</label>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Rating</label>
                       <Input
                         type="number"
                         step="0.1"
@@ -502,7 +502,7 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div className="md:col-span-2">
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">বিবরণ</label>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Description</label>
                       <textarea
                         value={editingProduct.description || ""}
                         onChange={(e) => setEditingProduct({ ...editingProduct, description: e.target.value })}
@@ -512,7 +512,7 @@ const AdminDashboard = () => {
                     </div>
                     {/* Dropshipping Supplier Fields */}
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">সাপ্লায়ার নাম</label>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Supplier Name</label>
                       <Input
                         value={(editingProduct as any).supplier_name || ""}
                         onChange={(e) => setEditingProduct({ ...editingProduct, supplier_name: e.target.value } as any)}
@@ -520,7 +520,7 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">সাপ্লায়ার দাম</label>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Supplier Price</label>
                       <Input
                         type="number"
                         step="0.01"
@@ -530,7 +530,7 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div className="md:col-span-2">
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">সাপ্লায়ার URL</label>
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Supplier URL</label>
                       <Input
                         value={(editingProduct as any).supplier_url || ""}
                         onChange={(e) => setEditingProduct({ ...editingProduct, supplier_url: e.target.value } as any)}
@@ -539,14 +539,14 @@ const AdminDashboard = () => {
                     </div>
                   </div>
                   <div className="flex justify-end gap-2">
-                    <Button variant="outline" onClick={() => setEditingProduct(null)}>বাতিল</Button>
+                    <Button variant="outline" onClick={() => setEditingProduct(null)}>Cancel</Button>
                     <Button
                       onClick={handleSaveProduct}
                       disabled={createProduct.isPending || updateProduct.isPending}
                       className="gap-1.5 bg-gradient-warm text-primary-foreground"
                     >
                       <Save className="h-4 w-4" />
-                      {createProduct.isPending || updateProduct.isPending ? "সেভ হচ্ছে..." : "সেভ করুন"}
+                      {createProduct.isPending || updateProduct.isPending ? "Saving..." : "Save"}
                     </Button>
                   </div>
                 </motion.div>
@@ -561,7 +561,7 @@ const AdminDashboard = () => {
             ) : products.length === 0 ? (
               <div className="text-center py-16 text-muted-foreground">
                 <Package className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                <p>কোনো প্রোডাক্ট নেই</p>
+                <p>No products yet</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -628,7 +628,7 @@ const AdminDashboard = () => {
             {orders.length === 0 ? (
               <div className="text-center py-16 text-muted-foreground">
                 <ShoppingCart className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                <p>কোনো অর্ডার নেই</p>
+                <p>No orders yet</p>
               </div>
             ) : (
               <div className="space-y-3">
@@ -650,7 +650,7 @@ const AdminDashboard = () => {
                         <p className="font-medium mt-1">{order.shipping_name}</p>
                         <p className="text-sm text-muted-foreground">{order.shipping_email}</p>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {new Date(order.created_at).toLocaleString("bn-BD")} • {order.payment_method}
+                          {new Date(order.created_at).toLocaleString("en-US")} • {order.payment_method}
                           {order.ip_address && ` • IP: ${order.ip_address}`}
                         </p>
                         {order.fraud_reasons && order.fraud_reasons.length > 0 && (
@@ -856,7 +856,7 @@ const AdminDashboard = () => {
             {profiles.length === 0 ? (
               <div className="text-center py-16 text-muted-foreground">
                 <Users className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                <p>কোনো ইউজার নেই</p>
+                <p>No users yet</p>
               </div>
             ) : (
               <div className="grid gap-3">
@@ -867,12 +867,12 @@ const AdminDashboard = () => {
                         {(profile.full_name || "?")[0].toUpperCase()}
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium">{profile.full_name || "নাম নেই"}</p>
+                        <p className="font-medium">{profile.full_name || "No name"}</p>
                         <p className="text-sm text-muted-foreground truncate">{profile.email}</p>
                       </div>
                       <div className="text-right text-xs text-muted-foreground">
                         <p>{profile.city && `${profile.city}, `}{profile.country}</p>
-                        <p>{new Date(profile.created_at).toLocaleDateString("bn-BD")}</p>
+                        <p>{new Date(profile.created_at).toLocaleDateString("en-US")}</p>
                       </div>
                     </div>
                   </div>
@@ -970,11 +970,11 @@ const AdminDashboard = () => {
 
           {/* Security Tab */}
           <TabsContent value="security" className="space-y-4">
-            <h3 className="font-display font-bold text-lg">রেট লিমিট লগ</h3>
+            <h3 className="font-display font-bold text-lg">Rate Limit Log</h3>
             {rateLimits.length === 0 ? (
               <div className="text-center py-16 text-muted-foreground">
                 <Shield className="h-12 w-12 mx-auto mb-3 opacity-30" />
-                <p>কোনো রেট লিমিট ডাটা নেই</p>
+                <p>No rate limit data</p>
               </div>
             ) : (
               <div className="space-y-2">
@@ -983,7 +983,7 @@ const AdminDashboard = () => {
                     <div>
                       <p className="font-mono text-sm">{rl.identifier}</p>
                       <p className="text-xs text-muted-foreground">
-                        {rl.identifier_type} • {new Date(rl.window_start).toLocaleString("bn-BD")}
+                        {rl.identifier_type} • {new Date(rl.window_start).toLocaleString("en-US")}
                       </p>
                     </div>
                     <div className={`text-lg font-bold ${rl.order_count >= 3 ? "text-destructive" : "text-foreground"}`}>
@@ -997,7 +997,7 @@ const AdminDashboard = () => {
 
           {/* Settings Tab */}
           <TabsContent value="settings" className="space-y-4">
-            <h3 className="font-display font-bold text-lg">সেটিংস</h3>
+            <h3 className="font-display font-bold text-lg">Settings</h3>
             <StripeSettings />
           </TabsContent>
         </Tabs>
