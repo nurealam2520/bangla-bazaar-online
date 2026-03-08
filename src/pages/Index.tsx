@@ -7,6 +7,7 @@ import Testimonials from "@/components/Testimonials";
 import Newsletter from "@/components/Newsletter";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
+import HomeBlogPosts from "@/components/HomeBlogPosts";
 
 const Index = () => {
   return (
