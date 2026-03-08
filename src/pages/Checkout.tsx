@@ -16,9 +16,57 @@ const Checkout = () => {
   const [searchParams] = useSearchParams();
   const [paymentMethod, setPaymentMethod] = useState<"card" | "cod">("card");
   const [loading, setLoading] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponApplied, setCouponApplied] = useState("");
+  const [applyingCoupon, setApplyingCoupon] = useState(false);
 
   const shipping = totalPrice > 50 ? 0 : 5.99;
-  const total = totalPrice + shipping;
+  const total = Math.max(0, totalPrice - couponDiscount + shipping);
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setApplyingCoupon(true);
+    const { data, error } = await supabase
+      .from("coupons")
+      .select("*")
+      .eq("code", couponCode.toUpperCase().trim())
+      .eq("is_active", true)
+      .maybeSingle();
+
+    if (error || !data) {
+      toast.error("Invalid or expired coupon code");
+      setApplyingCoupon(false);
+      return;
+    }
+
+    if (data.min_order && totalPrice < Number(data.min_order)) {
+      toast.error(`Minimum order $${Number(data.min_order).toFixed(2)} required`);
+      setApplyingCoupon(false);
+      return;
+    }
+
+    if (data.max_uses && data.max_uses > 0 && data.used_count >= data.max_uses) {
+      toast.error("Coupon usage limit reached");
+      setApplyingCoupon(false);
+      return;
+    }
+
+    if (data.expires_at && new Date(data.expires_at) < new Date()) {
+      toast.error("Coupon has expired");
+      setApplyingCoupon(false);
+      return;
+    }
+
+    const discount = data.type === "percentage"
+      ? (totalPrice * Number(data.value)) / 100
+      : Number(data.value);
+
+    setCouponDiscount(Math.min(discount, totalPrice));
+    setCouponApplied(data.code);
+    toast.success(`Coupon applied! You save $${Math.min(discount, totalPrice).toFixed(2)}`);
+    setApplyingCoupon(false);
+  };
 
   // Handle Stripe success/cancel redirects
   useEffect(() => {
