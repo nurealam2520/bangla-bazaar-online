@@ -113,6 +113,7 @@ const TrackOrder = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <SEOHead title="Track Your Order" description="Track your Pawnest order status and shipment. Enter your order ID or sign in to view order history." canonical="/track-order" />
       <Navbar />
       <main className="py-12">
         <div className="container mx-auto px-4 max-w-3xl">

@@ -54,6 +54,7 @@ const Auth = () => {
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center px-4">
+      <SEOHead title="Sign In" description="Sign in or create a Pawnest account to track orders, save wishlists, and checkout faster." canonical="/auth" noindex />
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
