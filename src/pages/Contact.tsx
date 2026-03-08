@@ -92,7 +92,8 @@ const Contact = () => {
               {/* Form */}
               <div>
                 <h2 className="text-2xl font-display font-bold mb-8">Send a Message</h2>
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-5 relative">
+                  <HoneypotField value={honeypot} onChange={setHoneypot} />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="name">Name</Label>

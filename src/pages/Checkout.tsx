@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Minus, Plus, Trash2, ArrowLeft, CreditCard, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useBotProtection, useFormRateLimit } from "@/hooks/useBotProtection";
+import HoneypotField from "@/components/HoneypotField";
 
 const Checkout = () => {
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
