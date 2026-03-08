@@ -30,29 +30,16 @@ const About = () => {
         {/* Hero */}
         <section className="py-24 bg-secondary/30">
           <div className="container mx-auto px-4 text-center">
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-primary font-medium tracking-widest uppercase text-sm mb-3"
-            >
-              Our Story
-            </motion.p>
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-4xl md:text-6xl font-display font-bold mb-6"
-            >
-              About <span className="text-gradient-green">Pawnest</span>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <EditableText contentKey="about_label" fallback="Our Story" as="p" className="text-primary font-medium tracking-widest uppercase text-sm mb-3" />
+            </motion.div>
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-4xl md:text-6xl font-display font-bold mb-6">
+              <EditableText contentKey="about_title_1" fallback="About" as="span" />{" "}
+              <EditableText contentKey="about_title_2" fallback="Pawnest" as="span" className="text-gradient-green" />
             </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed"
-            >
-              Founded by passionate pet owners, Pawnest is on a mission to make premium pet care accessible to every dog and cat parent worldwide. We believe your furry family members deserve nothing but the best.
-            </motion.p>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+              <EditableText contentKey="about_description" fallback="Founded by passionate pet owners, Pawnest is on a mission to make premium pet care accessible to every dog and cat parent worldwide. We believe your furry family members deserve nothing but the best." as="p" className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed" multiline />
+            </motion.div>
           </div>
         </section>
 
