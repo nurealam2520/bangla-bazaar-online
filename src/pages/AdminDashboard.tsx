@@ -503,10 +503,10 @@ const AdminDashboard = () => {
 
       <main className="container mx-auto px-4 py-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 gap-3 mb-6">
           {[
-            { label: "Total Orders", value: orders.length, icon: ShoppingCart, color: "text-primary" },
-            { label: "Total Revenue", value: `$${totalRevenue.toFixed(2)}`, icon: Package, color: "text-primary" },
+            { label: "Orders", value: orders.length, icon: ShoppingCart, color: "text-primary" },
+            { label: "Revenue", value: `$${totalRevenue.toFixed(0)}`, icon: Package, color: "text-primary" },
             { label: "Pending", value: pendingOrders, icon: Clock, color: "text-accent" },
             { label: "Products", value: products.length, icon: Package, color: "text-primary" },
           ].map((stat, i) => (
@@ -514,12 +514,12 @@ const AdminDashboard = () => {
               key={i}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-card border border-border rounded-xl p-4"
+              transition={{ delay: i * 0.05 }}
+              className="bg-card border border-border rounded-xl p-3"
             >
-              <stat.icon className={`h-5 w-5 ${stat.color} mb-2`} />
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-xs text-muted-foreground">{stat.label}</p>
+              <stat.icon className={`h-4 w-4 ${stat.color} mb-1`} />
+              <p className="text-xl font-bold">{stat.value}</p>
+              <p className="text-[11px] text-muted-foreground">{stat.label}</p>
             </motion.div>
           ))}
         </div>
