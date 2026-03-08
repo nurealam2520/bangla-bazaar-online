@@ -147,6 +147,7 @@ export type Database = {
           created_at: string
           fraud_reasons: string[] | null
           fraud_score: number
+          fulfillment_status: string
           guest_email: string | null
           id: string
           ip_address: string | null
@@ -161,7 +162,10 @@ export type Database = {
           shipping_postal_code: string
           status: string
           subtotal: number
+          supplier_order_id: string | null
           total: number
+          tracking_number: string | null
+          tracking_url: string | null
           updated_at: string
           user_agent: string | null
           user_id: string | null
@@ -170,6 +174,7 @@ export type Database = {
           created_at?: string
           fraud_reasons?: string[] | null
           fraud_score?: number
+          fulfillment_status?: string
           guest_email?: string | null
           id?: string
           ip_address?: string | null
@@ -184,7 +189,10 @@ export type Database = {
           shipping_postal_code: string
           status?: string
           subtotal: number
+          supplier_order_id?: string | null
           total: number
+          tracking_number?: string | null
+          tracking_url?: string | null
           updated_at?: string
           user_agent?: string | null
           user_id?: string | null
@@ -193,6 +201,7 @@ export type Database = {
           created_at?: string
           fraud_reasons?: string[] | null
           fraud_score?: number
+          fulfillment_status?: string
           guest_email?: string | null
           id?: string
           ip_address?: string | null
@@ -207,7 +216,10 @@ export type Database = {
           shipping_postal_code?: string
           status?: string
           subtotal?: number
+          supplier_order_id?: string | null
           total?: number
+          tracking_number?: string | null
+          tracking_url?: string | null
           updated_at?: string
           user_agent?: string | null
           user_id?: string | null
