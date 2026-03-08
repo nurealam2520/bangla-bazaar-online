@@ -31,6 +31,8 @@ const Auth = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isBot()) { toast.error("Suspicious activity detected. Please try again."); return; }
+    if (checkLimit()) { toast.error("Too many attempts. Please wait a moment."); return; }
     setLoading(true);
 
     if (isLogin) {
