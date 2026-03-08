@@ -23,8 +23,19 @@ const ShareButtons = ({
   const encodedTitle = encodeURIComponent(title);
   const encodedDesc = encodeURIComponent(description);
 
-  const openShareWindow = (url: string, name: string) => {
-    window.open(url, name, "width=600,height=400,scrollbars=yes,resizable=yes");
+  const copyLink = async () => {
+    try {
+      await navigator.clipboard.writeText(shareUrl);
+      setCopied(true);
+      toast.success("লিংক কপি হয়েছে!");
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("কপি করা যায়নি");
+    }
+  };
+
+  const openShareWindow = (shareHref: string, name: string) => {
+    window.open(shareHref, name, "width=600,height=400,scrollbars=yes,resizable=yes");
   };
 
   const platforms = [
