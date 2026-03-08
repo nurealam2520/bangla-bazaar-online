@@ -98,15 +98,13 @@ const About = () => {
         {/* CTA */}
         <section className="py-24 bg-gradient-green text-primary-foreground">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Ready to Give Your Pet the Best?</h2>
-            <p className="text-primary-foreground/80 max-w-lg mx-auto mb-8">
-              Join thousands of happy pet parents who trust Pawnest for premium quality products.
-            </p>
+            <EditableText contentKey="about_cta_title" fallback="Ready to Give Your Pet the Best?" as="h2" className="text-3xl md:text-4xl font-display font-bold mb-4" />
+            <EditableText contentKey="about_cta_desc" fallback="Join thousands of happy pet parents who trust Pawnest for premium quality products." as="p" className="text-primary-foreground/80 max-w-lg mx-auto mb-8" />
             <a
               href="/"
               className="inline-flex items-center px-8 py-3 rounded-lg bg-background text-foreground font-semibold hover:opacity-90 transition-opacity"
             >
-              Start Shopping
+              <EditableText contentKey="about_cta_button" fallback="Start Shopping" />
             </a>
           </div>
         </section>
