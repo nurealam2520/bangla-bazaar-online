@@ -173,3 +173,51 @@
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
 }
+
+@layer components {
+  .prose-custom h1 {
+    @apply text-3xl font-display font-bold mt-8 mb-4 text-foreground;
+  }
+  .prose-custom h2 {
+    @apply text-2xl font-display font-bold mt-10 mb-4 text-foreground;
+  }
+  .prose-custom h3 {
+    @apply text-xl font-display font-semibold mt-8 mb-3 text-foreground;
+  }
+  .prose-custom p {
+    @apply leading-relaxed mb-4 text-foreground/85;
+  }
+  .prose-custom strong, .prose-custom b {
+    @apply font-semibold text-foreground;
+  }
+  .prose-custom em, .prose-custom i {
+    @apply italic;
+  }
+  .prose-custom u {
+    @apply underline underline-offset-2;
+  }
+  .prose-custom ul {
+    @apply list-disc pl-6 mb-4 space-y-1 text-foreground/85;
+  }
+  .prose-custom ol {
+    @apply list-decimal pl-6 mb-4 space-y-1 text-foreground/85;
+  }
+  .prose-custom blockquote {
+    @apply border-l-4 border-primary/40 pl-4 py-2 my-4 italic text-muted-foreground bg-muted/30 rounded-r-lg;
+  }
+  .prose-custom a {
+    @apply text-primary underline underline-offset-2 hover:text-primary/80 transition-colors;
+  }
+  .prose-custom img {
+    @apply rounded-xl my-4 max-w-full h-auto;
+  }
+  .prose-custom pre {
+    @apply bg-muted rounded-xl p-4 my-4 overflow-x-auto text-sm font-mono;
+  }
+  .prose-custom hr {
+    @apply border-border my-8;
+  }
+  .prose-custom [style*="text-align: center"] {
+    @apply text-center;
+  }
+}
