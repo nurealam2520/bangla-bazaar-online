@@ -184,6 +184,40 @@ serve(async (req: Request) => {
       { identifier: order.shipping_email.toLowerCase(), identifier_type: "email", window_start: new Date().toISOString() },
     ]);
 
+    // Send new order notification email to admin
+    try {
+      await fetch(`${supabaseUrl}/functions/v1/send-email`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${serviceRoleKey}`,
+        },
+        body: JSON.stringify({
+          to: "neworder@compawnest.com",
+          subject: `🐾 New Order #${orderData.id.slice(0, 8)} — $${Number(order.total).toFixed(2)}`,
+          html: `
+            <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
+              <h2 style="color:#16a34a;">🐾 New Order Received!</h2>
+              <table style="width:100%;border-collapse:collapse;">
+                <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee;">Order ID</td><td style="padding:8px;border-bottom:1px solid #eee;">#${orderData.id.slice(0, 8)}</td></tr>
+                <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee;">Customer</td><td style="padding:8px;border-bottom:1px solid #eee;">${order.shipping_name}</td></tr>
+                <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee;">Email</td><td style="padding:8px;border-bottom:1px solid #eee;">${order.shipping_email}</td></tr>
+                <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee;">Address</td><td style="padding:8px;border-bottom:1px solid #eee;">${order.shipping_address}, ${order.shipping_city}, ${order.shipping_country}</td></tr>
+                <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee;">Payment</td><td style="padding:8px;border-bottom:1px solid #eee;">${order.payment_method.toUpperCase()}</td></tr>
+                <tr><td style="padding:8px;font-weight:bold;border-bottom:1px solid #eee;">Total</td><td style="padding:8px;border-bottom:1px solid #eee;font-weight:bold;font-size:18px;">$${Number(order.total).toFixed(2)}</td></tr>
+              </table>
+              <h3 style="margin-top:20px;">Items:</h3>
+              <ul>${order.items.map((i: any) => `<li>${i.product_name} x${i.quantity} — $${Number(i.price).toFixed(2)}</li>`).join("")}</ul>
+              ${isSuspicious ? '<p style="margin-top:16px;padding:12px;background:#fef2f2;border-radius:8px;color:#dc2626;font-weight:bold;">⚠️ FLAGGED — Fraud Score: ' + score + '</p>' : ''}
+            </div>
+          `,
+          body: `New Order #${orderData.id.slice(0, 8)}\nCustomer: ${order.shipping_name}\nTotal: $${Number(order.total).toFixed(2)}`,
+        }),
+      });
+    } catch (emailErr) {
+      console.error("Admin notification email failed:", emailErr);
+    }
+
     return new Response(
       JSON.stringify({
         success: true,
