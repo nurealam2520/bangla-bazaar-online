@@ -6,7 +6,7 @@ const ReturnPolicy = () => {
   return (
     <>
       <SEOHead
-        title="Return Policy | Pawnest"
+        title="Return Policy"
         description="Learn about Pawnest's return and refund policy. We offer hassle-free returns within 30 days of purchase."
         canonical="/return-policy"
       />
