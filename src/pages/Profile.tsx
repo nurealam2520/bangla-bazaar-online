@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { User, Package, MapPin, Save, RefreshCw, ExternalLink } from "lucide-react";
+import { User, Package, MapPin, Save, RefreshCw, ExternalLink, MessageSquareHeart } from "lucide-react";
+import TestimonialForm from "@/components/TestimonialForm";
 import { Link, useNavigate } from "react-router-dom";
 
 interface ProfileData {
@@ -116,6 +117,7 @@ const Profile = () => {
                 <TabsTrigger value="profile"><User className="h-4 w-4 mr-1.5" /> Profile</TabsTrigger>
                 <TabsTrigger value="orders"><Package className="h-4 w-4 mr-1.5" /> Orders ({orders.length})</TabsTrigger>
                 <TabsTrigger value="address"><MapPin className="h-4 w-4 mr-1.5" /> Address</TabsTrigger>
+                <TabsTrigger value="testimonial"><MessageSquareHeart className="h-4 w-4 mr-1.5" /> Testimonial</TabsTrigger>
               </TabsList>
 
               <TabsContent value="profile">
@@ -194,6 +196,10 @@ const Profile = () => {
                     <Save className="h-4 w-4" /> {saving ? "Saving..." : "Save Address"}
                   </Button>
                 </div>
+              </TabsContent>
+
+              <TabsContent value="testimonial">
+                <TestimonialForm />
               </TabsContent>
             </Tabs>
           )}

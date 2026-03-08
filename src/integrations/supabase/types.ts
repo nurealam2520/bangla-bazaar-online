@@ -516,6 +516,45 @@ export type Database = {
         }
         Relationships: []
       }
+      testimonials: {
+        Row: {
+          comment: string
+          created_at: string
+          id: string
+          is_approved: boolean
+          location: string | null
+          pet_info: string | null
+          rating: number
+          user_avatar: string | null
+          user_id: string
+          user_name: string
+        }
+        Insert: {
+          comment?: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          location?: string | null
+          pet_info?: string | null
+          rating?: number
+          user_avatar?: string | null
+          user_id: string
+          user_name?: string
+        }
+        Update: {
+          comment?: string
+          created_at?: string
+          id?: string
+          is_approved?: boolean
+          location?: string | null
+          pet_info?: string | null
+          rating?: number
+          user_avatar?: string | null
+          user_id?: string
+          user_name?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
