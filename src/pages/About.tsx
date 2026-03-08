@@ -6,7 +6,7 @@ import { Heart, Shield, Truck, Users, Award, Leaf } from "lucide-react";
 const values = [
   { icon: Heart, title: "Pet-First Philosophy", description: "Every product is selected with your pet's health, safety, and happiness in mind." },
   { icon: Shield, title: "Quality Guaranteed", description: "We only stock products from trusted, certified brands — no compromises." },
-  { icon: Truck, title: "Global Delivery", description: "Fast, reliable shipping across the US, UK, Canada, Australia & New Zealand." },
+  { icon: Truck, title: "Global Delivery", description: "Fast, reliable shipping to the USA, Canada, Australia & New Zealand." },
   { icon: Leaf, title: "Eco-Conscious", description: "Sustainable packaging and eco-friendly product options wherever possible." },
   { icon: Users, title: "Community Driven", description: "Built by pet parents, for pet parents. Your feedback shapes everything we do." },
   { icon: Award, title: "Expert Curated", description: "Our team of veterinarians and pet experts hand-pick every item in our catalog." },
