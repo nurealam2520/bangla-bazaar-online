@@ -20,9 +20,13 @@ const contactInfo = [
 
 const Contact = () => {
   const [sending, setSending] = useState(false);
+  const { honeypot, setHoneypot, isBot } = useBotProtection(2000);
+  const { checkLimit } = useFormRateLimit(3, 60000);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isBot()) { toast.error("Suspicious activity detected."); return; }
+    if (checkLimit()) { toast.error("Too many attempts. Please wait."); return; }
     setSending(true);
     setTimeout(() => {
       toast.success("Message sent! We'll get back to you soon. 🐾");
