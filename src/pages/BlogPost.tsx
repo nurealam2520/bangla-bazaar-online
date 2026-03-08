@@ -155,7 +155,11 @@ const BlogPost = () => {
 
             {/* Content */}
             <div className="prose-custom">
-              {formatContent(post.content)}
+              {isHtml ? (
+                <div dangerouslySetInnerHTML={{ __html: post.content }} />
+              ) : (
+                formatMarkdownContent(post.content)
+              )}
             </div>
 
             {/* Share */}
