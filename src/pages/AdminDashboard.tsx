@@ -19,6 +19,9 @@ import { useAllProducts, useCreateProduct, useUpdateProduct, useDeleteProduct, t
 import { useAllBlogPosts, useCreateBlogPost, useUpdateBlogPost, useDeleteBlogPost, type BlogPost, type BlogPostInsert } from "@/hooks/useBlogPosts";
 import ProductImport from "@/components/admin/ProductImport";
 import StripeSettings from "@/components/admin/StripeSettings";
+import ShippingSettings from "@/components/admin/ShippingSettings";
+import PaymentSettings from "@/components/admin/PaymentSettings";
+import CouponSettings from "@/components/admin/CouponSettings";
 
 interface Order {
   id: string;
