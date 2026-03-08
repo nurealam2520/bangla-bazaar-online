@@ -1,27 +1,12 @@
 import { motion } from "framer-motion";
 import { Truck, Shield, Clock, Headphones } from "lucide-react";
+import EditableText from "@/components/EditableText";
 
 const features = [
-  {
-    icon: Truck,
-    title: "Fast Shipping",
-    description: "Free delivery on orders over $50 to the US, Canada, Australia & NZ",
-  },
-  {
-    icon: Shield,
-    title: "100% Authentic",
-    description: "All products sourced directly from trusted brands",
-  },
-  {
-    icon: Clock,
-    title: "Easy Returns",
-    description: "Hassle-free returns & refunds within 30 days",
-  },
-  {
-    icon: Headphones,
-    title: "24/7 Support",
-    description: "Reach our friendly team anytime, anywhere",
-  },
+  { icon: Truck, key: "feature_1", titleFallback: "Fast Shipping", descFallback: "Free delivery on orders over $50 to the US, Canada, Australia & NZ" },
+  { icon: Shield, key: "feature_2", titleFallback: "100% Authentic", descFallback: "All products sourced directly from trusted brands" },
+  { icon: Clock, key: "feature_3", titleFallback: "Easy Returns", descFallback: "Hassle-free returns & refunds within 30 days" },
+  { icon: Headphones, key: "feature_4", titleFallback: "24/7 Support", descFallback: "Reach our friendly team anytime, anywhere" },
 ];
 
 const FeaturesSection = () => {
@@ -36,7 +21,7 @@ const FeaturesSection = () => {
         >
           {features.map((feature, i) => (
             <motion.div
-              key={feature.title}
+              key={feature.key}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -47,8 +32,8 @@ const FeaturesSection = () => {
                 <feature.icon className="h-6 w-6 text-primary" />
               </div>
               <div>
-                <h3 className="font-display font-semibold mb-1">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
+                <EditableText contentKey={`${feature.key}_title`} fallback={feature.titleFallback} as="h3" className="font-display font-semibold mb-1" />
+                <EditableText contentKey={`${feature.key}_desc`} fallback={feature.descFallback} as="p" className="text-sm text-muted-foreground" />
               </div>
             </motion.div>
           ))}
