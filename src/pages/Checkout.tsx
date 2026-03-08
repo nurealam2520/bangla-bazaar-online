@@ -87,6 +87,8 @@ const Checkout = () => {
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isBot()) { toast.error("Suspicious activity detected."); return; }
+    if (checkLimit()) { toast.error("Too many order attempts. Please wait."); return; }
     setLoading(true);
 
     const formData = new FormData(e.target as HTMLFormElement);
