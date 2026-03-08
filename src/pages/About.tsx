@@ -2,22 +2,23 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
+import EditableText from "@/components/EditableText";
 import { Heart, Shield, Truck, Users, Award, Leaf } from "lucide-react";
 
 const values = [
-  { icon: Heart, title: "Pet-First Philosophy", description: "Every product is selected with your pet's health, safety, and happiness in mind." },
-  { icon: Shield, title: "Quality Guaranteed", description: "We only stock products from trusted, certified brands — no compromises." },
-  { icon: Truck, title: "Global Delivery", description: "Fast, reliable shipping to the USA, Canada, Australia & New Zealand." },
-  { icon: Leaf, title: "Eco-Conscious", description: "Sustainable packaging and eco-friendly product options wherever possible." },
-  { icon: Users, title: "Community Driven", description: "Built by pet parents, for pet parents. Your feedback shapes everything we do." },
-  { icon: Award, title: "Expert Curated", description: "Our team of veterinarians and pet experts hand-pick every item in our catalog." },
+  { icon: Heart, key: "about_value_1", titleFb: "Pet-First Philosophy", descFb: "Every product is selected with your pet's health, safety, and happiness in mind." },
+  { icon: Shield, key: "about_value_2", titleFb: "Quality Guaranteed", descFb: "We only stock products from trusted, certified brands — no compromises." },
+  { icon: Truck, key: "about_value_3", titleFb: "Global Delivery", descFb: "Fast, reliable shipping to the USA, Canada, Australia & New Zealand." },
+  { icon: Leaf, key: "about_value_4", titleFb: "Eco-Conscious", descFb: "Sustainable packaging and eco-friendly product options wherever possible." },
+  { icon: Users, key: "about_value_5", titleFb: "Community Driven", descFb: "Built by pet parents, for pet parents. Your feedback shapes everything we do." },
+  { icon: Award, key: "about_value_6", titleFb: "Expert Curated", descFb: "Our team of veterinarians and pet experts hand-pick every item in our catalog." },
 ];
 
 const stats = [
-  { value: "50K+", label: "Happy Customers" },
-  { value: "200+", label: "Premium Products" },
-  { value: "4", label: "Countries Served" },
-  { value: "4.9★", label: "Average Rating" },
+  { key: "about_stat_1", valueFb: "50K+", labelFb: "Happy Customers" },
+  { key: "about_stat_2", valueFb: "200+", labelFb: "Premium Products" },
+  { key: "about_stat_3", valueFb: "4", labelFb: "Countries Served" },
+  { key: "about_stat_4", valueFb: "4.9★", labelFb: "Average Rating" },
 ];
 
 const About = () => {
