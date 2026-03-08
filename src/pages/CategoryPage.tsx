@@ -43,6 +43,7 @@ const CategoryPage = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <SEOHead title={`${config.label} Products`} description={`Shop premium ${config.label.toLowerCase()} products at Pawnest. ${config.description}`} canonical={`/category/${category}`} />
       <Navbar />
       <main>
         <section className="py-16 bg-secondary/30">
