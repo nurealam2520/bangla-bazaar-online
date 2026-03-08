@@ -7,6 +7,9 @@
   RewriteRule . /index.html [L]
 </IfModule>
 
+# Fallback if mod_rewrite is not available
+ErrorDocument 404 /index.html
+
 # Cache static assets
 <IfModule mod_expires.c>
   ExpiresActive On
