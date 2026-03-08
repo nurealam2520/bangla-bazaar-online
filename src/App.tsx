@@ -23,6 +23,10 @@ import TrackOrder from "./pages/TrackOrder";
 import Wishlist from "./pages/Wishlist";
 import Profile from "./pages/Profile";
 import NotFound from "./pages/NotFound";
+import ReturnPolicy from "./pages/ReturnPolicy";
+import PrivacyPolicy from "./pages/PrivacyPolicy";
+import TermsOfService from "./pages/TermsOfService";
+import FAQ from "./pages/FAQ";
 
 const queryClient = new QueryClient();
 
