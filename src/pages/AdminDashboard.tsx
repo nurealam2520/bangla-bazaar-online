@@ -644,7 +644,12 @@ const AdminDashboard = () => {
               </div>
             ) : (
               <div className="space-y-3">
-                {orders.map((order) => (
+                {orders.map((order) => {
+                  const supplierCost = 0; // TODO: calculate from order items' supplier prices
+                  const profit = Number(order.total) - Number(order.subtotal) * 0.6; // rough estimate
+                  const profitMargin = ((profit / Number(order.total)) * 100).toFixed(1);
+
+                  return (
                   <div key={order.id} className="bg-card border border-border rounded-xl p-4 hover:shadow-sm transition-shadow">
                     <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
                       <div className="flex-1 min-w-0">
@@ -652,6 +657,14 @@ const AdminDashboard = () => {
                           <span className="font-mono text-xs text-muted-foreground">#{order.id.slice(0, 8)}</span>
                           <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${statusColors[order.status] || "bg-muted text-muted-foreground"}`}>
                             {order.status.toUpperCase()}
+                          </span>
+                          <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                            order.fulfillment_status === "delivered" ? "bg-primary/15 text-primary" :
+                            order.fulfillment_status === "shipped" ? "bg-accent/15 text-accent" :
+                            order.fulfillment_status === "ordered_from_supplier" ? "bg-secondary text-secondary-foreground" :
+                            "bg-muted text-muted-foreground"
+                          }`}>
+                            {(order.fulfillment_status || "unfulfilled").replace(/_/g, " ").toUpperCase()}
                           </span>
                           {order.is_suspicious && (
                             <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-destructive/15 text-destructive flex items-center gap-1">
@@ -664,6 +677,10 @@ const AdminDashboard = () => {
                         <p className="text-xs text-muted-foreground mt-1">
                           {new Date(order.created_at).toLocaleString("en-US")} • {order.payment_method}
                           {order.ip_address && ` • IP: ${order.ip_address}`}
+                        </p>
+                        {/* Profit indicator */}
+                        <p className="text-xs mt-1">
+                          <span className="text-primary font-semibold">Est. Profit: ${profit.toFixed(2)} ({profitMargin}%)</span>
                         </p>
                         {order.fraud_reasons && order.fraud_reasons.length > 0 && (
                           <div className="flex flex-wrap gap-1 mt-2">
@@ -690,22 +707,99 @@ const AdminDashboard = () => {
                         )}
                       </div>
                     </div>
-                    {selectedOrderId === order.id && orderItems.length > 0 && (
-                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mt-4 pt-4 border-t border-border space-y-2">
-                        {orderItems.map((item) => (
-                          <div key={item.id} className="flex items-center gap-3">
-                            {item.product_image && <img src={item.product_image} alt={item.product_name} className="w-10 h-10 rounded-lg object-cover" />}
-                            <div className="flex-1 min-w-0">
-                              <p className="text-sm font-medium truncate">{item.product_name}</p>
-                              <p className="text-xs text-muted-foreground">x{item.quantity}</p>
-                            </div>
-                            <span className="text-sm font-semibold">${Number(item.price).toFixed(2)}</span>
+
+                    {/* Expanded: items + fulfillment controls */}
+                    {selectedOrderId === order.id && (
+                      <motion.div initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: "auto" }} className="mt-4 pt-4 border-t border-border space-y-4">
+                        {/* Order items */}
+                        {orderItems.length > 0 && (
+                          <div className="space-y-2">
+                            {orderItems.map((item) => (
+                              <div key={item.id} className="flex items-center gap-3">
+                                {item.product_image && <img src={item.product_image} alt={item.product_name} className="w-10 h-10 rounded-lg object-cover" />}
+                                <div className="flex-1 min-w-0">
+                                  <p className="text-sm font-medium truncate">{item.product_name}</p>
+                                  <p className="text-xs text-muted-foreground">x{item.quantity}</p>
+                                </div>
+                                <span className="text-sm font-semibold">${Number(item.price).toFixed(2)}</span>
+                              </div>
+                            ))}
                           </div>
-                        ))}
+                        )}
+
+                        {/* Fulfillment Controls */}
+                        <div className="bg-secondary/30 rounded-xl p-4 space-y-3">
+                          <h4 className="text-sm font-semibold flex items-center gap-2">
+                            <Package className="h-4 w-4 text-primary" /> Fulfillment
+                          </h4>
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            <div>
+                              <label className="text-xs text-muted-foreground block mb-1">Supplier Order ID</label>
+                              <Input
+                                defaultValue={order.supplier_order_id || ""}
+                                placeholder="AliExpress order #"
+                                className="h-8 text-xs"
+                                onBlur={(e) => {
+                                  if (e.target.value !== (order.supplier_order_id || "")) {
+                                    supabase.from("orders").update({ supplier_order_id: e.target.value }).eq("id", order.id).then(() => fetchAll());
+                                  }
+                                }}
+                              />
+                            </div>
+                            <div>
+                              <label className="text-xs text-muted-foreground block mb-1">Fulfillment Status</label>
+                              <select
+                                defaultValue={order.fulfillment_status || "unfulfilled"}
+                                className="w-full h-8 px-2 rounded-lg border border-input bg-background text-xs"
+                                onChange={(e) => {
+                                  updateOrderStatus(order.id, order.status, { fulfillment_status: e.target.value });
+                                }}
+                              >
+                                <option value="unfulfilled">Unfulfilled</option>
+                                <option value="ordered_from_supplier">Ordered from Supplier</option>
+                                <option value="shipped">Shipped</option>
+                                <option value="delivered">Delivered</option>
+                              </select>
+                            </div>
+                            <div>
+                              <label className="text-xs text-muted-foreground block mb-1">Tracking Number</label>
+                              <Input
+                                defaultValue={order.tracking_number || ""}
+                                placeholder="Tracking #"
+                                className="h-8 text-xs"
+                                onBlur={(e) => {
+                                  if (e.target.value !== (order.tracking_number || "")) {
+                                    updateOrderStatus(order.id, "shipped", { tracking_number: e.target.value, fulfillment_status: "shipped" });
+                                  }
+                                }}
+                              />
+                            </div>
+                            <div>
+                              <label className="text-xs text-muted-foreground block mb-1">Tracking URL</label>
+                              <Input
+                                defaultValue={order.tracking_url || ""}
+                                placeholder="https://track.17track.net/..."
+                                className="h-8 text-xs"
+                                onBlur={(e) => {
+                                  if (e.target.value !== (order.tracking_url || "")) {
+                                    supabase.from("orders").update({ tracking_url: e.target.value }).eq("id", order.id).then(() => fetchAll());
+                                  }
+                                }}
+                              />
+                            </div>
+                          </div>
+                          {/* Quick supplier link */}
+                          {order.status === "confirmed" && (
+                            <p className="text-xs text-muted-foreground">
+                              💡 Tip: Order this from your supplier, paste the supplier order ID, then update fulfillment status.
+                            </p>
+                          )}
+                        </div>
                       </motion.div>
                     )}
                   </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </TabsContent>
