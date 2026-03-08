@@ -1,27 +1,31 @@
 import { motion } from "framer-motion";
 import { Star } from "lucide-react";
+import EditableText from "@/components/EditableText";
 
 const testimonials = [
   {
-    name: "Sarah M.",
-    location: "New York, USA",
-    text: "Pawnest has been a game-changer for my two golden retrievers. The quality of food and toys is unmatched!",
+    key: "testimonial_1",
+    nameFallback: "Sarah M.",
+    locationFallback: "New York, USA",
+    textFallback: "Pawnest has been a game-changer for my two golden retrievers. The quality of food and toys is unmatched!",
     rating: 5,
-    pet: "2 Dogs",
+    petFallback: "2 Dogs",
   },
   {
-    name: "James L.",
-    location: "Melbourne, Australia",
-    text: "Fast shipping to Australia and my cats absolutely love the scratching tower. Will definitely order again.",
+    key: "testimonial_2",
+    nameFallback: "James L.",
+    locationFallback: "Melbourne, Australia",
+    textFallback: "Fast shipping to Australia and my cats absolutely love the scratching tower. Will definitely order again.",
     rating: 5,
-    pet: "3 Cats",
+    petFallback: "3 Cats",
   },
   {
-    name: "Emma K.",
-    location: "Toronto, Canada",
-    text: "The orthopedic dog bed is incredible. My senior lab sleeps so much better now. Thank you Pawnest!",
+    key: "testimonial_3",
+    nameFallback: "Emma K.",
+    locationFallback: "Toronto, Canada",
+    textFallback: "The orthopedic dog bed is incredible. My senior lab sleeps so much better now. Thank you Pawnest!",
     rating: 5,
-    pet: "1 Dog",
+    petFallback: "1 Dog",
   },
 ];
 
@@ -30,15 +34,16 @@ const Testimonials = () => {
     <section className="py-24">
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
-          <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">Testimonials</p>
+          <EditableText contentKey="testimonials_label" fallback="Testimonials" as="p" className="text-primary font-medium tracking-widest uppercase text-sm mb-3" />
           <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
-            What Pet Parents <span className="text-gradient-green">Say</span>
+            <EditableText contentKey="testimonials_title_1" fallback="What Pet Parents" as="span" />{" "}
+            <EditableText contentKey="testimonials_title_2" fallback="Say" as="span" className="text-gradient-green" />
           </h2>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
           {testimonials.map((t, i) => (
             <motion.div
-              key={t.name}
+              key={t.key}
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -50,13 +55,13 @@ const Testimonials = () => {
                   <Star key={j} className="h-4 w-4 fill-primary text-primary" />
                 ))}
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed mb-6">"{t.text}"</p>
+              <EditableText contentKey={`${t.key}_text`} fallback={t.textFallback} as="p" className="text-sm text-muted-foreground leading-relaxed mb-6" multiline />
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-semibold text-sm">{t.name}</p>
-                  <p className="text-xs text-muted-foreground">{t.location}</p>
+                  <EditableText contentKey={`${t.key}_name`} fallback={t.nameFallback} as="p" className="font-semibold text-sm" />
+                  <EditableText contentKey={`${t.key}_location`} fallback={t.locationFallback} as="p" className="text-xs text-muted-foreground" />
                 </div>
-                <span className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-full">{t.pet}</span>
+                <EditableText contentKey={`${t.key}_pet`} fallback={t.petFallback} as="span" className="text-xs bg-secondary text-secondary-foreground px-2 py-1 rounded-full" />
               </div>
             </motion.div>
           ))}
