@@ -363,6 +363,8 @@ const AdminDashboard = () => {
         toast.success("Blog post updated!");
       }
       setEditingPost(null);
+      localStorage.removeItem(DRAFT_KEY);
+      setDraftSavedAt(null);
     } catch (err: any) {
       toast.error(err.message);
     }
