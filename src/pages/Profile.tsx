@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { toast } from "sonner";
-import { User, Package, MapPin, Save, RefreshCw, ExternalLink } from "lucide-react";
+import { User, Package, MapPin, Save, RefreshCw, ExternalLink, MessageSquareHeart } from "lucide-react";
+import TestimonialForm from "@/components/TestimonialForm";
 import { Link, useNavigate } from "react-router-dom";
 
 interface ProfileData {
