@@ -154,6 +154,14 @@ const BlogPost = () => {
               {formatContent(post.content)}
             </div>
 
+            {/* Share */}
+            <ShareButtons
+              title={post.title}
+              description={post.excerpt}
+              url={`https://compawnest.com/blog/${post.slug}`}
+              className="pt-6 mt-8 border-t border-border"
+            />
+
             {/* Related Products */}
             {relatedProducts.length > 0 && (
               <div className="mt-12 pt-8 border-t border-border">
