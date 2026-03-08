@@ -11,8 +11,8 @@ const testimonials = [
   },
   {
     name: "James L.",
-    location: "London, UK",
-    text: "Fast shipping to the UK and my cats absolutely love the scratching tower. Will definitely order again.",
+    location: "Melbourne, Australia",
+    text: "Fast shipping to Australia and my cats absolutely love the scratching tower. Will definitely order again.",
     rating: 5,
     pet: "3 Cats",
   },
