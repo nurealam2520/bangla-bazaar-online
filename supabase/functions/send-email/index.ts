@@ -1,4 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 import { SmtpClient } from "https://deno.land/x/smtp@v0.7.0/mod.ts";
 
 const corsHeaders = {
@@ -21,11 +22,24 @@ serve(async (req) => {
       });
     }
 
-    const smtpHost = Deno.env.get("SMTP_HOST");
-    const smtpPort = Deno.env.get("SMTP_PORT");
-    const smtpUser = Deno.env.get("SMTP_USER");
-    const smtpPass = Deno.env.get("SMTP_PASS");
-    const smtpFrom = Deno.env.get("SMTP_FROM") || smtpUser;
+    // Read SMTP config from app_config table
+    const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const supabase = createClient(supabaseUrl, serviceRoleKey);
+
+    const { data: configs } = await supabase
+      .from("app_config")
+      .select("key, value")
+      .in("key", ["smtp_host", "smtp_port", "smtp_user", "smtp_pass", "smtp_from"]);
+
+    const configMap: Record<string, string> = {};
+    configs?.forEach((c: any) => { configMap[c.key] = c.value; });
+
+    const smtpHost = configMap.smtp_host;
+    const smtpPort = configMap.smtp_port || "465";
+    const smtpUser = configMap.smtp_user;
+    const smtpPass = configMap.smtp_pass;
+    const smtpFrom = configMap.smtp_from || smtpUser;
 
     if (!smtpHost || !smtpUser || !smtpPass) {
       console.error("SMTP not configured. Email logged:", JSON.stringify({ to, subject }));
@@ -39,13 +53,13 @@ serve(async (req) => {
 
     await client.connectTLS({
       hostname: smtpHost,
-      port: parseInt(smtpPort || "465"),
+      port: parseInt(smtpPort),
       username: smtpUser,
       password: smtpPass,
     });
 
     await client.send({
-      from: smtpFrom!,
+      from: smtpFrom,
       to,
       subject,
       content: body || "",
