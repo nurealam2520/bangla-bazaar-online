@@ -19,7 +19,7 @@ const testimonials = [
   {
     name: "Emma K.",
     location: "Toronto, Canada",
-    text: "The orthopedic dog bed is incredible. My senior lab sleeps so much better now. Thank you PawNest!",
+    text: "The orthopedic dog bed is incredible. My senior lab sleeps so much better now. Thank you Pawnest!",
     rating: 5,
     pet: "1 Dog",
   },

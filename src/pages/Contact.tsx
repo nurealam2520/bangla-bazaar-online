@@ -9,9 +9,9 @@ import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
 import { toast } from "sonner";
 
 const contactInfo = [
-  { icon: Mail, label: "Email", value: "hello@pawnest.com" },
+  { icon: Mail, label: "Email", value: "hello@compawnest.com" },
   { icon: Phone, label: "Phone", value: "+1 (800) 555-PETS" },
-  { icon: MapPin, label: "Headquarters", value: "Shipping worldwide from US & UK" },
+  { icon: MapPin, label: "Headquarters", value: "Shipping worldwide to US, CA, AU & NZ" },
   { icon: Clock, label: "Support Hours", value: "24/7 — We're always here" },
 ];
 

@@ -5,7 +5,7 @@ const features = [
   {
     icon: Truck,
     title: "Fast Shipping",
-    description: "Free delivery on orders over $50 across the US, UK, CA, AU & NZ",
+    description: "Free delivery on orders over $50 to the US, Canada, Australia & NZ",
   },
   {
     icon: Shield,
