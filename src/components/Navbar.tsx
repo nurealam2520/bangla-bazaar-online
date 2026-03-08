@@ -78,9 +78,7 @@ const Navbar = () => {
         <div className="container mx-auto flex items-center justify-between h-14 md:h-16 px-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
-            <span className="text-xl md:text-2xl font-display font-bold text-gradient-green">
-              🐾 Pawnest
-            </span>
+            <EditableText contentKey="logo_text" fallback="🐾 Pawnest" as="span" className="text-xl md:text-2xl font-display font-bold text-gradient-green" />
           </Link>
 
           {/* Desktop nav links */}
