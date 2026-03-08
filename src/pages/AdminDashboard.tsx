@@ -342,7 +342,7 @@ const AdminDashboard = () => {
         await createBlogPost.mutateAsync({
           title: editingPost.title,
           slug,
-          excerpt: editingPost.excerpt || "",
+          excerpt: editingPost.excerpt || editingPost.content.replace(/<[^>]*>/g, "").slice(0, 160).trim(),
           content: editingPost.content,
           cover_image: editingPost.cover_image || "",
           author_id: user!.id,
@@ -355,7 +355,7 @@ const AdminDashboard = () => {
           id: editingPost.id!,
           title: editingPost.title,
           slug,
-          excerpt: editingPost.excerpt,
+          excerpt: editingPost.excerpt || editingPost.content?.replace(/<[^>]*>/g, "").slice(0, 160).trim(),
           content: editingPost.content,
           cover_image: editingPost.cover_image,
           is_published: editingPost.is_published,
@@ -1064,14 +1064,6 @@ const AdminDashboard = () => {
                           />
                         </label>
                       </div>
-                    </div>
-                    <div className="md:col-span-2">
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Excerpt</label>
-                      <Input
-                        value={editingPost.excerpt || ""}
-                        onChange={(e) => setEditingPost({ ...editingPost, excerpt: e.target.value })}
-                        placeholder="Brief description of the post"
-                      />
                     </div>
                     <div className="md:col-span-2">
                       <label className="text-sm font-medium text-muted-foreground mb-1 block">Content *</label>
