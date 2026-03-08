@@ -26,6 +26,9 @@ import PaymentSettings from "@/components/admin/PaymentSettings";
 import CouponSettings from "@/components/admin/CouponSettings";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 import DataBackup from "@/components/admin/DataBackup";
+import ContactMessages from "@/components/admin/ContactMessages";
+import LiveChatSettings from "@/components/admin/LiveChatSettings";
+import SmtpSettings from "@/components/admin/SmtpSettings";
 
 interface Order {
   id: string;

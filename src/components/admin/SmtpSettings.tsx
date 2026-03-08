@@ -38,24 +38,17 @@ const SmtpSettings = () => {
     }
     setSaving(true);
     try {
-      // Save non-sensitive config to app_config
       const configs = [
         { key: "smtp_host", value: host },
         { key: "smtp_port", value: port },
         { key: "smtp_user", value: user },
+        { key: "smtp_pass", value: pass },
         { key: "smtp_from", value: fromEmail || user },
       ];
 
       for (const config of configs) {
         await supabase.from("app_config").upsert(config, { onConflict: "key" });
       }
-
-      // Save SMTP secrets via edge function
-      const { error } = await supabase.functions.invoke("set-smtp-secrets", {
-        body: { host, port, user, pass, from: fromEmail || user },
-      });
-
-      if (error) throw error;
 
       toast.success("SMTP settings saved!");
     } catch (err: any) {
