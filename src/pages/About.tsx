@@ -40,7 +40,7 @@ const About = () => {
               transition={{ delay: 0.1 }}
               className="text-4xl md:text-6xl font-display font-bold mb-6"
             >
-              About <span className="text-gradient-green">PawNest</span>
+              About <span className="text-gradient-green">Pawnest</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
