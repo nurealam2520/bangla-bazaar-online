@@ -80,7 +80,8 @@ const Auth = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 relative">
+            <HoneypotField value={honeypot} onChange={setHoneypot} />
             {!isLogin && (
               <div>
                 <Label htmlFor="fullName">Full Name</Label>
