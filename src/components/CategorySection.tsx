@@ -26,9 +26,9 @@ const categories = [
 
 const CategorySection = () => {
   return (
-    <section className="py-24 bg-secondary/30">
+    <section className="py-14 bg-secondary/30">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <EditableText contentKey="category_label" fallback="Categories" as="p" className="text-primary font-medium tracking-widest uppercase text-sm mb-3" />
           <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
             <EditableText contentKey="category_title_1" fallback="Shop by" as="span" />{" "}

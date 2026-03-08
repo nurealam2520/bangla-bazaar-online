@@ -11,9 +11,9 @@ const HomeBlogPosts = () => {
   if (latestPosts.length === 0) return null;
 
   return (
-    <section className="hidden md:block py-24">
+    <section className="hidden md:block py-14">
       <div className="container mx-auto px-4">
-        <div className="text-center mb-16">
+        <div className="text-center mb-10">
           <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">Blog</p>
           <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
             Latest <span className="text-gradient-green">Posts</span>

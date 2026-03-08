@@ -11,7 +11,7 @@ const features = [
 
 const FeaturesSection = () => {
   return (
-    <section className="py-20 bg-secondary/30 border-y border-border">
+    <section className="py-14 bg-secondary/30 border-y border-border">
       <div className="container mx-auto px-4">
         <motion.div
           initial={{ opacity: 0 }}
