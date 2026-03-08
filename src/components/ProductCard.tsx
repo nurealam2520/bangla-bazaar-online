@@ -93,10 +93,10 @@ const ProductCard = ({ product }: { product: Product }) => {
                 transition={{ duration: 0.2 }}
                 className="absolute bottom-3 left-3 right-3"
               >
-                <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-background/90 backdrop-blur-md text-sm font-medium text-foreground hover:bg-background transition-colors shadow-lg">
+                <Link to={`/product/${product.id}`} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-background/90 backdrop-blur-md text-sm font-medium text-foreground hover:bg-background transition-colors shadow-lg">
                   <Eye className="h-4 w-4" />
                   Quick View
-                </button>
+                </Link>
               </motion.div>
             )}
           </AnimatePresence>
