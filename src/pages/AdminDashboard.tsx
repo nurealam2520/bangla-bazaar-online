@@ -1066,14 +1066,6 @@ const AdminDashboard = () => {
                       </div>
                     </div>
                     <div className="md:col-span-2">
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Excerpt</label>
-                      <Input
-                        value={editingPost.excerpt || ""}
-                        onChange={(e) => setEditingPost({ ...editingPost, excerpt: e.target.value })}
-                        placeholder="Brief description of the post"
-                      />
-                    </div>
-                    <div className="md:col-span-2">
                       <label className="text-sm font-medium text-muted-foreground mb-1 block">Content *</label>
                       <RichTextEditor
                         value={editingPost.content || ""}
