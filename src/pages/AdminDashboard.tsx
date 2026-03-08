@@ -967,7 +967,23 @@ const AdminDashboard = () => {
               >
                 <Plus className="h-4 w-4" /> New Post
               </Button>
+              {localStorage.getItem(DRAFT_KEY) && !editingPost && (
+                <div className="flex items-center gap-2">
+                  <Button size="sm" variant="outline" onClick={loadDraft} className="gap-1.5">
+                    <Clock className="h-4 w-4" /> Load Draft
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={clearDraft} className="text-destructive">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
             </div>
+
+            {editingPost && draftSavedAt && (
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <Clock className="h-3 w-3" /> Auto-saved: {new Date(draftSavedAt).toLocaleTimeString()}
+              </p>
+            )}
 
             <AnimatePresence>
               {editingPost && (
