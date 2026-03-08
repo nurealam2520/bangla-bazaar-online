@@ -197,6 +197,10 @@ const Profile = () => {
                   </Button>
                 </div>
               </TabsContent>
+
+              <TabsContent value="testimonial">
+                <TestimonialForm />
+              </TabsContent>
             </Tabs>
           )}
         </div>
