@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import ProductCard from "@/components/ProductCard";
+import ShareButtons from "@/components/ShareButtons";
 import { RefreshCw, ArrowLeft, Calendar, User } from "lucide-react";
 import { motion } from "framer-motion";
 
