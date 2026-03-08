@@ -178,7 +178,7 @@ const ProductImageUploader = ({ onUploaded }: { onUploaded: (url: string) => voi
   );
 };
 
-
+const AdminDashboard = () => {
   const { user, isAdmin, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
