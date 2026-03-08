@@ -76,7 +76,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <span className="text-xl md:text-2xl font-display font-bold text-gradient-green">
-              🐾 PawNest
+              🐾 Pawnest
             </span>
           </Link>
 
@@ -283,7 +283,7 @@ const Navbar = () => {
               {/* Footer */}
               <div className="px-5 py-4 border-t border-border">
                 <p className="text-xs text-muted-foreground text-center">
-                  🐾 PawNest — Premium Pet Shop
+                  🐾 Pawnest — Premium Pet Shop
                 </p>
               </div>
             </motion.div>

@@ -6,7 +6,7 @@ import { Heart, Shield, Truck, Users, Award, Leaf } from "lucide-react";
 const values = [
   { icon: Heart, title: "Pet-First Philosophy", description: "Every product is selected with your pet's health, safety, and happiness in mind." },
   { icon: Shield, title: "Quality Guaranteed", description: "We only stock products from trusted, certified brands — no compromises." },
-  { icon: Truck, title: "Global Delivery", description: "Fast, reliable shipping across the US, UK, Canada, Australia & New Zealand." },
+  { icon: Truck, title: "Global Delivery", description: "Fast, reliable shipping to the USA, Canada, Australia & New Zealand." },
   { icon: Leaf, title: "Eco-Conscious", description: "Sustainable packaging and eco-friendly product options wherever possible." },
   { icon: Users, title: "Community Driven", description: "Built by pet parents, for pet parents. Your feedback shapes everything we do." },
   { icon: Award, title: "Expert Curated", description: "Our team of veterinarians and pet experts hand-pick every item in our catalog." },
@@ -15,7 +15,7 @@ const values = [
 const stats = [
   { value: "50K+", label: "Happy Customers" },
   { value: "200+", label: "Premium Products" },
-  { value: "5", label: "Countries Served" },
+  { value: "4", label: "Countries Served" },
   { value: "4.9★", label: "Average Rating" },
 ];
 
@@ -40,7 +40,7 @@ const About = () => {
               transition={{ delay: 0.1 }}
               className="text-4xl md:text-6xl font-display font-bold mb-6"
             >
-              About <span className="text-gradient-green">PawNest</span>
+              About <span className="text-gradient-green">Pawnest</span>
             </motion.h1>
             <motion.p
               initial={{ opacity: 0, y: 20 }}
@@ -48,7 +48,7 @@ const About = () => {
               transition={{ delay: 0.2 }}
               className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed"
             >
-              Founded by passionate pet owners, PawNest is on a mission to make premium pet care accessible to every dog and cat parent worldwide. We believe your furry family members deserve nothing but the best.
+              Founded by passionate pet owners, Pawnest is on a mission to make premium pet care accessible to every dog and cat parent worldwide. We believe your furry family members deserve nothing but the best.
             </motion.p>
           </div>
         </section>
@@ -109,7 +109,7 @@ const About = () => {
           <div className="container mx-auto px-4 text-center">
             <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Ready to Give Your Pet the Best?</h2>
             <p className="text-primary-foreground/80 max-w-lg mx-auto mb-8">
-              Join thousands of happy pet parents who trust PawNest for premium quality products.
+              Join thousands of happy pet parents who trust Pawnest for premium quality products.
             </p>
             <a
               href="/"

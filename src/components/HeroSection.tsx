@@ -15,7 +15,7 @@ const slides = [
     highlight: "Furry Friends",
     subtitle: "for Your",
     description:
-      "Premium quality pet food, accessories, and essentials — delivered straight to your door across the US, UK, Canada, Australia & New Zealand.",
+      "Premium quality pet food, accessories, and essentials — delivered straight to your door across the USA, Canada, Australia & New Zealand.",
     cta: "Start Shopping",
     ctaLink: "/shop",
     secondaryCta: "Browse Categories",

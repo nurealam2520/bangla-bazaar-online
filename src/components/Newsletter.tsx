@@ -7,7 +7,7 @@ import { toast } from "sonner";
 const Newsletter = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    toast.success("You're subscribed! 🎉 Welcome to the PawNest family.");
+    toast.success("You're subscribed! 🎉 Welcome to the Pawnest family.");
     (e.target as HTMLFormElement).reset();
   };
 

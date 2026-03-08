@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Star, ShoppingCart, Heart, Eye, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -92,10 +93,10 @@ const ProductCard = ({ product }: { product: Product }) => {
                 transition={{ duration: 0.2 }}
                 className="absolute bottom-3 left-3 right-3"
               >
-                <button className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-background/90 backdrop-blur-md text-sm font-medium text-foreground hover:bg-background transition-colors shadow-lg">
+                <Link to={`/product/${product.id}`} className="w-full flex items-center justify-center gap-2 py-2.5 rounded-xl bg-background/90 backdrop-blur-md text-sm font-medium text-foreground hover:bg-background transition-colors shadow-lg">
                   <Eye className="h-4 w-4" />
                   Quick View
-                </button>
+                </Link>
               </motion.div>
             )}
           </AnimatePresence>
@@ -106,9 +107,11 @@ const ProductCard = ({ product }: { product: Product }) => {
           <span className="text-[11px] font-medium text-primary uppercase tracking-wider">
             {product.subcategory}
           </span>
-          <h3 className="font-semibold text-card-foreground mt-1.5 mb-2 line-clamp-2 text-[15px] leading-snug min-h-[2.5rem]">
-            {product.name}
-          </h3>
+          <Link to={`/product/${product.id}`}>
+            <h3 className="font-semibold text-card-foreground mt-1.5 mb-2 line-clamp-2 text-[15px] leading-snug min-h-[2.5rem] hover:text-primary transition-colors">
+              {product.name}
+            </h3>
+          </Link>
           <div className="flex items-center gap-1.5 mb-3">
             <div className="flex gap-0.5">
               {Array.from({ length: 5 }).map((_, i) => (
