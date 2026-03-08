@@ -10,6 +10,8 @@ import SEOHead from "@/components/SEOHead";
 import { Mail, Lock, User, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useBotProtection, useFormRateLimit } from "@/hooks/useBotProtection";
+import HoneypotField from "@/components/HoneypotField";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
