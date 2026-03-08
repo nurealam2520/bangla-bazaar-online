@@ -526,31 +526,29 @@ const AdminDashboard = () => {
 
         {/* Tabs */}
         <Tabs defaultValue="products" className="space-y-4">
-          <div className="overflow-x-auto -mx-4 px-4">
-            <TabsList className="bg-secondary/60 p-1 rounded-xl w-max min-w-full">
-              <TabsTrigger value="products" className="rounded-lg text-xs px-2.5">
-                <Package className="h-3.5 w-3.5 mr-1" /> Products
-              </TabsTrigger>
-              <TabsTrigger value="orders" className="rounded-lg text-xs px-2.5">
-                <ShoppingCart className="h-3.5 w-3.5 mr-1" /> Orders
-              </TabsTrigger>
-              <TabsTrigger value="blog" className="rounded-lg text-xs px-2.5">
-                <FileText className="h-3.5 w-3.5 mr-1" /> Blog
-              </TabsTrigger>
-              <TabsTrigger value="profiles" className="rounded-lg text-xs px-2.5">
-                <Users className="h-3.5 w-3.5 mr-1" /> Users
-              </TabsTrigger>
-              <TabsTrigger value="roles" className="rounded-lg text-xs px-2.5">
-                <UserCog className="h-3.5 w-3.5 mr-1" /> Roles
-              </TabsTrigger>
-              <TabsTrigger value="security" className="rounded-lg text-xs px-2.5">
-                <Shield className="h-3.5 w-3.5 mr-1" /> Security
-              </TabsTrigger>
-              <TabsTrigger value="settings" className="rounded-lg text-xs px-2.5">
-                <Settings className="h-3.5 w-3.5 mr-1" /> Settings
-              </TabsTrigger>
-            </TabsList>
-          </div>
+          <TabsList className="bg-secondary/60 p-1 rounded-xl h-auto flex flex-wrap gap-1">
+            <TabsTrigger value="products" className="rounded-lg text-xs px-2.5">
+              <Package className="h-3.5 w-3.5 mr-1" /> Products
+            </TabsTrigger>
+            <TabsTrigger value="orders" className="rounded-lg text-xs px-2.5">
+              <ShoppingCart className="h-3.5 w-3.5 mr-1" /> Orders
+            </TabsTrigger>
+            <TabsTrigger value="blog" className="rounded-lg text-xs px-2.5">
+              <FileText className="h-3.5 w-3.5 mr-1" /> Blog
+            </TabsTrigger>
+            <TabsTrigger value="profiles" className="rounded-lg text-xs px-2.5">
+              <Users className="h-3.5 w-3.5 mr-1" /> Users
+            </TabsTrigger>
+            <TabsTrigger value="roles" className="rounded-lg text-xs px-2.5">
+              <UserCog className="h-3.5 w-3.5 mr-1" /> Roles
+            </TabsTrigger>
+            <TabsTrigger value="security" className="rounded-lg text-xs px-2.5">
+              <Shield className="h-3.5 w-3.5 mr-1" /> Security
+            </TabsTrigger>
+            <TabsTrigger value="settings" className="rounded-lg text-xs px-2.5">
+              <Settings className="h-3.5 w-3.5 mr-1" /> Settings
+            </TabsTrigger>
+          </TabsList>
 
           {/* Products Tab */}
           <TabsContent value="products" className="space-y-4">
