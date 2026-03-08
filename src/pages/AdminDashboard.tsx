@@ -99,8 +99,86 @@ const emptyProduct: ProductInsert = {
   subcategory: "",
   description: "",
 };
+const ProductImageUploader = ({ onUploaded }: { onUploaded: (url: string) => void }) => {
+  const [uploading, setUploading] = useState(false);
+  const [compressionInfo, setCompressionInfo] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
 
-const AdminDashboard = () => {
+  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("শুধুমাত্র ছবি ফাইল আপলোড করুন");
+      return;
+    }
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("ফাইল ১০MB এর বেশি হতে পারবে না");
+      return;
+    }
+
+    setUploading(true);
+    setCompressionInfo("");
+    try {
+      const originalSize = file.size;
+      const optimized = await optimizeImage(file, { maxWidth: 800, maxHeight: 800, quality: 0.8 });
+      const savedPercent = Math.round((1 - optimized.size / originalSize) * 100);
+      if (savedPercent > 0) {
+        setCompressionInfo(`${formatFileSize(originalSize)} → ${formatFileSize(optimized.size)} (${savedPercent}% কমেছে)`);
+      }
+
+      const ext = optimized.name.split(".").pop() || "webp";
+      const fileName = `product-${Date.now()}.${ext}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from("site-images")
+        .upload(fileName, optimized, { upsert: true });
+
+      if (uploadError) throw uploadError;
+
+      const { data: urlData } = supabase.storage
+        .from("site-images")
+        .getPublicUrl(fileName);
+
+      onUploaded(urlData.publicUrl);
+      toast.success("ছবি আপলোড ও অপটিমাইজ হয়েছে ✓");
+    } catch (err: any) {
+      console.error(err);
+      toast.error("আপলোড ব্যর্থ: " + err.message);
+    } finally {
+      setUploading(false);
+      if (fileRef.current) fileRef.current.value = "";
+    }
+  };
+
+  return (
+    <div className="space-y-1">
+      <input ref={fileRef} type="file" accept="image/*" className="hidden" onChange={handleFileChange} />
+      <Button
+        type="button"
+        variant="outline"
+        size="sm"
+        onClick={() => fileRef.current?.click()}
+        disabled={uploading}
+        className="w-full gap-2"
+      >
+        {uploading ? (
+          <><Loader2 className="h-4 w-4 animate-spin" /> অপটিমাইজ ও আপলোড হচ্ছে...</>
+        ) : (
+          <><Upload className="h-4 w-4" /> ছবি আপলোড করুন (অটো কমপ্রেস)</>
+        )}
+      </Button>
+      {compressionInfo && (
+        <p className="text-xs text-muted-foreground flex items-center gap-1">
+          <ImageIcon className="h-3 w-3" /> {compressionInfo}
+        </p>
+      )}
+    </div>
+  );
+};
+
+
   const { user, isAdmin, loading, signOut } = useAuth();
   const navigate = useNavigate();
   const [orders, setOrders] = useState<Order[]>([]);
