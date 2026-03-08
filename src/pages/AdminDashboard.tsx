@@ -9,7 +9,7 @@ import {
   ShoppingCart, Users, Shield, AlertTriangle, Package,
   LogOut, ArrowLeft, RefreshCw, Eye, CheckCircle, XCircle,
   Clock, Plus, Pencil, Trash2, X, Save, FileText, Globe, EyeOff,
-  UserCog, UserPlus, UserMinus, Settings, Upload, ImageIcon, Loader2
+  UserCog, UserPlus, UserMinus, Settings, Upload, ImageIcon, Loader2, Database
 } from "lucide-react";
 import { optimizeImage, formatFileSize } from "@/lib/imageOptimizer";
 import { Textarea } from "@/components/ui/textarea";
@@ -24,6 +24,7 @@ import ShippingSettings from "@/components/admin/ShippingSettings";
 import PaymentSettings from "@/components/admin/PaymentSettings";
 import CouponSettings from "@/components/admin/CouponSettings";
 import RichTextEditor from "@/components/admin/RichTextEditor";
+import DataBackup from "@/components/admin/DataBackup";
 
 interface Order {
   id: string;
@@ -547,6 +548,9 @@ const AdminDashboard = () => {
             </TabsTrigger>
             <TabsTrigger value="settings" className="rounded-lg text-xs px-2.5">
               <Settings className="h-3.5 w-3.5 mr-1" /> Settings
+            </TabsTrigger>
+            <TabsTrigger value="backup" className="rounded-lg text-xs px-2.5">
+              <Database className="h-3.5 w-3.5 mr-1" /> Backup
             </TabsTrigger>
           </TabsList>
 
@@ -1273,6 +1277,12 @@ const AdminDashboard = () => {
             <PaymentSettings />
             <ShippingSettings />
             <CouponSettings />
+          </TabsContent>
+
+          {/* Backup Tab */}
+          <TabsContent value="backup" className="space-y-4">
+            <h3 className="font-display font-bold text-lg">ডেটা ব্যাকআপ ও পুনরুদ্ধার</h3>
+            <DataBackup />
           </TabsContent>
         </Tabs>
       </main>

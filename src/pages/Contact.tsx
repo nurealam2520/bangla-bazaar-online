@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
 import { toast } from "sonner";
+import { useBotProtection, useFormRateLimit } from "@/hooks/useBotProtection";
+import HoneypotField from "@/components/HoneypotField";
 
 const contactInfo = [
   { icon: Mail, label: "Email", value: "hello@compawnest.com" },
@@ -18,9 +20,13 @@ const contactInfo = [
 
 const Contact = () => {
   const [sending, setSending] = useState(false);
+  const { honeypot, setHoneypot, isBot } = useBotProtection(2000);
+  const { checkLimit } = useFormRateLimit(3, 60000);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    if (isBot()) { toast.error("Suspicious activity detected."); return; }
+    if (checkLimit()) { toast.error("Too many attempts. Please wait."); return; }
     setSending(true);
     setTimeout(() => {
       toast.success("Message sent! We'll get back to you soon. 🐾");
@@ -86,7 +92,8 @@ const Contact = () => {
               {/* Form */}
               <div>
                 <h2 className="text-2xl font-display font-bold mb-8">Send a Message</h2>
-                <form onSubmit={handleSubmit} className="space-y-5">
+                <form onSubmit={handleSubmit} className="space-y-5 relative">
+                  <HoneypotField value={honeypot} onChange={setHoneypot} />
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                       <Label htmlFor="name">Name</Label>

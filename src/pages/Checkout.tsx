@@ -10,6 +10,8 @@ import { Label } from "@/components/ui/label";
 import { Minus, Plus, Trash2, ArrowLeft, CreditCard, Truck } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { useBotProtection, useFormRateLimit } from "@/hooks/useBotProtection";
+import HoneypotField from "@/components/HoneypotField";
 
 const Checkout = () => {
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
@@ -21,6 +23,8 @@ const Checkout = () => {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState("");
   const [applyingCoupon, setApplyingCoupon] = useState(false);
+  const { honeypot, setHoneypot, isBot } = useBotProtection(3000);
+  const { checkLimit } = useFormRateLimit(3, 120000);
 
   const shipping = totalPrice > 50 ? 0 : 5.99;
   const total = Math.max(0, totalPrice - couponDiscount + shipping);
@@ -83,6 +87,8 @@ const Checkout = () => {
 
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isBot()) { toast.error("Suspicious activity detected."); return; }
+    if (checkLimit()) { toast.error("Too many order attempts. Please wait."); return; }
     setLoading(true);
 
     const formData = new FormData(e.target as HTMLFormElement);
@@ -181,7 +187,8 @@ const Checkout = () => {
           </button>
           <h1 className="text-3xl md:text-4xl font-display font-bold mb-10">Checkout</h1>
 
-          <form onSubmit={handlePlaceOrder}>
+          <form onSubmit={handlePlaceOrder} className="relative">
+            <HoneypotField value={honeypot} onChange={setHoneypot} />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
               {/* Left: Form */}
               <div className="lg:col-span-2 space-y-8">

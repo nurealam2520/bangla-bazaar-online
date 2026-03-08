@@ -10,6 +10,8 @@ import SEOHead from "@/components/SEOHead";
 import { Mail, Lock, User, ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
+import { useBotProtection, useFormRateLimit } from "@/hooks/useBotProtection";
+import HoneypotField from "@/components/HoneypotField";
 
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -19,6 +21,8 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { honeypot, setHoneypot, isBot } = useBotProtection(1500);
+  const { checkLimit } = useFormRateLimit(5, 60000);
 
   if (user) {
     navigate("/");
@@ -27,6 +31,8 @@ const Auth = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (isBot()) { toast.error("Suspicious activity detected. Please try again."); return; }
+    if (checkLimit()) { toast.error("Too many attempts. Please wait a moment."); return; }
     setLoading(true);
 
     if (isLogin) {
@@ -74,7 +80,8 @@ const Auth = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 relative">
+            <HoneypotField value={honeypot} onChange={setHoneypot} />
             {!isLogin && (
               <div>
                 <Label htmlFor="fullName">Full Name</Label>
