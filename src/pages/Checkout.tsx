@@ -334,11 +334,6 @@ const Checkout = () => {
                   >
                     {loading ? "Processing..." : `Place Order — $${total.toFixed(2)}`}
                   </Button>
-                  {totalPrice < 50 && (
-                    <p className="text-xs text-muted-foreground text-center mt-3">
-                      Add ${(50 - totalPrice).toFixed(2)} more for free shipping!
-                    </p>
-                  )}
                 </div>
               </div>
             </div>

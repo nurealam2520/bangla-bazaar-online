@@ -13,8 +13,8 @@ const faqs = [
     a: "Shipping times vary by location. US orders typically arrive in 5–10 business days. International orders (Canada, Australia, NZ) take 10–20 business days depending on the destination.",
   },
   {
-    q: "Do you offer free shipping?",
-    a: "Yes! We offer free shipping on orders above a certain threshold. Check our shipping page for details on free shipping minimums for your country.",
+    q: "How does shipping work?",
+    a: "We offer fast & secure shipping worldwide. Shipping rates are calculated at checkout based on your location and order weight. Check our shipping page for delivery estimates to your country.",
   },
   {
     q: "Can I return an opened product?",
