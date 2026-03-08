@@ -49,15 +49,15 @@ const About = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {stats.map((stat, i) => (
                 <motion.div
-                  key={stat.label}
+                  key={stat.key}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
                   className="text-center"
                 >
-                  <p className="text-3xl md:text-4xl font-display font-bold text-primary mb-1">{stat.value}</p>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  <EditableText contentKey={`${stat.key}_value`} fallback={stat.valueFb} as="p" className="text-3xl md:text-4xl font-display font-bold text-primary mb-1" />
+                  <EditableText contentKey={`${stat.key}_label`} fallback={stat.labelFb} as="p" className="text-sm text-muted-foreground" />
                 </motion.div>
               ))}
             </div>
