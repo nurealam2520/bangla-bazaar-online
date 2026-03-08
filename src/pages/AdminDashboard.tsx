@@ -330,6 +330,18 @@ const AdminDashboard = () => {
   const generateSlug = (title: string) =>
     title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
+  const generateExcerpt = async (content: string): Promise<string> => {
+    try {
+      const { data, error } = await supabase.functions.invoke("generate-excerpt", {
+        body: { content },
+      });
+      if (error) throw error;
+      return data?.excerpt || content.replace(/<[^>]*>/g, "").slice(0, 160).trim();
+    } catch {
+      return content.replace(/<[^>]*>/g, "").slice(0, 160).trim();
+    }
+  };
+
   const handleSaveBlogPost = async () => {
     if (!editingPost) return;
     if (!editingPost.title || !editingPost.content) {
@@ -338,11 +350,13 @@ const AdminDashboard = () => {
     }
     try {
       const slug = editingPost.slug || generateSlug(editingPost.title);
+      const excerpt = editingPost.excerpt || await generateExcerpt(editingPost.content);
+      
       if (editingPost.isNew) {
         await createBlogPost.mutateAsync({
           title: editingPost.title,
           slug,
-          excerpt: editingPost.excerpt || editingPost.content.replace(/<[^>]*>/g, "").slice(0, 160).trim(),
+          excerpt,
           content: editingPost.content,
           cover_image: editingPost.cover_image || "",
           author_id: user!.id,
@@ -355,7 +369,7 @@ const AdminDashboard = () => {
           id: editingPost.id!,
           title: editingPost.title,
           slug,
-          excerpt: editingPost.excerpt || editingPost.content?.replace(/<[^>]*>/g, "").slice(0, 160).trim(),
+          excerpt,
           content: editingPost.content,
           cover_image: editingPost.cover_image,
           is_published: editingPost.is_published,
