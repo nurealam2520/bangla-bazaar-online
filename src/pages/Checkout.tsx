@@ -16,9 +16,57 @@ const Checkout = () => {
   const [searchParams] = useSearchParams();
   const [paymentMethod, setPaymentMethod] = useState<"card" | "cod">("card");
   const [loading, setLoading] = useState(false);
+  const [couponCode, setCouponCode] = useState("");
+  const [couponDiscount, setCouponDiscount] = useState(0);
+  const [couponApplied, setCouponApplied] = useState("");
+  const [applyingCoupon, setApplyingCoupon] = useState(false);
 
   const shipping = totalPrice > 50 ? 0 : 5.99;
-  const total = totalPrice + shipping;
+  const total = Math.max(0, totalPrice - couponDiscount + shipping);
+
+  const handleApplyCoupon = async () => {
+    if (!couponCode.trim()) return;
+    setApplyingCoupon(true);
+    const { data, error } = await supabase
+      .from("coupons")
+      .select("*")
+      .eq("code", couponCode.toUpperCase().trim())
+      .eq("is_active", true)
+      .maybeSingle();
+
+    if (error || !data) {
+      toast.error("Invalid or expired coupon code");
+      setApplyingCoupon(false);
+      return;
+    }
+
+    if (data.min_order && totalPrice < Number(data.min_order)) {
+      toast.error(`Minimum order $${Number(data.min_order).toFixed(2)} required`);
+      setApplyingCoupon(false);
+      return;
+    }
+
+    if (data.max_uses && data.max_uses > 0 && data.used_count >= data.max_uses) {
+      toast.error("Coupon usage limit reached");
+      setApplyingCoupon(false);
+      return;
+    }
+
+    if (data.expires_at && new Date(data.expires_at) < new Date()) {
+      toast.error("Coupon has expired");
+      setApplyingCoupon(false);
+      return;
+    }
+
+    const discount = data.type === "percentage"
+      ? (totalPrice * Number(data.value)) / 100
+      : Number(data.value);
+
+    setCouponDiscount(Math.min(discount, totalPrice));
+    setCouponApplied(data.code);
+    toast.success(`Coupon applied! You save $${Math.min(discount, totalPrice).toFixed(2)}`);
+    setApplyingCoupon(false);
+  };
 
   // Handle Stripe success/cancel redirects
   useEffect(() => {
@@ -241,11 +289,32 @@ const Checkout = () => {
                     ))}
                   </div>
 
+                  {/* Coupon Code */}
+                  <div className="border-t border-border pt-4 pb-2">
+                    {couponApplied ? (
+                      <div className="flex items-center justify-between bg-primary/10 rounded-lg px-3 py-2">
+                        <span className="text-sm font-mono text-primary font-bold">{couponApplied}</span>
+                        <button type="button" onClick={() => { setCouponDiscount(0); setCouponApplied(""); setCouponCode(""); }} className="text-xs text-destructive hover:underline">Remove</button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2">
+                        <Input placeholder="Coupon code" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} className="h-8 text-xs uppercase" />
+                        <Button type="button" size="sm" variant="outline" onClick={handleApplyCoupon} disabled={applyingCoupon} className="shrink-0 text-xs h-8">{applyingCoupon ? "..." : "Apply"}</Button>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="border-t border-border pt-4 space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Subtotal</span>
                       <span>${totalPrice.toFixed(2)}</span>
                     </div>
+                    {couponDiscount > 0 && (
+                      <div className="flex justify-between text-primary">
+                        <span>Discount</span>
+                        <span>-${couponDiscount.toFixed(2)}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Shipping</span>
                        <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>

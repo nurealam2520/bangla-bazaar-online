@@ -4,6 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Star, ShoppingCart, Heart, Eye, Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useCart } from "@/contexts/CartContext";
+import { useWishlist } from "@/hooks/useWishlist";
+import { useAuth } from "@/contexts/AuthContext";
+import { toast } from "sonner";
 import type { Product } from "@/hooks/useProducts";
 
 const item = {
@@ -13,9 +16,16 @@ const item = {
 
 const ProductCard = ({ product }: { product: Product }) => {
   const { addToCart } = useCart();
-  const [isWished, setIsWished] = useState(false);
+  const { user } = useAuth();
+  const { wishlistIds, toggleWishlist } = useWishlist();
+  const isWished = wishlistIds.includes(product.id);
   const [showQuick, setShowQuick] = useState(false);
   const [justAdded, setJustAdded] = useState(false);
+
+  const handleWishlist = () => {
+    if (!user) { toast.error("Sign in to save to wishlist"); return; }
+    toggleWishlist.mutate(product.id);
+  };
 
   const handleAddToCart = () => {
     addToCart({
@@ -74,7 +84,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           <div className="absolute top-3 right-3 flex flex-col gap-2">
             <motion.button
               whileTap={{ scale: 0.85 }}
-              onClick={() => setIsWished(!isWished)}
+              onClick={handleWishlist}
               className={`w-9 h-9 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-sm ${
                 isWished
                   ? "bg-destructive/90 text-destructive-foreground"

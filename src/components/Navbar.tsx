@@ -27,6 +27,8 @@ const desktopNavLinks = [
 const mobileMenuLinks = [
   { label: "About Us", href: "/about", icon: Info },
   { label: "Track Order", href: "/track-order", icon: Package },
+  { label: "Wishlist", href: "/wishlist", icon: Heart },
+  { label: "My Account", href: "/profile", icon: User },
   { label: "Sign In / Sign Up", href: "/auth", icon: LogIn },
   { label: "Admin Dashboard", href: "/admin", icon: Shield, adminOnly: true },
 ];
@@ -131,8 +133,8 @@ const Navbar = () => {
             <Button variant="ghost" size="icon" asChild>
               <Link to="/shop"><Search className="h-4 w-4" /></Link>
             </Button>
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <Heart className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
+              <Link to="/wishlist"><Heart className="h-4 w-4" /></Link>
             </Button>
             <Button
               variant="ghost"
@@ -158,7 +160,7 @@ const Navbar = () => {
               </Button>
             )}
             <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
-              <Link to={user ? "/admin" : "/auth"}><User className="h-4 w-4" /></Link>
+              <Link to={user ? "/profile" : "/auth"}><User className="h-4 w-4" /></Link>
             </Button>
 
             {/* Hamburger (mobile) */}
