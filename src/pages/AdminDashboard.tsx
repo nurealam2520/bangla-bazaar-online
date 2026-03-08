@@ -342,7 +342,7 @@ const AdminDashboard = () => {
         await createBlogPost.mutateAsync({
           title: editingPost.title,
           slug,
-          excerpt: editingPost.excerpt || "",
+          excerpt: editingPost.excerpt || editingPost.content.replace(/<[^>]*>/g, "").slice(0, 160).trim(),
           content: editingPost.content,
           cover_image: editingPost.cover_image || "",
           author_id: user!.id,
