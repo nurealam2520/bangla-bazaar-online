@@ -1,26 +1,47 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
+import EditableText from "@/components/EditableText";
+import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Footer = () => {
+  const { get } = useSiteContent();
+
+  const socialLinks = [
+    { Icon: Facebook, key: "social_facebook" },
+    { Icon: Instagram, key: "social_instagram" },
+    { Icon: Youtube, key: "social_youtube" },
+  ];
+
   return (
     <footer className="bg-card border-t border-border">
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-10">
           <div>
-            <h3 className="text-2xl font-display font-bold text-gradient-gold mb-4">🐾 Pawnest</h3>
-            <p className="text-sm text-muted-foreground mb-6 leading-relaxed">
-              Premium pet food & accessories delivered worldwide. Trusted by pet owners across the USA, Canada, Australia & New Zealand.
-            </p>
+            <h3 className="text-2xl font-display font-bold text-gradient-gold mb-4">
+              <EditableText contentKey="logo_text" fallback="🐾 Pawnest" />
+            </h3>
+            <EditableText
+              contentKey="footer_description"
+              fallback="Premium pet food & accessories delivered worldwide. Trusted by pet owners across the USA, Canada, Australia & New Zealand."
+              as="p"
+              className="text-sm text-muted-foreground mb-6 leading-relaxed"
+              multiline
+            />
             <div className="flex gap-3">
-              {[Facebook, Instagram, Youtube].map((Icon, i) => (
-                <a
-                  key={i}
-                  href="#"
-                  className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                >
-                  <Icon className="h-4 w-4" />
-                </a>
-              ))}
+              {socialLinks.map(({ Icon, key }) => {
+                const href = get(key, "#");
+                return (
+                  <a
+                    key={key}
+                    href={href || "#"}
+                    target={href && href !== "#" ? "_blank" : undefined}
+                    rel="noopener noreferrer"
+                    className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                );
+              })}
             </div>
           </div>
 
@@ -66,11 +87,11 @@ const Footer = () => {
               </li>
               <li className="flex items-center gap-3">
                 <Phone className="h-4 w-4 text-primary shrink-0" />
-                <span>+1 (800) 555-PETS</span>
+                <EditableText contentKey="footer_phone" fallback="+1 (800) 555-PETS" />
               </li>
               <li className="flex items-center gap-3">
                 <Mail className="h-4 w-4 text-primary shrink-0" />
-                <span>hello@compawnest.com</span>
+                <EditableText contentKey="footer_email" fallback="hello@compawnest.com" />
               </li>
             </ul>
           </div>
