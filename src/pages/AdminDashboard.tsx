@@ -1293,6 +1293,11 @@ const AdminDashboard = () => {
             )}
           </TabsContent>
 
+          {/* Messages Tab */}
+          <TabsContent value="messages" className="space-y-6">
+            <ContactMessages />
+          </TabsContent>
+
           {/* Security Tab */}
           <TabsContent value="security" className="space-y-4">
             <h3 className="font-display font-bold text-lg">Rate Limit Log</h3>
@@ -1323,6 +1328,8 @@ const AdminDashboard = () => {
           {/* Settings Tab */}
           <TabsContent value="settings" className="space-y-6">
             <h3 className="font-display font-bold text-lg">Store Settings</h3>
+            <SmtpSettings />
+            <LiveChatSettings />
             <PaymentSettings />
             <ShippingSettings />
             <CouponSettings />
