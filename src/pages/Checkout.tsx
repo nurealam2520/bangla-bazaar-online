@@ -23,6 +23,8 @@ const Checkout = () => {
   const [couponDiscount, setCouponDiscount] = useState(0);
   const [couponApplied, setCouponApplied] = useState("");
   const [applyingCoupon, setApplyingCoupon] = useState(false);
+  const { honeypot, setHoneypot, isBot } = useBotProtection(3000);
+  const { checkLimit } = useFormRateLimit(3, 120000);
 
   const shipping = totalPrice > 50 ? 0 : 5.99;
   const total = Math.max(0, totalPrice - couponDiscount + shipping);
