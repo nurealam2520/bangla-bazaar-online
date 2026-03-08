@@ -24,6 +24,7 @@ import ShippingSettings from "@/components/admin/ShippingSettings";
 import PaymentSettings from "@/components/admin/PaymentSettings";
 import CouponSettings from "@/components/admin/CouponSettings";
 import RichTextEditor from "@/components/admin/RichTextEditor";
+import DataBackup from "@/components/admin/DataBackup";
 
 interface Order {
   id: string;
