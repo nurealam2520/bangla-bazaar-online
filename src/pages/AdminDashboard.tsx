@@ -959,8 +959,8 @@ const AdminDashboard = () => {
 
           {/* Blog Tab */}
           <TabsContent value="blog" className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-display font-bold text-lg">Blog Management</h3>
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="font-display font-bold text-lg flex-1">Blog Management</h3>
               <Button
                 size="sm"
                 onClick={() => setEditingPost({ isNew: true, title: "", slug: "", excerpt: "", content: "", cover_image: "", is_published: false, published_at: null })}
@@ -969,14 +969,14 @@ const AdminDashboard = () => {
                 <Plus className="h-4 w-4" /> New Post
               </Button>
               {localStorage.getItem(DRAFT_KEY) && !editingPost && (
-                <div className="flex items-center gap-2">
+                <>
                   <Button size="sm" variant="outline" onClick={loadDraft} className="gap-1.5">
-                    <Clock className="h-4 w-4" /> Load Draft
+                    <Clock className="h-4 w-4" /> Draft
                   </Button>
-                  <Button size="sm" variant="ghost" onClick={clearDraft} className="text-destructive">
+                  <Button size="sm" variant="ghost" onClick={clearDraft} className="text-destructive h-8 w-8 p-0">
                     <Trash2 className="h-4 w-4" />
                   </Button>
-                </div>
+                </>
               )}
             </div>
 
