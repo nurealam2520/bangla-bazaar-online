@@ -2,22 +2,23 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
+import EditableText from "@/components/EditableText";
 import { Heart, Shield, Truck, Users, Award, Leaf } from "lucide-react";
 
 const values = [
-  { icon: Heart, title: "Pet-First Philosophy", description: "Every product is selected with your pet's health, safety, and happiness in mind." },
-  { icon: Shield, title: "Quality Guaranteed", description: "We only stock products from trusted, certified brands — no compromises." },
-  { icon: Truck, title: "Global Delivery", description: "Fast, reliable shipping to the USA, Canada, Australia & New Zealand." },
-  { icon: Leaf, title: "Eco-Conscious", description: "Sustainable packaging and eco-friendly product options wherever possible." },
-  { icon: Users, title: "Community Driven", description: "Built by pet parents, for pet parents. Your feedback shapes everything we do." },
-  { icon: Award, title: "Expert Curated", description: "Our team of veterinarians and pet experts hand-pick every item in our catalog." },
+  { icon: Heart, key: "about_value_1", titleFb: "Pet-First Philosophy", descFb: "Every product is selected with your pet's health, safety, and happiness in mind." },
+  { icon: Shield, key: "about_value_2", titleFb: "Quality Guaranteed", descFb: "We only stock products from trusted, certified brands — no compromises." },
+  { icon: Truck, key: "about_value_3", titleFb: "Global Delivery", descFb: "Fast, reliable shipping to the USA, Canada, Australia & New Zealand." },
+  { icon: Leaf, key: "about_value_4", titleFb: "Eco-Conscious", descFb: "Sustainable packaging and eco-friendly product options wherever possible." },
+  { icon: Users, key: "about_value_5", titleFb: "Community Driven", descFb: "Built by pet parents, for pet parents. Your feedback shapes everything we do." },
+  { icon: Award, key: "about_value_6", titleFb: "Expert Curated", descFb: "Our team of veterinarians and pet experts hand-pick every item in our catalog." },
 ];
 
 const stats = [
-  { value: "50K+", label: "Happy Customers" },
-  { value: "200+", label: "Premium Products" },
-  { value: "4", label: "Countries Served" },
-  { value: "4.9★", label: "Average Rating" },
+  { key: "about_stat_1", valueFb: "50K+", labelFb: "Happy Customers" },
+  { key: "about_stat_2", valueFb: "200+", labelFb: "Premium Products" },
+  { key: "about_stat_3", valueFb: "4", labelFb: "Countries Served" },
+  { key: "about_stat_4", valueFb: "4.9★", labelFb: "Average Rating" },
 ];
 
 const About = () => {
@@ -29,29 +30,16 @@ const About = () => {
         {/* Hero */}
         <section className="py-24 bg-secondary/30">
           <div className="container mx-auto px-4 text-center">
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-primary font-medium tracking-widest uppercase text-sm mb-3"
-            >
-              Our Story
-            </motion.p>
-            <motion.h1
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 }}
-              className="text-4xl md:text-6xl font-display font-bold mb-6"
-            >
-              About <span className="text-gradient-green">Pawnest</span>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+              <EditableText contentKey="about_label" fallback="Our Story" as="p" className="text-primary font-medium tracking-widest uppercase text-sm mb-3" />
+            </motion.div>
+            <motion.h1 initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="text-4xl md:text-6xl font-display font-bold mb-6">
+              <EditableText contentKey="about_title_1" fallback="About" as="span" />{" "}
+              <EditableText contentKey="about_title_2" fallback="Pawnest" as="span" className="text-gradient-green" />
             </motion.h1>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.2 }}
-              className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed"
-            >
-              Founded by passionate pet owners, Pawnest is on a mission to make premium pet care accessible to every dog and cat parent worldwide. We believe your furry family members deserve nothing but the best.
-            </motion.p>
+            <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
+              <EditableText contentKey="about_description" fallback="Founded by passionate pet owners, Pawnest is on a mission to make premium pet care accessible to every dog and cat parent worldwide. We believe your furry family members deserve nothing but the best." as="p" className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed" multiline />
+            </motion.div>
           </div>
         </section>
 
@@ -61,15 +49,15 @@ const About = () => {
             <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
               {stats.map((stat, i) => (
                 <motion.div
-                  key={stat.label}
+                  key={stat.key}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
                   className="text-center"
                 >
-                  <p className="text-3xl md:text-4xl font-display font-bold text-primary mb-1">{stat.value}</p>
-                  <p className="text-sm text-muted-foreground">{stat.label}</p>
+                  <EditableText contentKey={`${stat.key}_value`} fallback={stat.valueFb} as="p" className="text-3xl md:text-4xl font-display font-bold text-primary mb-1" />
+                  <EditableText contentKey={`${stat.key}_label`} fallback={stat.labelFb} as="p" className="text-sm text-muted-foreground" />
                 </motion.div>
               ))}
             </div>
@@ -80,15 +68,16 @@ const About = () => {
         <section className="py-24">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">What We Stand For</p>
+              <EditableText contentKey="about_values_label" fallback="What We Stand For" as="p" className="text-primary font-medium tracking-widest uppercase text-sm mb-3" />
               <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
-                Our <span className="text-gradient-green">Values</span>
+                <EditableText contentKey="about_values_title_1" fallback="Our" as="span" />{" "}
+                <EditableText contentKey="about_values_title_2" fallback="Values" as="span" className="text-gradient-green" />
               </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {values.map((item, i) => (
                 <motion.div
-                  key={item.title}
+                  key={item.key}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -98,8 +87,8 @@ const About = () => {
                   <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-5">
                     <item.icon className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="font-display font-semibold text-lg mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+                  <EditableText contentKey={`${item.key}_title`} fallback={item.titleFb} as="h3" className="font-display font-semibold text-lg mb-2" />
+                  <EditableText contentKey={`${item.key}_desc`} fallback={item.descFb} as="p" className="text-sm text-muted-foreground leading-relaxed" />
                 </motion.div>
               ))}
             </div>
@@ -109,15 +98,13 @@ const About = () => {
         {/* CTA */}
         <section className="py-24 bg-gradient-green text-primary-foreground">
           <div className="container mx-auto px-4 text-center">
-            <h2 className="text-3xl md:text-4xl font-display font-bold mb-4">Ready to Give Your Pet the Best?</h2>
-            <p className="text-primary-foreground/80 max-w-lg mx-auto mb-8">
-              Join thousands of happy pet parents who trust Pawnest for premium quality products.
-            </p>
+            <EditableText contentKey="about_cta_title" fallback="Ready to Give Your Pet the Best?" as="h2" className="text-3xl md:text-4xl font-display font-bold mb-4" />
+            <EditableText contentKey="about_cta_desc" fallback="Join thousands of happy pet parents who trust Pawnest for premium quality products." as="p" className="text-primary-foreground/80 max-w-lg mx-auto mb-8" />
             <a
               href="/"
               className="inline-flex items-center px-8 py-3 rounded-lg bg-background text-foreground font-semibold hover:opacity-90 transition-opacity"
             >
-              Start Shopping
+              <EditableText contentKey="about_cta_button" fallback="Start Shopping" />
             </a>
           </div>
         </section>
