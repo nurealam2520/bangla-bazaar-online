@@ -21,6 +21,8 @@ const Auth = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { honeypot, setHoneypot, isBot } = useBotProtection(1500);
+  const { checkLimit } = useFormRateLimit(5, 60000);
 
   if (user) {
     navigate("/");
