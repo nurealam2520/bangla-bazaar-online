@@ -549,6 +549,9 @@ const AdminDashboard = () => {
             <TabsTrigger value="settings" className="rounded-lg text-xs px-2.5">
               <Settings className="h-3.5 w-3.5 mr-1" /> Settings
             </TabsTrigger>
+            <TabsTrigger value="backup" className="rounded-lg text-xs px-2.5">
+              <Database className="h-3.5 w-3.5 mr-1" /> Backup
+            </TabsTrigger>
           </TabsList>
 
           {/* Products Tab */}
