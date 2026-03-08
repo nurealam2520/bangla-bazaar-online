@@ -26,12 +26,17 @@ interface Order {
   shipping_email: string;
   status: string;
   total: number;
+  subtotal: number;
   payment_method: string;
   is_suspicious: boolean;
   fraud_score: number;
   fraud_reasons: string[] | null;
   created_at: string;
   ip_address: string | null;
+  tracking_number: string | null;
+  tracking_url: string | null;
+  supplier_order_id: string | null;
+  fulfillment_status: string;
 }
 
 interface OrderItem {
