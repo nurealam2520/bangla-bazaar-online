@@ -9,8 +9,9 @@ import {
   ShoppingCart, Users, Shield, AlertTriangle, Package,
   LogOut, ArrowLeft, RefreshCw, Eye, CheckCircle, XCircle,
   Clock, Plus, Pencil, Trash2, X, Save, FileText, Globe, EyeOff,
-  UserCog, UserPlus, UserMinus, Settings
+  UserCog, UserPlus, UserMinus, Settings, Upload, ImageIcon, Loader2
 } from "lucide-react";
+import { optimizeImage, formatFileSize } from "@/lib/imageOptimizer";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
