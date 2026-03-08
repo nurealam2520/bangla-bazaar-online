@@ -4,7 +4,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { CreditCard, Save, RefreshCw } from "lucide-react";
-import StripeSettings from "./StripeSettings";
 
 interface PaymentSetting {
   id: string;
@@ -58,8 +57,6 @@ const PaymentSettings = () => {
       .update({
         min_order: setting.min_order,
         max_order: setting.max_order,
-        allowed_countries: setting.allowed_countries,
-        config: setting.config,
       })
       .eq("id", setting.id);
     if (error) toast.error(error.message);
@@ -75,10 +72,6 @@ const PaymentSettings = () => {
         <CreditCard className="h-5 w-5 text-primary" /> Payment Gateways
       </h3>
 
-      {/* Stripe detailed config */}
-      <StripeSettings />
-
-      {/* All gateways */}
       {settings.map((setting, i) => {
         const info = providerLabels[setting.provider] || { name: setting.provider, icon: "💰", desc: "" };
         return (
@@ -91,19 +84,17 @@ const PaymentSettings = () => {
                   <p className="text-xs text-muted-foreground">{info.desc}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-3">
-                <button
-                  onClick={() => handleToggle(setting)}
-                  className={`w-12 h-6 rounded-full transition-colors relative ${setting.is_enabled ? "bg-primary" : "bg-muted"}`}
-                >
-                  <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${setting.is_enabled ? "left-[26px]" : "left-0.5"}`} />
-                </button>
-              </div>
+              <button
+                onClick={() => handleToggle(setting)}
+                className={`w-12 h-6 rounded-full transition-colors relative ${setting.is_enabled ? "bg-primary" : "bg-muted"}`}
+              >
+                <span className={`absolute top-0.5 w-5 h-5 rounded-full bg-white transition-transform ${setting.is_enabled ? "left-[26px]" : "left-0.5"}`} />
+              </button>
             </div>
 
             {setting.is_enabled && (
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3 pt-3 border-t border-border">
-                <div>
+              <div className="flex items-end gap-3 pt-3 border-t border-border">
+                <div className="flex-1">
                   <label className="text-xs text-muted-foreground block mb-1">Min Order ($)</label>
                   <Input
                     type="number" step="0.01"
@@ -116,8 +107,8 @@ const PaymentSettings = () => {
                     className="h-8 text-xs"
                   />
                 </div>
-                <div>
-                  <label className="text-xs text-muted-foreground block mb-1">Max Order ($, 0=no limit)</label>
+                <div className="flex-1">
+                  <label className="text-xs text-muted-foreground block mb-1">Max Order ($, 0 = no limit)</label>
                   <Input
                     type="number" step="0.01"
                     value={setting.max_order}
@@ -129,24 +120,9 @@ const PaymentSettings = () => {
                     className="h-8 text-xs"
                   />
                 </div>
-                <div>
-                  <label className="text-xs text-muted-foreground block mb-1">Countries (comma-sep)</label>
-                  <Input
-                    value={setting.allowed_countries.join(",")}
-                    onChange={(e) => {
-                      const updated = [...settings];
-                      updated[i] = { ...setting, allowed_countries: e.target.value.split(",").map(c => c.trim()).filter(Boolean) };
-                      setSettings(updated);
-                    }}
-                    placeholder="US,CA,AU,NZ"
-                    className="h-8 text-xs"
-                  />
-                </div>
-                <div className="col-span-2 md:col-span-3 flex justify-end">
-                  <Button size="sm" onClick={() => handleSave(setting)} disabled={saving === setting.id} className="gap-1.5">
-                    <Save className="h-3.5 w-3.5" /> {saving === setting.id ? "Saving..." : "Save"}
-                  </Button>
-                </div>
+                <Button size="sm" onClick={() => handleSave(setting)} disabled={saving === setting.id} className="gap-1.5">
+                  <Save className="h-3.5 w-3.5" /> {saving === setting.id ? "Saving..." : "Save"}
+                </Button>
               </div>
             )}
           </div>
