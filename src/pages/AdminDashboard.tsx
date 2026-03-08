@@ -1022,12 +1022,48 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Cover Image URL</label>
-                      <Input
-                        value={editingPost.cover_image || ""}
-                        onChange={(e) => setEditingPost({ ...editingPost, cover_image: e.target.value })}
-                        placeholder="https://..."
-                      />
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">কভার ইমেজ</label>
+                      {editingPost.cover_image && (
+                        <img src={editingPost.cover_image} alt="Cover" className="w-full h-32 object-cover rounded-xl mb-2" />
+                      )}
+                      <div className="flex gap-2">
+                        <Input
+                          value={editingPost.cover_image || ""}
+                          onChange={(e) => setEditingPost({ ...editingPost, cover_image: e.target.value })}
+                          placeholder="URL অথবা নিচের বাটন দিয়ে আপলোড করুন"
+                          className="flex-1"
+                        />
+                        <label className="inline-flex items-center gap-1.5 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium cursor-pointer hover:opacity-90 transition-opacity">
+                          <Upload className="h-4 w-4" />
+                          আপলোড
+                          <input
+                            type="file"
+                            accept="image/*"
+                            className="hidden"
+                            onChange={async (e) => {
+                              const file = e.target.files?.[0];
+                              if (!file) return;
+                              try {
+                                const optimized = await optimizeImage(file);
+                                const ext = optimized.name.split(".").pop();
+                                const fileName = `blog-cover-${Date.now()}.${ext}`;
+                                const { error: uploadError } = await supabase.storage
+                                  .from("site-images")
+                                  .upload(fileName, optimized, { upsert: true });
+                                if (uploadError) throw uploadError;
+                                const { data: urlData } = supabase.storage
+                                  .from("site-images")
+                                  .getPublicUrl(fileName);
+                                setEditingPost({ ...editingPost, cover_image: urlData.publicUrl });
+                                toast.success("কভার ইমেজ আপলোড হয়েছে!");
+                              } catch (err: any) {
+                                toast.error("আপলোড ব্যর্থ: " + err.message);
+                              }
+                              e.target.value = "";
+                            }}
+                          />
+                        </label>
+                      </div>
                     </div>
                     <div className="md:col-span-2">
                       <label className="text-sm font-medium text-muted-foreground mb-1 block">Excerpt</label>
