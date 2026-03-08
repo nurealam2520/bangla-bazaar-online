@@ -62,6 +62,9 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => setMounted(true), []);
 
@@ -70,12 +73,26 @@ const Navbar = () => {
     setMenuOpen(false);
   }, [location.pathname]);
 
+  // Show/hide navbar on scroll direction + back to top button
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      setNavVisible(currentY < 50 || currentY < lastScrollY.current);
+      setShowBackToTop(currentY > 400);
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
   return (
     <>
       {/* Top bar */}
-      <nav className="sticky top-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border">
+      <nav className={`sticky top-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border transition-transform duration-300 ${navVisible ? "translate-y-0" : "-translate-y-full"}`}>
         <div className="container mx-auto flex items-center justify-between h-14 md:h-16 px-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
