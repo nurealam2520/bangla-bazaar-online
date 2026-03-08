@@ -84,7 +84,7 @@ const ProductCard = ({ product }: { product: Product }) => {
           <div className="absolute top-3 right-3 flex flex-col gap-2">
             <motion.button
               whileTap={{ scale: 0.85 }}
-              onClick={() => setIsWished(!isWished)}
+              onClick={handleWishlist}
               className={`w-9 h-9 rounded-full backdrop-blur-md flex items-center justify-center transition-all duration-300 shadow-sm ${
                 isWished
                   ? "bg-destructive/90 text-destructive-foreground"
