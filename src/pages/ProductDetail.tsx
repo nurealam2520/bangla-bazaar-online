@@ -78,11 +78,11 @@ const ProductDetail = () => {
         name: product.name,
         price: Number(product.price),
         image: product.image,
-        original_price: product.original_price ? Number(product.original_price) : null,
+        originalPrice: product.original_price ? Number(product.original_price) : null,
         rating: Number(product.rating),
         reviews: product.reviews,
         badge: product.badge,
-        category: product.category as "dogs" | "cats",
+        category: product.category,
         subcategory: product.subcategory,
         description: product.description,
       });
