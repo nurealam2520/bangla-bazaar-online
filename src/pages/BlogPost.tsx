@@ -14,17 +14,23 @@ const BlogPost = () => {
   const { data: post, isLoading, error } = useBlogPostBySlug(slug || "");
   const { data: relatedProducts = [] } = useProducts();
 
-  // Auto-generate table of contents from ## headings
+  // Check if content is HTML (from rich editor) or plain markdown
+  const isHtml = post?.content ? /<[a-z][\s\S]*>/i.test(post.content) : false;
+
+  // Auto-generate table of contents from headings
   const headings = post?.content
-    ? post.content.match(/^##\s+(.+)$/gm)?.map((h) => h.replace(/^##\s+/, "")) || []
+    ? isHtml
+      ? (post.content.match(/<h2[^>]*>([^<]+)<\/h2>/gi) || []).map((h) =>
+          h.replace(/<\/?h2[^>]*>/g, "")
+        )
+      : post.content.match(/^##\s+(.+)$/gm)?.map((h) => h.replace(/^##\s+/, "")) || []
     : [];
 
-  // Format content: convert markdown-like syntax to HTML-ish rendering
-  const formatContent = (content: string) => {
+  // Format old markdown content (backward compatible)
+  const formatMarkdownContent = (content: string) => {
     return content
       .split("\n\n")
       .map((paragraph, i) => {
-        // H2 headings
         if (paragraph.startsWith("## ")) {
           const text = paragraph.replace("## ", "");
           const id = text.toLowerCase().replace(/[^a-z0-9]+/g, "-");
@@ -34,7 +40,6 @@ const BlogPost = () => {
             </h2>
           );
         }
-        // H3 headings
         if (paragraph.startsWith("### ")) {
           return (
             <h3 key={i} className="text-xl font-display font-semibold mt-8 mb-3">
@@ -42,7 +47,6 @@ const BlogPost = () => {
             </h3>
           );
         }
-        // Bold text
         const formatted = paragraph.replace(
           /\*\*(.+?)\*\*/g,
           '<strong class="font-semibold text-foreground">$1</strong>'
