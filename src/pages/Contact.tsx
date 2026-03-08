@@ -8,6 +8,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Mail, Phone, MapPin, Clock, Send } from "lucide-react";
 import { toast } from "sonner";
+import { useBotProtection, useFormRateLimit } from "@/hooks/useBotProtection";
+import HoneypotField from "@/components/HoneypotField";
 
 const contactInfo = [
   { icon: Mail, label: "Email", value: "hello@compawnest.com" },
