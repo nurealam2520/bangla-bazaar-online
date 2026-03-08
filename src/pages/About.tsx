@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import { Heart, Shield, Truck, Users, Award, Leaf } from "lucide-react";
 
 const values = [
