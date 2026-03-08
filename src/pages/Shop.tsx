@@ -2,6 +2,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import ProductCard from "@/components/ProductCard";
 import { useProducts } from "@/hooks/useProducts";
 import { Search, RefreshCw } from "lucide-react";
@@ -38,6 +39,11 @@ const Shop = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <SEOHead
+        title="Shop Pet Products"
+        description="Browse our complete collection of premium dog & cat food, toys, beds and accessories. Free shipping on orders over $50."
+        canonical="/shop"
+      />
       <Navbar />
       <main>
         <section className="py-16 bg-secondary/30">
