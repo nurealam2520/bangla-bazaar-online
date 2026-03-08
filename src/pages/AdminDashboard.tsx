@@ -454,12 +454,20 @@ const AdminDashboard = () => {
                       />
                     </div>
                     <div>
-                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Image URL *</label>
-                      <Input
-                        value={editingProduct.image || ""}
-                        onChange={(e) => setEditingProduct({ ...editingProduct, image: e.target.value })}
-                        placeholder="https://..."
-                      />
+                      <label className="text-sm font-medium text-muted-foreground mb-1 block">Image *</label>
+                      <div className="space-y-2">
+                        <Input
+                          value={editingProduct.image || ""}
+                          onChange={(e) => setEditingProduct({ ...editingProduct, image: e.target.value })}
+                          placeholder="Image URL অথবা নিচে আপলোড করুন..."
+                        />
+                        <ProductImageUploader
+                          onUploaded={(url) => setEditingProduct({ ...editingProduct, image: url })}
+                        />
+                        {editingProduct.image && (
+                          <img src={editingProduct.image} alt="Preview" className="h-16 w-16 rounded-lg object-cover border border-border" />
+                        )}
+                      </div>
                     </div>
                     <div>
                       <label className="text-sm font-medium text-muted-foreground mb-1 block">Price *</label>
