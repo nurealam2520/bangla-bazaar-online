@@ -289,11 +289,32 @@ const Checkout = () => {
                     ))}
                   </div>
 
+                  {/* Coupon Code */}
+                  <div className="border-t border-border pt-4 pb-2">
+                    {couponApplied ? (
+                      <div className="flex items-center justify-between bg-primary/10 rounded-lg px-3 py-2">
+                        <span className="text-sm font-mono text-primary font-bold">{couponApplied}</span>
+                        <button type="button" onClick={() => { setCouponDiscount(0); setCouponApplied(""); setCouponCode(""); }} className="text-xs text-destructive hover:underline">Remove</button>
+                      </div>
+                    ) : (
+                      <div className="flex gap-2">
+                        <Input placeholder="Coupon code" value={couponCode} onChange={(e) => setCouponCode(e.target.value)} className="h-8 text-xs uppercase" />
+                        <Button type="button" size="sm" variant="outline" onClick={handleApplyCoupon} disabled={applyingCoupon} className="shrink-0 text-xs h-8">{applyingCoupon ? "..." : "Apply"}</Button>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="border-t border-border pt-4 space-y-2 text-sm">
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Subtotal</span>
                       <span>${totalPrice.toFixed(2)}</span>
                     </div>
+                    {couponDiscount > 0 && (
+                      <div className="flex justify-between text-primary">
+                        <span>Discount</span>
+                        <span>-${couponDiscount.toFixed(2)}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span className="text-muted-foreground">Shipping</span>
                        <span>{shipping === 0 ? "Free" : `$${shipping.toFixed(2)}`}</span>
