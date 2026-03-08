@@ -491,12 +491,11 @@ const AdminDashboard = () => {
             </h1>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={fetchAll} disabled={fetching} className="gap-1.5">
+            <Button variant="outline" size="icon" onClick={fetchAll} disabled={fetching} className="h-8 w-8">
               <RefreshCw className={`h-3.5 w-3.5 ${fetching ? "animate-spin" : ""}`} />
-              Refresh
             </Button>
-            <Button variant="ghost" size="sm" onClick={signOut} className="gap-1.5 text-destructive">
-              <LogOut className="h-3.5 w-3.5" /> Logout
+            <Button variant="ghost" size="icon" onClick={signOut} className="h-8 w-8 text-destructive">
+              <LogOut className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
@@ -504,10 +503,10 @@ const AdminDashboard = () => {
 
       <main className="container mx-auto px-4 py-6">
         {/* Stats Cards */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+        <div className="grid grid-cols-2 gap-3 mb-6">
           {[
-            { label: "Total Orders", value: orders.length, icon: ShoppingCart, color: "text-primary" },
-            { label: "Total Revenue", value: `$${totalRevenue.toFixed(2)}`, icon: Package, color: "text-primary" },
+            { label: "Orders", value: orders.length, icon: ShoppingCart, color: "text-primary" },
+            { label: "Revenue", value: `$${totalRevenue.toFixed(0)}`, icon: Package, color: "text-primary" },
             { label: "Pending", value: pendingOrders, icon: Clock, color: "text-accent" },
             { label: "Products", value: products.length, icon: Package, color: "text-primary" },
           ].map((stat, i) => (
@@ -515,41 +514,43 @@ const AdminDashboard = () => {
               key={i}
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="bg-card border border-border rounded-xl p-4"
+              transition={{ delay: i * 0.05 }}
+              className="bg-card border border-border rounded-xl p-3"
             >
-              <stat.icon className={`h-5 w-5 ${stat.color} mb-2`} />
-              <p className="text-2xl font-bold">{stat.value}</p>
-              <p className="text-xs text-muted-foreground">{stat.label}</p>
+              <stat.icon className={`h-4 w-4 ${stat.color} mb-1`} />
+              <p className="text-xl font-bold">{stat.value}</p>
+              <p className="text-[11px] text-muted-foreground">{stat.label}</p>
             </motion.div>
           ))}
         </div>
 
         {/* Tabs */}
         <Tabs defaultValue="products" className="space-y-4">
-          <TabsList className="bg-secondary/60 p-1 rounded-xl">
-            <TabsTrigger value="products" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <Package className="h-3.5 w-3.5" /> Products
-            </TabsTrigger>
-            <TabsTrigger value="orders" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <ShoppingCart className="h-3.5 w-3.5" /> Orders
-            </TabsTrigger>
-            <TabsTrigger value="blog" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <FileText className="h-3.5 w-3.5" /> Blog
-            </TabsTrigger>
-            <TabsTrigger value="profiles" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <Users className="h-3.5 w-3.5" /> Users
-            </TabsTrigger>
-            <TabsTrigger value="roles" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <UserCog className="h-3.5 w-3.5" /> Roles
-            </TabsTrigger>
-            <TabsTrigger value="security" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <Shield className="h-3.5 w-3.5" /> Security
-            </TabsTrigger>
-            <TabsTrigger value="settings" className="rounded-lg gap-1.5 text-xs md:text-sm">
-              <Settings className="h-3.5 w-3.5" /> Settings
-            </TabsTrigger>
-          </TabsList>
+          <div className="overflow-x-auto -mx-4 px-4">
+            <TabsList className="bg-secondary/60 p-1 rounded-xl w-max min-w-full">
+              <TabsTrigger value="products" className="rounded-lg text-xs px-2.5">
+                <Package className="h-3.5 w-3.5 mr-1" /> Products
+              </TabsTrigger>
+              <TabsTrigger value="orders" className="rounded-lg text-xs px-2.5">
+                <ShoppingCart className="h-3.5 w-3.5 mr-1" /> Orders
+              </TabsTrigger>
+              <TabsTrigger value="blog" className="rounded-lg text-xs px-2.5">
+                <FileText className="h-3.5 w-3.5 mr-1" /> Blog
+              </TabsTrigger>
+              <TabsTrigger value="profiles" className="rounded-lg text-xs px-2.5">
+                <Users className="h-3.5 w-3.5 mr-1" /> Users
+              </TabsTrigger>
+              <TabsTrigger value="roles" className="rounded-lg text-xs px-2.5">
+                <UserCog className="h-3.5 w-3.5 mr-1" /> Roles
+              </TabsTrigger>
+              <TabsTrigger value="security" className="rounded-lg text-xs px-2.5">
+                <Shield className="h-3.5 w-3.5 mr-1" /> Security
+              </TabsTrigger>
+              <TabsTrigger value="settings" className="rounded-lg text-xs px-2.5">
+                <Settings className="h-3.5 w-3.5 mr-1" /> Settings
+              </TabsTrigger>
+            </TabsList>
+          </div>
 
           {/* Products Tab */}
           <TabsContent value="products" className="space-y-4">
@@ -958,8 +959,8 @@ const AdminDashboard = () => {
 
           {/* Blog Tab */}
           <TabsContent value="blog" className="space-y-4">
-            <div className="flex items-center justify-between">
-              <h3 className="font-display font-bold text-lg">Blog Management</h3>
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="font-display font-bold text-lg flex-1">Blog Management</h3>
               <Button
                 size="sm"
                 onClick={() => setEditingPost({ isNew: true, title: "", slug: "", excerpt: "", content: "", cover_image: "", is_published: false, published_at: null })}
@@ -968,14 +969,14 @@ const AdminDashboard = () => {
                 <Plus className="h-4 w-4" /> New Post
               </Button>
               {localStorage.getItem(DRAFT_KEY) && !editingPost && (
-                <div className="flex items-center gap-2">
+                <>
                   <Button size="sm" variant="outline" onClick={loadDraft} className="gap-1.5">
-                    <Clock className="h-4 w-4" /> Load Draft
+                    <Clock className="h-4 w-4" /> Draft
                   </Button>
-                  <Button size="sm" variant="ghost" onClick={clearDraft} className="text-destructive">
+                  <Button size="sm" variant="ghost" onClick={clearDraft} className="text-destructive h-8 w-8 p-0">
                     <Trash2 className="h-4 w-4" />
                   </Button>
-                </div>
+                </>
               )}
             </div>
 
