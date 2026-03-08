@@ -25,7 +25,7 @@ const Checkout = () => {
     if (searchParams.get("success") === "true") {
       toast.success("Payment successful! Order placed! 🎉");
       clearCart();
-      navigate("/", { replace: true });
+      navigate("/track-order", { replace: true });
     }
     if (searchParams.get("canceled") === "true") {
       toast.error("Payment was cancelled.");
@@ -92,7 +92,7 @@ const Checkout = () => {
         if (data?.success) {
           toast.success(data.message || "Order placed successfully! 🎉");
           clearCart();
-          navigate("/");
+          navigate("/track-order");
         } else {
           toast.error(data?.error || "Something went wrong.");
         }
