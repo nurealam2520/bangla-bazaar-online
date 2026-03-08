@@ -12,7 +12,7 @@ interface SEOHeadProps {
 
 const SITE_NAME = "Pawnest";
 const DEFAULT_DESCRIPTION = "Premium dog & cat products delivered to your door. Shop food, toys, beds & accessories with fast shipping to USA, Canada, Australia & New Zealand.";
-const DEFAULT_IMAGE = "https://compawnest.com/og-image.jpg";
+const DEFAULT_IMAGE = "https://compawnest.com/og-image.png";
 const SITE_URL = "https://compawnest.com";
 
 const SEOHead = ({
