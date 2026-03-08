@@ -68,15 +68,16 @@ const About = () => {
         <section className="py-24">
           <div className="container mx-auto px-4">
             <div className="text-center mb-16">
-              <p className="text-primary font-medium tracking-widest uppercase text-sm mb-3">What We Stand For</p>
+              <EditableText contentKey="about_values_label" fallback="What We Stand For" as="p" className="text-primary font-medium tracking-widest uppercase text-sm mb-3" />
               <h2 className="text-4xl md:text-5xl font-display font-bold mb-4">
-                Our <span className="text-gradient-green">Values</span>
+                <EditableText contentKey="about_values_title_1" fallback="Our" as="span" />{" "}
+                <EditableText contentKey="about_values_title_2" fallback="Values" as="span" className="text-gradient-green" />
               </h2>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {values.map((item, i) => (
                 <motion.div
-                  key={item.title}
+                  key={item.key}
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
@@ -86,8 +87,8 @@ const About = () => {
                   <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center mb-5">
                     <item.icon className="h-6 w-6 text-primary" />
                   </div>
-                  <h3 className="font-display font-semibold text-lg mb-2">{item.title}</h3>
-                  <p className="text-sm text-muted-foreground leading-relaxed">{item.description}</p>
+                  <EditableText contentKey={`${item.key}_title`} fallback={item.titleFb} as="h3" className="font-display font-semibold text-lg mb-2" />
+                  <EditableText contentKey={`${item.key}_desc`} fallback={item.descFb} as="p" className="text-sm text-muted-foreground leading-relaxed" />
                 </motion.div>
               ))}
             </div>
