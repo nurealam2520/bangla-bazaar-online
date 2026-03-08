@@ -321,8 +321,8 @@ const ProductDetail = () => {
             <section>
               <h2 className="text-2xl font-display font-bold mb-8">You May Also Like</h2>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {relatedProducts.map((p) => (
-                  <ProductCard key={p.id} product={p} />
+                {relatedProducts.map((p: any) => (
+                  <ProductCard key={p.id} product={{ ...p, category: p.category as "dogs" | "cats" }} />
                 ))}
               </div>
             </section>
