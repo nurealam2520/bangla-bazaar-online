@@ -1,4 +1,4 @@
-import { useRef, useCallback } from "react";
+import { useRef, useCallback, useEffect } from "react";
 import {
   Bold, Italic, Underline, Heading1, Heading2, Heading3,
   List, ListOrdered, Link2, ImageIcon, AlignLeft, AlignCenter,
@@ -36,12 +36,24 @@ const ToolbarButton = ({
 
 const RichTextEditor = ({ value, onChange, className = "", placeholder }: RichTextEditorProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
+  const isInternalChange = useRef(false);
+
+  // Only set innerHTML from prop on mount or when value changes externally
+  useEffect(() => {
+    if (isInternalChange.current) {
+      isInternalChange.current = false;
+      return;
+    }
+    if (editorRef.current && editorRef.current.innerHTML !== value) {
+      editorRef.current.innerHTML = value || "";
+    }
+  }, [value]);
 
   const exec = useCallback((command: string, val?: string) => {
     document.execCommand(command, false, val);
-    // Sync after command
     setTimeout(() => {
       if (editorRef.current) {
+        isInternalChange.current = true;
         onChange(editorRef.current.innerHTML);
       }
     }, 0);
@@ -49,6 +61,7 @@ const RichTextEditor = ({ value, onChange, className = "", placeholder }: RichTe
 
   const handleInput = useCallback(() => {
     if (editorRef.current) {
+      isInternalChange.current = true;
       onChange(editorRef.current.innerHTML);
     }
   }, [onChange]);
@@ -122,7 +135,6 @@ const RichTextEditor = ({ value, onChange, className = "", placeholder }: RichTe
         className="min-h-[300px] p-4 focus:outline-none prose-custom text-sm leading-relaxed"
         onInput={handleInput}
         onBlur={handleInput}
-        dangerouslySetInnerHTML={{ __html: value || "" }}
         data-placeholder={placeholder}
         style={{ minHeight: "300px" }}
       />
