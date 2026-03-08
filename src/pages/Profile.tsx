@@ -117,6 +117,7 @@ const Profile = () => {
                 <TabsTrigger value="profile"><User className="h-4 w-4 mr-1.5" /> Profile</TabsTrigger>
                 <TabsTrigger value="orders"><Package className="h-4 w-4 mr-1.5" /> Orders ({orders.length})</TabsTrigger>
                 <TabsTrigger value="address"><MapPin className="h-4 w-4 mr-1.5" /> Address</TabsTrigger>
+                <TabsTrigger value="testimonial"><MessageSquareHeart className="h-4 w-4 mr-1.5" /> Testimonial</TabsTrigger>
               </TabsList>
 
               <TabsContent value="profile">
