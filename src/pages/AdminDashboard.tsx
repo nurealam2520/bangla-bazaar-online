@@ -491,12 +491,11 @@ const AdminDashboard = () => {
             </h1>
           </div>
           <div className="flex items-center gap-2">
-            <Button variant="outline" size="sm" onClick={fetchAll} disabled={fetching} className="gap-1.5">
+            <Button variant="outline" size="icon" onClick={fetchAll} disabled={fetching} className="h-8 w-8">
               <RefreshCw className={`h-3.5 w-3.5 ${fetching ? "animate-spin" : ""}`} />
-              Refresh
             </Button>
-            <Button variant="ghost" size="sm" onClick={signOut} className="gap-1.5 text-destructive">
-              <LogOut className="h-3.5 w-3.5" /> Logout
+            <Button variant="ghost" size="icon" onClick={signOut} className="h-8 w-8 text-destructive">
+              <LogOut className="h-3.5 w-3.5" />
             </Button>
           </div>
         </div>
