@@ -107,9 +107,11 @@ const ProductCard = ({ product }: { product: Product }) => {
           <span className="text-[11px] font-medium text-primary uppercase tracking-wider">
             {product.subcategory}
           </span>
-          <h3 className="font-semibold text-card-foreground mt-1.5 mb-2 line-clamp-2 text-[15px] leading-snug min-h-[2.5rem]">
-            {product.name}
-          </h3>
+          <Link to={`/product/${product.id}`}>
+            <h3 className="font-semibold text-card-foreground mt-1.5 mb-2 line-clamp-2 text-[15px] leading-snug min-h-[2.5rem] hover:text-primary transition-colors">
+              {product.name}
+            </h3>
+          </Link>
           <div className="flex items-center gap-1.5 mb-3">
             <div className="flex gap-0.5">
               {Array.from({ length: 5 }).map((_, i) => (
