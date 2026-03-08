@@ -255,8 +255,8 @@ const ProductDetail = () => {
                 <div className="flex items-center gap-3 text-sm">
                   <Truck className="h-5 w-5 text-primary" />
                   <div>
-                    <p className="font-medium">Free Shipping</p>
-                    <p className="text-xs text-muted-foreground">On orders over $50</p>
+                    <p className="font-medium">Fast & Secure</p>
+                    <p className="text-xs text-muted-foreground">Safe delivery worldwide</p>
                   </div>
                 </div>
                 <div className="flex items-center gap-3 text-sm">

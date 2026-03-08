@@ -14,7 +14,7 @@ const Index = () => {
     <div className="min-h-screen bg-background pb-20 md:pb-0">
       <SEOHead
         title="Premium Dog & Cat Products"
-        description="Shop premium dog & cat food, toys, beds & accessories at Pawnest. Fast shipping to USA, Canada, Australia & New Zealand. Free shipping over $50."
+        description="Shop premium dog & cat food, toys, beds & accessories at Pawnest. Fast & secure shipping to USA, Canada, Australia & New Zealand."
         canonical="/"
         jsonLd={{
           "@context": "https://schema.org",

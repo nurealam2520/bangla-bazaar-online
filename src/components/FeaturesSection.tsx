@@ -3,7 +3,7 @@ import { Truck, Shield, Clock, Headphones } from "lucide-react";
 import EditableText from "@/components/EditableText";
 
 const features = [
-  { icon: Truck, key: "feature_1", titleFallback: "Fast Shipping", descFallback: "Free delivery on orders over $50 to the US, Canada, Australia & NZ" },
+  { icon: Truck, key: "feature_1", titleFallback: "Fast & Secure Shipping", descFallback: "Quick, safe delivery to the US, Canada, Australia & NZ" },
   { icon: Shield, key: "feature_2", titleFallback: "100% Authentic", descFallback: "All products sourced directly from trusted brands" },
   { icon: Clock, key: "feature_3", titleFallback: "Easy Returns", descFallback: "Hassle-free returns & refunds within 30 days" },
   { icon: Headphones, key: "feature_4", titleFallback: "24/7 Support", descFallback: "Reach our friendly team anytime, anywhere" },

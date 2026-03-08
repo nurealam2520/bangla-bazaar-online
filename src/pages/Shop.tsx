@@ -41,7 +41,7 @@ const Shop = () => {
     <div className="min-h-screen bg-background pb-20 md:pb-0">
       <SEOHead
         title="Shop Pet Products"
-        description="Browse our complete collection of premium dog & cat food, toys, beds and accessories. Free shipping on orders over $50."
+        description="Browse our complete collection of premium dog & cat food, toys, beds and accessories. Fast & secure shipping worldwide."
         canonical="/shop"
       />
       <Navbar />
