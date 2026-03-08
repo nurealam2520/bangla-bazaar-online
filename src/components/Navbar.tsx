@@ -1,5 +1,5 @@
 import { Link, useLocation } from "react-router-dom";
-import { ShoppingCart, User, Search, Heart, Home, Store, Dog, Cat, Phone, Shield, Menu, X, Moon, Sun, Info, LogIn, Package } from "lucide-react";
+import { ShoppingCart, User, Search, Heart, Home, Store, Dog, Cat, Phone, Shield, Menu, X, Moon, Sun, Info, LogIn, Package, FileText } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import EditableText from "@/components/EditableText";
 import { useCart } from "@/contexts/CartContext";
