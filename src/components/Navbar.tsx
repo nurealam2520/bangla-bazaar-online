@@ -160,7 +160,7 @@ const Navbar = () => {
               </Button>
             )}
             <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
-              <Link to={user ? "/admin" : "/auth"}><User className="h-4 w-4" /></Link>
+              <Link to={user ? "/profile" : "/auth"}><User className="h-4 w-4" /></Link>
             </Button>
 
             {/* Hamburger (mobile) */}
