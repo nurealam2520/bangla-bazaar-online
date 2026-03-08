@@ -23,11 +23,15 @@ const ShareButtons = ({
   const encodedTitle = encodeURIComponent(title);
   const encodedDesc = encodeURIComponent(description);
 
+  const openShareWindow = (url: string, name: string) => {
+    window.open(url, name, "width=600,height=400,scrollbars=yes,resizable=yes");
+  };
+
   const platforms = [
     {
       name: "Facebook",
       icon: Facebook,
-      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}`,
+      href: `https://www.facebook.com/sharer/sharer.php?u=${encodedUrl}&quote=${encodedTitle}`,
       color: "hover:bg-[#1877F2] hover:text-white hover:border-[#1877F2]",
     },
     {
@@ -47,41 +51,39 @@ const ShareButtons = ({
       icon: Mail,
       href: `mailto:?subject=${encodedTitle}&body=${encodedDesc}%0A%0A${encodedUrl}`,
       color: "hover:bg-muted",
+      isLink: true,
     },
   ];
-
-  const copyLink = async () => {
-    try {
-      await navigator.clipboard.writeText(shareUrl);
-      setCopied(true);
-      toast.success("লিংক কপি হয়েছে!");
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      toast.error("কপি করা যায়নি");
-    }
-  };
 
   return (
     <div className={`flex items-center gap-2 flex-wrap ${className}`}>
       <span className="text-sm text-muted-foreground mr-1">Share:</span>
-      {platforms.map((p) => (
-        <Button
-          key={p.name}
-          variant="outline"
-          size="icon"
-          className={`h-9 w-9 rounded-full transition-all duration-200 ${p.color}`}
-          asChild
-        >
-          <a
-            href={p.href}
-            target="_blank"
-            rel="noopener noreferrer"
+      {platforms.map((p) =>
+        (p as any).isLink ? (
+          <Button
+            key={p.name}
+            variant="outline"
+            size="icon"
+            className={`h-9 w-9 rounded-full transition-all duration-200 ${p.color}`}
+            asChild
+          >
+            <a href={p.href} aria-label={`Share via ${p.name}`}>
+              <p.icon className="h-4 w-4" />
+            </a>
+          </Button>
+        ) : (
+          <Button
+            key={p.name}
+            variant="outline"
+            size="icon"
+            className={`h-9 w-9 rounded-full transition-all duration-200 ${p.color}`}
+            onClick={() => openShareWindow(p.href, p.name)}
             aria-label={`Share on ${p.name}`}
           >
             <p.icon className="h-4 w-4" />
-          </a>
-        </Button>
-      ))}
+          </Button>
+        )
+      )}
       <Button
         variant="outline"
         size="icon"
