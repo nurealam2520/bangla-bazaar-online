@@ -5,6 +5,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import ProductCard from "@/components/ProductCard";
+import ShareButtons from "@/components/ShareButtons";
 import { RefreshCw, ArrowLeft, Calendar, User } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -152,6 +153,14 @@ const BlogPost = () => {
             <div className="prose-custom">
               {formatContent(post.content)}
             </div>
+
+            {/* Share */}
+            <ShareButtons
+              title={post.title}
+              description={post.excerpt}
+              url={`https://compawnest.com/blog/${post.slug}`}
+              className="pt-6 mt-8 border-t border-border"
+            />
 
             {/* Related Products */}
             {relatedProducts.length > 0 && (

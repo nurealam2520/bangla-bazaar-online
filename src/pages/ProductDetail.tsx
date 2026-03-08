@@ -8,6 +8,7 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import ProductCard from "@/components/ProductCard";
+import ShareButtons from "@/components/ShareButtons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -266,6 +267,14 @@ const ProductDetail = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Share */}
+              <ShareButtons
+                title={product.name}
+                description={product.description}
+                url={`https://compawnest.com/product/${product.id}`}
+                className="pt-6 border-t border-border"
+              />
             </motion.div>
           </div>
 
