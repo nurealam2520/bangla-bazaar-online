@@ -6,7 +6,7 @@ const TermsOfService = () => {
   return (
     <>
       <SEOHead
-        title="Terms of Service | Pawnest"
+        title="Terms of Service"
         description="Read the Pawnest terms of service governing your use of our website and purchases."
         canonical="/terms-of-service"
       />

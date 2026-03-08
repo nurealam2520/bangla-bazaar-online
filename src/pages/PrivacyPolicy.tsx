@@ -6,7 +6,7 @@ const PrivacyPolicy = () => {
   return (
     <>
       <SEOHead
-        title="Privacy Policy | Pawnest"
+        title="Privacy Policy"
         description="Read Pawnest's privacy policy to understand how we collect, use, and protect your personal information."
         canonical="/privacy-policy"
       />

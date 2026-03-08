@@ -42,9 +42,18 @@ const FAQ = () => {
   return (
     <>
       <SEOHead
-        title="FAQ | Pawnest"
+        title="Frequently Asked Questions"
         description="Find answers to frequently asked questions about Pawnest orders, shipping, returns, and more."
         canonical="/faq"
+        jsonLd={{
+          "@context": "https://schema.org",
+          "@type": "FAQPage",
+          mainEntity: faqs.map((faq) => ({
+            "@type": "Question",
+            name: faq.q,
+            acceptedAnswer: { "@type": "Answer", text: faq.a },
+          })),
+        }}
       />
       <Navbar />
       <main className="min-h-screen bg-background pt-8 pb-24 md:pb-8">

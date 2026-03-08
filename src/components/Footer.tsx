@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
 import EditableText from "@/components/EditableText";
+import EditableLink from "@/components/EditableLink";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Footer = () => {
@@ -28,20 +29,13 @@ const Footer = () => {
               multiline
             />
             <div className="flex gap-3">
-              {socialLinks.map(({ Icon, key }) => {
-                const href = get(key, "#");
-                return (
-                  <a
-                    key={key}
-                    href={href || "#"}
-                    target={href && href !== "#" ? "_blank" : undefined}
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors"
-                  >
+              {socialLinks.map(({ Icon, key }) => (
+                <EditableLink key={key} contentKey={key} className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors">
+                  <div className="w-10 h-10 rounded-full bg-secondary flex items-center justify-center hover:bg-primary hover:text-primary-foreground transition-colors">
                     <Icon className="h-4 w-4" />
-                  </a>
-                );
-              })}
+                  </div>
+                </EditableLink>
+              ))}
             </div>
           </div>
 
