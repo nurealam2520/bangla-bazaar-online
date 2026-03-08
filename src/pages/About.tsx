@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import { Heart, Shield, Truck, Users, Award, Leaf } from "lucide-react";
 
 const values = [
@@ -22,6 +23,7 @@ const stats = [
 const About = () => {
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <SEOHead title="About Us" description="Learn about Pawnest — our mission to deliver premium pet products to dog & cat owners across USA, Canada, Australia & New Zealand." canonical="/about" />
       <Navbar />
       <main>
         {/* Hero */}

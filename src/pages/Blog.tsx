@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { usePublishedPosts } from "@/hooks/useBlogPosts";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import { RefreshCw, Calendar, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
@@ -10,6 +11,7 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <SEOHead title="Pet Care Blog" description="Tips, guides, and stories for dog & cat lovers. Stay updated with expert pet care advice from Pawnest." canonical="/blog" />
       <Navbar />
       <main>
         {/* Hero */}

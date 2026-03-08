@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import { Dog, Cat, RefreshCw } from "lucide-react";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import ProductCard from "@/components/ProductCard";
 import { useProducts } from "@/hooks/useProducts";
 import { useState } from "react";
@@ -42,6 +43,7 @@ const CategoryPage = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <SEOHead title={`${config.label} Products`} description={`Shop premium ${config.label.toLowerCase()} products at Pawnest. ${config.description}`} canonical={`/category/${category}`} />
       <Navbar />
       <main>
         <section className="py-16 bg-secondary/30">

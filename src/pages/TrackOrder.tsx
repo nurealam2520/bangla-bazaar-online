@@ -3,6 +3,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -112,6 +113,7 @@ const TrackOrder = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <SEOHead title="Track Your Order" description="Track your Pawnest order status and shipment. Enter your order ID or sign in to view order history." canonical="/track-order" />
       <Navbar />
       <main className="py-12">
         <div className="container mx-auto px-4 max-w-3xl">
