@@ -172,6 +172,7 @@ const Checkout = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <SEOHead title="Checkout" description="Complete your Pawnest order. Secure checkout with credit card or cash on delivery." canonical="/checkout" noindex />
       <Navbar />
       <main className="py-12">
         <div className="container mx-auto px-4">
