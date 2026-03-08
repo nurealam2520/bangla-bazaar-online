@@ -5,7 +5,7 @@ import EditableText from "@/components/EditableText";
 import { useCart } from "@/contexts/CartContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { motion, AnimatePresence } from "framer-motion";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTheme } from "next-themes";
 
 const mobileNavItems = [
@@ -62,6 +62,9 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [navVisible, setNavVisible] = useState(true);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const lastScrollY = useRef(0);
 
   useEffect(() => setMounted(true), []);
 
@@ -70,12 +73,26 @@ const Navbar = () => {
     setMenuOpen(false);
   }, [location.pathname]);
 
+  // Show/hide navbar on scroll direction + back to top button
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      setNavVisible(currentY < 50 || currentY < lastScrollY.current);
+      setShowBackToTop(currentY > 400);
+      lastScrollY.current = currentY;
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const scrollToTop = () => window.scrollTo({ top: 0, behavior: "smooth" });
+
   const toggleTheme = () => setTheme(theme === "dark" ? "light" : "dark");
 
   return (
     <>
       {/* Top bar */}
-      <nav className="sticky top-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border">
+      <nav className={`sticky top-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border transition-transform duration-300 ${navVisible ? "translate-y-0" : "-translate-y-full"}`}>
         <div className="container mx-auto flex items-center justify-between h-14 md:h-16 px-4">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
@@ -345,6 +362,22 @@ const Navbar = () => {
           })}
         </div>
       </div>
+
+      {/* Back to Top Button */}
+      <AnimatePresence>
+        {showBackToTop && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.5 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.5 }}
+            onClick={scrollToTop}
+            className="fixed bottom-20 md:bottom-8 right-4 z-50 w-10 h-10 rounded-full bg-primary text-primary-foreground shadow-lg flex items-center justify-center hover:opacity-90 transition-opacity"
+            title="Back to top"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="m18 15-6-6-6 6"/></svg>
+          </motion.button>
+        )}
+      </AnimatePresence>
     </>
   );
 };
