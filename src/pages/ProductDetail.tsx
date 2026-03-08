@@ -267,6 +267,14 @@ const ProductDetail = () => {
                   </div>
                 </div>
               </div>
+
+              {/* Share */}
+              <ShareButtons
+                title={product.name}
+                description={product.description}
+                url={`https://compawnest.com/product/${product.id}`}
+                className="pt-6 border-t border-border"
+              />
             </motion.div>
           </div>
 
