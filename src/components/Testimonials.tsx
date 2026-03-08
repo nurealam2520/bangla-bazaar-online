@@ -5,7 +5,7 @@ const testimonials = [
   {
     name: "Sarah M.",
     location: "New York, USA",
-    text: "PawNest has been a game-changer for my two golden retrievers. The quality of food and toys is unmatched!",
+    text: "Pawnest has been a game-changer for my two golden retrievers. The quality of food and toys is unmatched!",
     rating: 5,
     pet: "2 Dogs",
   },
