@@ -263,12 +263,19 @@ const AdminDashboard = () => {
     if (data) setOrderItems(data as OrderItem[]);
   };
 
-  const updateOrderStatus = async (orderId: string, status: string) => {
-    const { error } = await supabase.from("orders").update({ status }).eq("id", orderId);
+  const updateOrderStatus = async (orderId: string, status: string, extra?: { tracking_number?: string; tracking_url?: string; supplier_order_id?: string; fulfillment_status?: string }) => {
+    const updateData: Record<string, unknown> = { status, ...extra };
+    const { error } = await supabase.from("orders").update(updateData).eq("id", orderId);
     if (error) {
       toast.error("Update failed: " + error.message);
     } else {
       toast.success(`Order ${status}`);
+      // Send notification
+      try {
+        await supabase.functions.invoke("order-notification", {
+          body: { order_id: orderId, new_status: status, tracking_number: extra?.tracking_number, tracking_url: extra?.tracking_url },
+        });
+      } catch (e) { console.error("Notification failed:", e); }
       fetchAll();
     }
   };
