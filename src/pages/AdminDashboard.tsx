@@ -202,6 +202,65 @@ const AdminDashboard = () => {
   const updateBlogPost = useUpdateBlogPost();
   const deleteBlogPost = useDeleteBlogPost();
   const [editingPost, setEditingPost] = useState<(Partial<BlogPost> & { isNew?: boolean }) | null>(null);
+  const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
+
+  // Auto-save draft to localStorage
+  const DRAFT_KEY = "blog_draft_autosave";
+
+  // Load draft on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(DRAFT_KEY);
+    if (saved) {
+      try {
+        const draft = JSON.parse(saved);
+        if (draft.title || draft.content) {
+          setDraftSavedAt(draft._savedAt || null);
+        }
+      } catch {}
+    }
+  }, []);
+
+  // Auto-save every 15 seconds when editing
+  useEffect(() => {
+    if (!editingPost) return;
+    const timer = setInterval(() => {
+      const toSave = { ...editingPost, _savedAt: new Date().toISOString() };
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(toSave));
+      setDraftSavedAt(toSave._savedAt);
+    }, 15000);
+    return () => clearInterval(timer);
+  }, [editingPost]);
+
+  // Save draft on every change (debounced via the editingPost state)
+  useEffect(() => {
+    if (!editingPost) return;
+    const timeout = setTimeout(() => {
+      const toSave = { ...editingPost, _savedAt: new Date().toISOString() };
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(toSave));
+      setDraftSavedAt(toSave._savedAt);
+    }, 2000);
+    return () => clearTimeout(timeout);
+  }, [editingPost]);
+
+  const loadDraft = () => {
+    const saved = localStorage.getItem(DRAFT_KEY);
+    if (saved) {
+      try {
+        const draft = JSON.parse(saved);
+        delete draft._savedAt;
+        setEditingPost({ ...draft, isNew: draft.isNew ?? true });
+        toast.success("Draft loaded!");
+      } catch {
+        toast.error("Could not load draft");
+      }
+    }
+  };
+
+  const clearDraft = () => {
+    localStorage.removeItem(DRAFT_KEY);
+    setDraftSavedAt(null);
+    toast.success("Draft cleared!");
+  };
 
   // Role management state
   const [userRoles, setUserRoles] = useState<UserRole[]>([]);
