@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { Facebook, Instagram, Youtube, Mail, Phone, MapPin } from "lucide-react";
 import EditableText from "@/components/EditableText";
+import EditableLink from "@/components/EditableLink";
 import { useSiteContent } from "@/hooks/useSiteContent";
 
 const Footer = () => {
