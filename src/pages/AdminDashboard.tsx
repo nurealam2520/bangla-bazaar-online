@@ -561,6 +561,9 @@ const AdminDashboard = () => {
             <TabsTrigger value="roles" className="rounded-lg text-xs px-2.5">
               <UserCog className="h-3.5 w-3.5 mr-1" /> Roles
             </TabsTrigger>
+            <TabsTrigger value="messages" className="rounded-lg text-xs px-2.5">
+              <Mail className="h-3.5 w-3.5 mr-1" /> Messages
+            </TabsTrigger>
             <TabsTrigger value="security" className="rounded-lg text-xs px-2.5">
               <Shield className="h-3.5 w-3.5 mr-1" /> Security
             </TabsTrigger>
