@@ -92,7 +92,7 @@ const Checkout = () => {
         if (data?.success) {
           toast.success(data.message || "Order placed successfully! 🎉");
           clearCart();
-          navigate("/");
+          navigate("/track-order");
         } else {
           toast.error(data?.error || "Something went wrong.");
         }
