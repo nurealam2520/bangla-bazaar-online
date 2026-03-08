@@ -27,6 +27,7 @@ const desktopNavLinks = [
 
 const mobileMenuLinks = [
   { label: "About Us", href: "/about", icon: Info },
+  { label: "Blog", href: "/blog", icon: FileText },
   { label: "Track Order", href: "/track-order", icon: Package },
   { label: "Wishlist", href: "/wishlist", icon: Heart },
   { label: "My Account", href: "/profile", icon: User },
