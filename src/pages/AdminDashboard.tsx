@@ -9,7 +9,8 @@ import {
   ShoppingCart, Users, Shield, AlertTriangle, Package,
   LogOut, ArrowLeft, RefreshCw, Eye, CheckCircle, XCircle,
   Clock, Plus, Pencil, Trash2, X, Save, FileText, Globe, EyeOff,
-  UserCog, UserPlus, UserMinus, Settings, Upload, ImageIcon, Loader2, Database
+  UserCog, UserPlus, UserMinus, Settings, Upload, ImageIcon, Loader2, Database,
+  Mail, MessageCircle
 } from "lucide-react";
 import { optimizeImage, formatFileSize } from "@/lib/imageOptimizer";
 import { Textarea } from "@/components/ui/textarea";
@@ -25,6 +26,9 @@ import PaymentSettings from "@/components/admin/PaymentSettings";
 import CouponSettings from "@/components/admin/CouponSettings";
 import RichTextEditor from "@/components/admin/RichTextEditor";
 import DataBackup from "@/components/admin/DataBackup";
+import ContactMessages from "@/components/admin/ContactMessages";
+import LiveChatSettings from "@/components/admin/LiveChatSettings";
+import SmtpSettings from "@/components/admin/SmtpSettings";
 
 interface Order {
   id: string;
@@ -556,6 +560,9 @@ const AdminDashboard = () => {
             </TabsTrigger>
             <TabsTrigger value="roles" className="rounded-lg text-xs px-2.5">
               <UserCog className="h-3.5 w-3.5 mr-1" /> Roles
+            </TabsTrigger>
+            <TabsTrigger value="messages" className="rounded-lg text-xs px-2.5">
+              <Mail className="h-3.5 w-3.5 mr-1" /> Messages
             </TabsTrigger>
             <TabsTrigger value="security" className="rounded-lg text-xs px-2.5">
               <Shield className="h-3.5 w-3.5 mr-1" /> Security
@@ -1286,6 +1293,11 @@ const AdminDashboard = () => {
             )}
           </TabsContent>
 
+          {/* Messages Tab */}
+          <TabsContent value="messages" className="space-y-6">
+            <ContactMessages />
+          </TabsContent>
+
           {/* Security Tab */}
           <TabsContent value="security" className="space-y-4">
             <h3 className="font-display font-bold text-lg">Rate Limit Log</h3>
@@ -1316,6 +1328,8 @@ const AdminDashboard = () => {
           {/* Settings Tab */}
           <TabsContent value="settings" className="space-y-6">
             <h3 className="font-display font-bold text-lg">Store Settings</h3>
+            <SmtpSettings />
+            <LiveChatSettings />
             <PaymentSettings />
             <ShippingSettings />
             <CouponSettings />
