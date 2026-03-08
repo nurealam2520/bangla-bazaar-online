@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { usePublishedPosts } from "@/hooks/useBlogPosts";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
+import SEOHead from "@/components/SEOHead";
 import { RefreshCw, Calendar, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
 
