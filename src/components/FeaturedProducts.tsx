@@ -33,7 +33,7 @@ const FeaturedProducts = () => {
   const isLoading = loadingAll || loadingDogs || loadingCats;
 
   return (
-    <section className="py-24">
+    <section className="py-14">
       <div className="container mx-auto px-4">
         <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-6 mb-12">
           <div>
