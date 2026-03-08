@@ -133,8 +133,8 @@ const Navbar = () => {
             <Button variant="ghost" size="icon" asChild>
               <Link to="/shop"><Search className="h-4 w-4" /></Link>
             </Button>
-            <Button variant="ghost" size="icon" className="hidden md:flex">
-              <Heart className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="hidden md:flex" asChild>
+              <Link to="/wishlist"><Heart className="h-4 w-4" /></Link>
             </Button>
             <Button
               variant="ghost"
