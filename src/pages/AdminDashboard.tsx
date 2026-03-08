@@ -202,6 +202,65 @@ const AdminDashboard = () => {
   const updateBlogPost = useUpdateBlogPost();
   const deleteBlogPost = useDeleteBlogPost();
   const [editingPost, setEditingPost] = useState<(Partial<BlogPost> & { isNew?: boolean }) | null>(null);
+  const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
+
+  // Auto-save draft to localStorage
+  const DRAFT_KEY = "blog_draft_autosave";
+
+  // Load draft on mount
+  useEffect(() => {
+    const saved = localStorage.getItem(DRAFT_KEY);
+    if (saved) {
+      try {
+        const draft = JSON.parse(saved);
+        if (draft.title || draft.content) {
+          setDraftSavedAt(draft._savedAt || null);
+        }
+      } catch {}
+    }
+  }, []);
+
+  // Auto-save every 15 seconds when editing
+  useEffect(() => {
+    if (!editingPost) return;
+    const timer = setInterval(() => {
+      const toSave = { ...editingPost, _savedAt: new Date().toISOString() };
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(toSave));
+      setDraftSavedAt(toSave._savedAt);
+    }, 15000);
+    return () => clearInterval(timer);
+  }, [editingPost]);
+
+  // Save draft on every change (debounced via the editingPost state)
+  useEffect(() => {
+    if (!editingPost) return;
+    const timeout = setTimeout(() => {
+      const toSave = { ...editingPost, _savedAt: new Date().toISOString() };
+      localStorage.setItem(DRAFT_KEY, JSON.stringify(toSave));
+      setDraftSavedAt(toSave._savedAt);
+    }, 2000);
+    return () => clearTimeout(timeout);
+  }, [editingPost]);
+
+  const loadDraft = () => {
+    const saved = localStorage.getItem(DRAFT_KEY);
+    if (saved) {
+      try {
+        const draft = JSON.parse(saved);
+        delete draft._savedAt;
+        setEditingPost({ ...draft, isNew: draft.isNew ?? true });
+        toast.success("Draft loaded!");
+      } catch {
+        toast.error("Could not load draft");
+      }
+    }
+  };
+
+  const clearDraft = () => {
+    localStorage.removeItem(DRAFT_KEY);
+    setDraftSavedAt(null);
+    toast.success("Draft cleared!");
+  };
 
   // Role management state
   const [userRoles, setUserRoles] = useState<UserRole[]>([]);
@@ -304,6 +363,8 @@ const AdminDashboard = () => {
         toast.success("Blog post updated!");
       }
       setEditingPost(null);
+      localStorage.removeItem(DRAFT_KEY);
+      setDraftSavedAt(null);
     } catch (err: any) {
       toast.error(err.message);
     }
@@ -906,7 +967,23 @@ const AdminDashboard = () => {
               >
                 <Plus className="h-4 w-4" /> New Post
               </Button>
+              {localStorage.getItem(DRAFT_KEY) && !editingPost && (
+                <div className="flex items-center gap-2">
+                  <Button size="sm" variant="outline" onClick={loadDraft} className="gap-1.5">
+                    <Clock className="h-4 w-4" /> Load Draft
+                  </Button>
+                  <Button size="sm" variant="ghost" onClick={clearDraft} className="text-destructive">
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              )}
             </div>
+
+            {editingPost && draftSavedAt && (
+              <p className="text-xs text-muted-foreground flex items-center gap-1">
+                <Clock className="h-3 w-3" /> Auto-saved: {new Date(draftSavedAt).toLocaleTimeString()}
+              </p>
+            )}
 
             <AnimatePresence>
               {editingPost && (
