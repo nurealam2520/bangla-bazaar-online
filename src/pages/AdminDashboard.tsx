@@ -23,6 +23,7 @@ import StripeSettings from "@/components/admin/StripeSettings";
 import ShippingSettings from "@/components/admin/ShippingSettings";
 import PaymentSettings from "@/components/admin/PaymentSettings";
 import CouponSettings from "@/components/admin/CouponSettings";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 interface Order {
   id: string;
@@ -958,11 +959,10 @@ const AdminDashboard = () => {
                     </div>
                     <div className="md:col-span-2">
                       <label className="text-sm font-medium text-muted-foreground mb-1 block">Content *</label>
-                      <Textarea
+                      <RichTextEditor
                         value={editingPost.content || ""}
-                        onChange={(e) => setEditingPost({ ...editingPost, content: e.target.value })}
-                        className="min-h-[200px] resize-y"
-                        placeholder="Write your blog post content here..."
+                        onChange={(html) => setEditingPost({ ...editingPost, content: html })}
+                        placeholder="ব্লগ পোস্টের কন্টেন্ট লিখুন..."
                       />
                     </div>
                     <div className="flex items-center gap-3">
