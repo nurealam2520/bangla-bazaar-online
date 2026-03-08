@@ -26,6 +26,7 @@ const desktopNavLinks = [
 
 const mobileMenuLinks = [
   { label: "About Us", href: "/about", icon: Info },
+  { label: "Track Order", href: "/track-order", icon: Package },
   { label: "Sign In / Sign Up", href: "/auth", icon: LogIn },
   { label: "Admin Dashboard", href: "/admin", icon: Shield, adminOnly: true },
 ];
