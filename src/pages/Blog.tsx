@@ -11,6 +11,7 @@ const Blog = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <SEOHead title="Pet Care Blog" description="Tips, guides, and stories for dog & cat lovers. Stay updated with expert pet care advice from Pawnest." canonical="/blog" />
       <Navbar />
       <main>
         {/* Hero */}

@@ -31,6 +31,7 @@ const Contact = () => {
 
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <SEOHead title="Contact Us" description="Get in touch with Pawnest. Reach our 24/7 customer support for orders, returns, and product questions." canonical="/contact" />
       <Navbar />
       <main>
         <section className="py-24 bg-secondary/30">

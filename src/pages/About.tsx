@@ -23,6 +23,7 @@ const stats = [
 const About = () => {
   return (
     <div className="min-h-screen bg-background pb-20 md:pb-0">
+      <SEOHead title="About Us" description="Learn about Pawnest — our mission to deliver premium pet products to dog & cat owners across USA, Canada, Australia & New Zealand." canonical="/about" />
       <Navbar />
       <main>
         {/* Hero */}
