@@ -15,7 +15,7 @@ const values = [
 const stats = [
   { value: "50K+", label: "Happy Customers" },
   { value: "200+", label: "Premium Products" },
-  { value: "5", label: "Countries Served" },
+  { value: "4", label: "Countries Served" },
   { value: "4.9★", label: "Average Rating" },
 ];
 
