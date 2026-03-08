@@ -187,7 +187,8 @@ const Checkout = () => {
           </button>
           <h1 className="text-3xl md:text-4xl font-display font-bold mb-10">Checkout</h1>
 
-          <form onSubmit={handlePlaceOrder}>
+          <form onSubmit={handlePlaceOrder} className="relative">
+            <HoneypotField value={honeypot} onChange={setHoneypot} />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
               {/* Left: Form */}
               <div className="lg:col-span-2 space-y-8">
