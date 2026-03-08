@@ -23,6 +23,7 @@ import StripeSettings from "@/components/admin/StripeSettings";
 import ShippingSettings from "@/components/admin/ShippingSettings";
 import PaymentSettings from "@/components/admin/PaymentSettings";
 import CouponSettings from "@/components/admin/CouponSettings";
+import RichTextEditor from "@/components/admin/RichTextEditor";
 
 interface Order {
   id: string;
