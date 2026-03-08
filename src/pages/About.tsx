@@ -48,7 +48,7 @@ const About = () => {
               transition={{ delay: 0.2 }}
               className="text-muted-foreground max-w-2xl mx-auto text-lg leading-relaxed"
             >
-              Founded by passionate pet owners, PawNest is on a mission to make premium pet care accessible to every dog and cat parent worldwide. We believe your furry family members deserve nothing but the best.
+              Founded by passionate pet owners, Pawnest is on a mission to make premium pet care accessible to every dog and cat parent worldwide. We believe your furry family members deserve nothing but the best.
             </motion.p>
           </div>
         </section>
