@@ -1278,6 +1278,12 @@ const AdminDashboard = () => {
             <ShippingSettings />
             <CouponSettings />
           </TabsContent>
+
+          {/* Backup Tab */}
+          <TabsContent value="backup" className="space-y-4">
+            <h3 className="font-display font-bold text-lg">ডেটা ব্যাকআপ ও পুনরুদ্ধার</h3>
+            <DataBackup />
+          </TabsContent>
         </Tabs>
       </main>
     </div>
