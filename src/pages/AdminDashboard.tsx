@@ -1105,9 +1105,11 @@ const AdminDashboard = () => {
           </TabsContent>
 
           {/* Settings Tab */}
-          <TabsContent value="settings" className="space-y-4">
-            <h3 className="font-display font-bold text-lg">Settings</h3>
-            <StripeSettings />
+          <TabsContent value="settings" className="space-y-6">
+            <h3 className="font-display font-bold text-lg">Store Settings</h3>
+            <PaymentSettings />
+            <ShippingSettings />
+            <CouponSettings />
           </TabsContent>
         </Tabs>
       </main>
