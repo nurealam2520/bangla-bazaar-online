@@ -76,7 +76,7 @@ const Navbar = () => {
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2">
             <span className="text-xl md:text-2xl font-display font-bold text-gradient-green">
-              🐾 PawNest
+              🐾 Pawnest
             </span>
           </Link>
 
