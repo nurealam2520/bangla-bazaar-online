@@ -2,6 +2,9 @@
   RewriteEngine On
   RewriteBase /
 
+  # Proxy uploaded images through your domain
+  RewriteRule ^uploads/(.+)$ /image-proxy.php [L,QSA]
+
   # Serve OG tags for social media crawlers (Facebook, Twitter, LinkedIn, etc.)
   RewriteCond %{HTTP_USER_AGENT} facebookexternalhit|Facebot|Twitterbot|LinkedInBot|WhatsApp|Slackbot|TelegramBot|Pinterest|Discordbot [NC]
   RewriteCond %{REQUEST_FILENAME} !-f
