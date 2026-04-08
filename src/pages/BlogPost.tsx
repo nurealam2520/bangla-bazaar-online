@@ -8,6 +8,7 @@ import ProductCard from "@/components/ProductCard";
 import ShareButtons from "@/components/ShareButtons";
 import { RefreshCw, ArrowLeft, Calendar, User } from "lucide-react";
 import { motion } from "framer-motion";
+import { getImageUrl } from "@/lib/imageUrl";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();

@@ -3,6 +3,7 @@ import { usePublishedPosts } from "@/hooks/useBlogPosts";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
 import { format } from "date-fns";
+import { getImageUrl } from "@/lib/imageUrl";
 
 const HomeBlogPosts = () => {
   const { data: posts = [] } = usePublishedPosts();

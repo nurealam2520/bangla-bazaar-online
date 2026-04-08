@@ -5,6 +5,7 @@ import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import { RefreshCw, Calendar, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
+import { getImageUrl } from "@/lib/imageUrl";
 
 const Blog = () => {
   const { data: posts = [], isLoading } = usePublishedPosts();

@@ -8,6 +8,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import type { Product } from "@/hooks/useProducts";
+import { getImageUrl } from "@/lib/imageUrl";
 
 const item = {
   hidden: { opacity: 0, y: 30 },
