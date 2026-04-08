@@ -12,6 +12,7 @@ import ShareButtons from "@/components/ShareButtons";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { getImageUrl } from "@/lib/imageUrl";
 import { Star, ShoppingCart, ArrowLeft, Minus, Plus, Truck, Shield, RefreshCw, Heart } from "lucide-react";
 import { motion } from "framer-motion";
 import { toast } from "sonner";
