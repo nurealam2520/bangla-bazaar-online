@@ -52,11 +52,10 @@ const EditableImage = ({
 
       if (uploadError) throw uploadError;
 
-      const { data: urlData } = supabase.storage
-        .from("site-images")
-        .getPublicUrl(fileName);
+      // Save relative URL for same-domain serving via PHP proxy
+      const relativeUrl = `/uploads/${fileName}`;
 
-      const ok = await update(contentKey, urlData.publicUrl);
+      const ok = await update(contentKey, relativeUrl);
       if (ok) {
         toast({ title: "ছবি আপডেট হয়েছে ✓" });
       } else {
