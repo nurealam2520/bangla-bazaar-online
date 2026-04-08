@@ -4,6 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useSiteContent } from "@/hooks/useSiteContent";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
+import { getStorageUrl, getImageUrl } from "@/lib/imageUrl";
 
 interface EditableImageProps {
   contentKey: string;
@@ -25,7 +26,8 @@ const EditableImage = ({
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const currentSrc = get(contentKey, "") || fallbackSrc;
+  const rawSrc = get(contentKey, "") || fallbackSrc;
+  const currentSrc = getImageUrl(rawSrc);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -52,10 +54,10 @@ const EditableImage = ({
 
       if (uploadError) throw uploadError;
 
-      // Save relative URL for same-domain serving via PHP proxy
-      const relativeUrl = `/uploads/${fileName}`;
+      // Save full Supabase URL (will be proxied on live domain)
+      const storageUrl = getStorageUrl(fileName);
 
-      const ok = await update(contentKey, relativeUrl);
+      const ok = await update(contentKey, storageUrl);
       if (ok) {
         toast({ title: "ছবি আপডেট হয়েছে ✓" });
       } else {

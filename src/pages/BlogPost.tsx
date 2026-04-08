@@ -8,6 +8,7 @@ import ProductCard from "@/components/ProductCard";
 import ShareButtons from "@/components/ShareButtons";
 import { RefreshCw, ArrowLeft, Calendar, User } from "lucide-react";
 import { motion } from "framer-motion";
+import { getImageUrl } from "@/lib/imageUrl";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
@@ -67,7 +68,7 @@ const BlogPost = () => {
         "@type": "BlogPosting",
         headline: post.title,
         description: post.excerpt || post.content.slice(0, 160),
-        image: post.cover_image || undefined,
+        image: post.cover_image ? getImageUrl(post.cover_image) : undefined,
         datePublished: post.published_at || post.created_at,
         dateModified: post.updated_at,
         author: { "@type": "Organization", name: "Pawnest Team" },
@@ -87,7 +88,7 @@ const BlogPost = () => {
           title={post.title}
           description={post.excerpt || post.content.slice(0, 160)}
           canonical={`/blog/${post.slug}`}
-          image={post.cover_image || undefined}
+          image={post.cover_image ? getImageUrl(post.cover_image) : undefined}
           type="article"
           jsonLd={blogJsonLd}
         />
@@ -113,7 +114,7 @@ const BlogPost = () => {
           <motion.article initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
             {post.cover_image && (
               <img
-                src={post.cover_image}
+                src={getImageUrl(post.cover_image)}
                 alt={post.title}
                 className="w-full aspect-video object-cover rounded-2xl mb-8"
                 loading="lazy"

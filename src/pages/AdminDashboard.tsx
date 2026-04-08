@@ -13,6 +13,7 @@ import {
   Mail, MessageCircle
 } from "lucide-react";
 import { optimizeImage, formatFileSize } from "@/lib/imageOptimizer";
+import { getStorageUrl } from "@/lib/imageUrl";
 import { Textarea } from "@/components/ui/textarea";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
@@ -143,8 +144,8 @@ const ProductImageUploader = ({ onUploaded }: { onUploaded: (url: string) => voi
 
       if (uploadError) throw uploadError;
 
-      const relativeUrl = `/uploads/${fileName}`;
-      onUploaded(relativeUrl);
+      const storageUrl = getStorageUrl(fileName);
+      onUploaded(storageUrl);
       toast.success("ছবি আপলোড ও অপটিমাইজ হয়েছে ✓");
     } catch (err: any) {
       console.error(err);
@@ -1069,8 +1070,8 @@ const AdminDashboard = () => {
                                   .from("site-images")
                                   .upload(fileName, optimized, { upsert: true });
                                 if (uploadError) throw uploadError;
-                                const relativeUrl = `/uploads/${fileName}`;
-                                setEditingPost({ ...editingPost, cover_image: relativeUrl });
+                                const storageUrl = getStorageUrl(fileName);
+                                setEditingPost({ ...editingPost, cover_image: storageUrl });
                                 toast.success("কভার ইমেজ আপলোড হয়েছে!");
                               } catch (err: any) {
                                 toast.error("আপলোড ব্যর্থ: " + err.message);
