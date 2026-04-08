@@ -134,7 +134,7 @@ const ProductDetail = () => {
     "@type": "Product",
     name: product.name,
     description: product.description,
-    image: product.image,
+    image: getImageUrl(product.image),
     brand: { "@type": "Brand", name: "Pawnest" },
     offers: {
       "@type": "Offer",
@@ -179,7 +179,7 @@ const ProductDetail = () => {
         title={product.name}
         description={product.description}
         canonical={`/product/${product.id}`}
-        image={product.image}
+        image={getImageUrl(product.image)}
         type="product"
         jsonLd={productJsonLd}
       />
@@ -194,7 +194,7 @@ const ProductDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 mb-16">
             <motion.div initial={{ opacity: 0, x: -20 }} animate={{ opacity: 1, x: 0 }}>
               <div className="relative rounded-2xl overflow-hidden border border-border">
-                <img src={product.image} alt={product.name} className="w-full aspect-square object-cover" loading="lazy" />
+                <img src={getImageUrl(product.image)} alt={product.name} className="w-full aspect-square object-cover" loading="lazy" />
                 {product.badge && (
                   <span className="absolute top-4 left-4 bg-accent text-accent-foreground text-xs font-bold px-3 py-1 rounded-full">
                     {product.badge}
