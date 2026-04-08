@@ -143,11 +143,8 @@ const ProductImageUploader = ({ onUploaded }: { onUploaded: (url: string) => voi
 
       if (uploadError) throw uploadError;
 
-      const { data: urlData } = supabase.storage
-        .from("site-images")
-        .getPublicUrl(fileName);
-
-      onUploaded(urlData.publicUrl);
+      const relativeUrl = `/uploads/${fileName}`;
+      onUploaded(relativeUrl);
       toast.success("ছবি আপলোড ও অপটিমাইজ হয়েছে ✓");
     } catch (err: any) {
       console.error(err);
@@ -1072,10 +1069,8 @@ const AdminDashboard = () => {
                                   .from("site-images")
                                   .upload(fileName, optimized, { upsert: true });
                                 if (uploadError) throw uploadError;
-                                const { data: urlData } = supabase.storage
-                                  .from("site-images")
-                                  .getPublicUrl(fileName);
-                                setEditingPost({ ...editingPost, cover_image: urlData.publicUrl });
+                                const relativeUrl = `/uploads/${fileName}`;
+                                setEditingPost({ ...editingPost, cover_image: relativeUrl });
                                 toast.success("কভার ইমেজ আপলোড হয়েছে!");
                               } catch (err: any) {
                                 toast.error("আপলোড ব্যর্থ: " + err.message);
