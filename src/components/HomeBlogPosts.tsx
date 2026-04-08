@@ -34,7 +34,7 @@ const HomeBlogPosts = () => {
                 <Link to={`/blog/${post.slug}`}>
                   <div className="aspect-video overflow-hidden">
                     <img
-                      src={post.cover_image}
+                      src={getImageUrl(post.cover_image)}
                       alt={post.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
