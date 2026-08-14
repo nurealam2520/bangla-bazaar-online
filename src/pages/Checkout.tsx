@@ -7,17 +7,27 @@ import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Minus, Plus, Trash2, ArrowLeft, CreditCard, Truck } from "lucide-react";
+import { Minus, Plus, Trash2, ArrowLeft, CreditCard, Truck, Wallet, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useBotProtection, useFormRateLimit } from "@/hooks/useBotProtection";
 import HoneypotField from "@/components/HoneypotField";
 
+const PROVIDER_INFO: Record<string, { label: string; desc: string; Icon: typeof CreditCard }> = {
+  stripe: { label: "Credit / Debit Card", desc: "Visa, Mastercard, Amex (Stripe)", Icon: CreditCard },
+  paypal: { label: "PayPal", desc: "Pay securely with PayPal", Icon: Wallet },
+  afterpay: { label: "Afterpay / Clearpay", desc: "Buy now, pay in 4 installments", Icon: Clock },
+  klarna: { label: "Klarna", desc: "Buy now, pay later", Icon: Clock },
+  cod: { label: "Cash on Delivery", desc: "Pay when you receive", Icon: Truck },
+};
+
 const Checkout = () => {
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [paymentMethod, setPaymentMethod] = useState<"card" | "cod">("card");
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [methods, setMethods] = useState<{ provider: string; min_order: number; max_order: number }[]>([]);
+  const [methodsLoading, setMethodsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [couponDiscount, setCouponDiscount] = useState(0);
@@ -28,6 +38,21 @@ const Checkout = () => {
 
   const shipping = totalPrice > 50 ? 0 : 5.99;
   const total = Math.max(0, totalPrice - couponDiscount + shipping);
+
+  useEffect(() => {
+    const loadMethods = async () => {
+      const { data } = await supabase
+        .from("payment_settings")
+        .select("provider, min_order, max_order")
+        .eq("is_enabled", true)
+        .order("provider");
+      const list = (data as any[]) || [];
+      setMethods(list);
+      if (list.length) setPaymentMethod(list[0].provider);
+      setMethodsLoading(false);
+    };
+    loadMethods();
+  }, []);
 
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) return;
@@ -111,7 +136,7 @@ const Checkout = () => {
     };
 
     try {
-      if (paymentMethod === "card") {
+      if (paymentMethod === "stripe") {
         // Use Stripe Checkout
         const { data, error } = await supabase.functions.invoke("create-checkout", {
           body: {
@@ -137,9 +162,8 @@ const Checkout = () => {
           return;
         }
       } else {
-        // Cash on Delivery
         const { data, error } = await supabase.functions.invoke("place-order", {
-          body: { ...orderData, payment_method: "cod" },
+          body: { ...orderData, payment_method: paymentMethod },
         });
 
         if (error) throw error;
@@ -234,35 +258,35 @@ const Checkout = () => {
                   <h2 className="font-display font-semibold text-lg mb-6 flex items-center gap-2">
                     <CreditCard className="h-5 w-5 text-primary" /> Payment Method
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("card")}
-                      className={`p-4 rounded-xl border-2 text-left transition-all ${
-                        paymentMethod === "card"
-                          ? "border-primary bg-primary/5"
-                          : "border-border hover:border-muted-foreground/30"
-                      }`}
-                    >
-                      <CreditCard className="h-5 w-5 text-primary mb-2" />
-                      <p className="font-medium text-sm">Credit / Debit Card</p>
-                      <p className="text-xs text-muted-foreground">Visa, Mastercard, Amex (Stripe)</p>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("cod")}
-                      className={`p-4 rounded-xl border-2 text-left transition-all ${
-                        paymentMethod === "cod"
-                          ? "border-primary bg-primary/5"
-                          : "border-border hover:border-muted-foreground/30"
-                      }`}
-                    >
-                      <Truck className="h-5 w-5 text-primary mb-2" />
-                      <p className="font-medium text-sm">Cash on Delivery</p>
-                      <p className="text-xs text-muted-foreground">Pay when you receive</p>
-                    </button>
-                  </div>
-                  {paymentMethod === "card" && (
+                  {methodsLoading ? (
+                    <p className="text-sm text-muted-foreground">Loading payment methods...</p>
+                  ) : methods.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No payment method is currently available. Please contact support.</p>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {methods.map((m) => {
+                        const info = PROVIDER_INFO[m.provider] || { label: m.provider, desc: "", Icon: Wallet };
+                        const Icon = info.Icon;
+                        return (
+                          <button
+                            key={m.provider}
+                            type="button"
+                            onClick={() => setPaymentMethod(m.provider)}
+                            className={`p-4 rounded-xl border-2 text-left transition-all ${
+                              paymentMethod === m.provider
+                                ? "border-primary bg-primary/5"
+                                : "border-border hover:border-muted-foreground/30"
+                            }`}
+                          >
+                            <Icon className="h-5 w-5 text-primary mb-2" />
+                            <p className="font-medium text-sm">{info.label}</p>
+                            <p className="text-xs text-muted-foreground">{info.desc}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {paymentMethod === "stripe" && (
                     <p className="text-xs text-muted-foreground mt-4 bg-secondary/50 rounded-lg p-3">
                       💳 You will be redirected to Stripe's secure checkout page for card payment.
                     </p>
@@ -336,7 +360,7 @@ const Checkout = () => {
 
                   <Button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || !paymentMethod}
                     className="w-full mt-6 bg-gradient-green text-primary-foreground font-semibold shadow-emerald hover:opacity-90"
                   >
                     {loading ? "Processing..." : `Place Order — $${total.toFixed(2)}`}

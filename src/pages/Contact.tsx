@@ -23,20 +23,7 @@ const Contact = () => {
   const [sending, setSending] = useState(false);
   const { honeypot, setHoneypot, isBot } = useBotProtection(2000);
   const { checkLimit } = useFormRateLimit(3, 60000);
-  const [liveChatUrl, setLiveChatUrl] = useState<string | null>(null);
-
-  // Load live chat URL from site_content
-  useEffect(() => {
-    const loadChatConfig = async () => {
-      const { data } = await supabase
-        .from("site_content")
-        .select("value")
-        .eq("key", "live_chat_url")
-        .maybeSingle();
-      if (data?.value) setLiveChatUrl(data.value);
-    };
-    loadChatConfig();
-  }, []);
+  const whatsappUrl = "https://wa.me/64225404546";
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -97,11 +84,7 @@ const Contact = () => {
   };
 
   const handleLiveChat = () => {
-    if (liveChatUrl) {
-      window.open(liveChatUrl, "_blank");
-    } else {
-      toast.info("Live chat is coming soon! Please use the contact form.");
-    }
+    window.open(whatsappUrl, "_blank", "noopener,noreferrer");
   };
 
   return (
@@ -151,14 +134,14 @@ const Contact = () => {
 
                 <div className="mt-12 p-6 rounded-2xl bg-gradient-green text-primary-foreground">
                   <h3 className="font-display font-semibold text-lg mb-2">Need urgent help?</h3>
-                  <p className="text-sm text-primary-foreground/80 mb-4">Our live chat support is available 24/7 for all your pet product inquiries.</p>
+                  <p className="text-sm text-primary-foreground/80 mb-4">Chat with us on WhatsApp — available 24/7 for all your pet product inquiries.</p>
                   <Button
                     variant="outline"
                     className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 gap-2"
                     onClick={handleLiveChat}
                   >
                     <MessageCircle className="h-4 w-4" />
-                    Start Live Chat
+                    Chat on WhatsApp
                   </Button>
                 </div>
               </div>
