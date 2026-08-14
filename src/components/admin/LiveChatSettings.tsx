@@ -74,7 +74,7 @@ const LiveChatSettings = () => {
             placeholder="https://tawk.to/chat/... or your chatbot URL"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            "Start Live Chat" বাটনে ক্লিক করলে এই URL ওপেন হবে
+            Clicking the "Start Live Chat" button on the Contact page opens this URL.
           </p>
         </div>
 
@@ -88,7 +88,7 @@ const LiveChatSettings = () => {
             className="font-mono text-xs"
           />
           <p className="text-xs text-muted-foreground mt-1">
-            Tawk.to, Crisp, Tidio বা যেকোনো chat widget এর embed code পেস্ট করুন
+            Paste the embed code from Tawk.to, Crisp, Tidio or any chat widget. It loads on every page.
           </p>
         </div>
 
@@ -106,12 +106,12 @@ const LiveChatSettings = () => {
       </div>
 
       <div className="bg-muted/30 rounded-xl p-5 space-y-3">
-        <h4 className="font-semibold text-sm">সেটআপ গাইড</h4>
+        <h4 className="font-semibold text-sm">Setup guide</h4>
         <ol className="text-sm text-muted-foreground space-y-2 list-decimal list-inside">
-          <li><strong>Tawk.to</strong> — বিনামূল্যে, tawk.to তে সাইন আপ করে widget code কপি করুন</li>
-          <li><strong>Crisp</strong> — crisp.chat এ অ্যাকাউন্ট করে script পেস্ট করুন</li>
-          <li><strong>Tidio</strong> — AI chatbot সহ, tidio.com থেকে সেটআপ করুন</li>
-          <li><strong>Custom AI Bot</strong> — আপনার নিজের chatbot URL দিন</li>
+          <li><strong>Tawk.to</strong> — free; sign up at tawk.to and copy the widget code</li>
+          <li><strong>Crisp</strong> — create an account at crisp.chat and paste the script</li>
+          <li><strong>Tidio</strong> — AI chatbot included; set up at tidio.com</li>
+          <li><strong>Custom AI Bot</strong> — just paste your own chatbot URL</li>
         </ol>
       </div>
     </div>
