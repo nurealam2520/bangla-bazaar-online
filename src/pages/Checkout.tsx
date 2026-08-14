@@ -7,7 +7,7 @@ import SEOHead from "@/components/SEOHead";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Minus, Plus, Trash2, ArrowLeft, CreditCard, Truck } from "lucide-react";
+import { Minus, Plus, Trash2, ArrowLeft, CreditCard, Truck, Wallet, Clock } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useBotProtection, useFormRateLimit } from "@/hooks/useBotProtection";
@@ -17,7 +17,9 @@ const Checkout = () => {
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const [paymentMethod, setPaymentMethod] = useState<"card" | "cod">("card");
+  const [paymentMethod, setPaymentMethod] = useState<string>("");
+  const [methods, setMethods] = useState<{ provider: string; min_order: number; max_order: number }[]>([]);
+  const [methodsLoading, setMethodsLoading] = useState(true);
   const [loading, setLoading] = useState(false);
   const [couponCode, setCouponCode] = useState("");
   const [couponDiscount, setCouponDiscount] = useState(0);
@@ -28,6 +30,21 @@ const Checkout = () => {
 
   const shipping = totalPrice > 50 ? 0 : 5.99;
   const total = Math.max(0, totalPrice - couponDiscount + shipping);
+
+  useEffect(() => {
+    const loadMethods = async () => {
+      const { data } = await supabase
+        .from("payment_settings")
+        .select("provider, min_order, max_order")
+        .eq("is_enabled", true)
+        .order("provider");
+      const list = (data as any[]) || [];
+      setMethods(list);
+      if (list.length) setPaymentMethod(list[0].provider);
+      setMethodsLoading(false);
+    };
+    loadMethods();
+  }, []);
 
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) return;
@@ -111,7 +128,7 @@ const Checkout = () => {
     };
 
     try {
-      if (paymentMethod === "card") {
+      if (paymentMethod === "stripe") {
         // Use Stripe Checkout
         const { data, error } = await supabase.functions.invoke("create-checkout", {
           body: {
