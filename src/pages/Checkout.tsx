@@ -14,6 +14,7 @@ import { useBotProtection, useFormRateLimit } from "@/hooks/useBotProtection";
 import HoneypotField from "@/components/HoneypotField";
 
 const Checkout = () => {
+  // eslint-disable-next-line
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
