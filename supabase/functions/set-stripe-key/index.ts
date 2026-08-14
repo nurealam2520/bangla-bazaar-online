@@ -14,7 +14,7 @@ serve(async (req: Request) => {
   try {
     // Verify admin access
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
-    const supabaseAnonKey = Deno.env.get("SUPABASE_PUBLISHABLE_KEY")!;
+    const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
     const authHeader = req.headers.get("authorization");
 
     if (!authHeader) {
@@ -24,8 +24,8 @@ serve(async (req: Request) => {
       });
     }
 
-    const anonClient = createClient(supabaseUrl, supabaseAnonKey);
-    const { data: { user } } = await anonClient.auth.getUser(authHeader.replace("Bearer ", ""));
+    const serviceClient = createClient(supabaseUrl, serviceRoleKey);
+    const { data: { user } } = await serviceClient.auth.getUser(authHeader.replace("Bearer ", ""));
 
     if (!user) {
       return new Response(JSON.stringify({ error: "Unauthorized" }), {
@@ -35,7 +35,6 @@ serve(async (req: Request) => {
     }
 
     // Check admin role
-    const serviceClient = createClient(supabaseUrl, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
     const { data: roleData } = await serviceClient
       .from("user_roles")
       .select("role")
