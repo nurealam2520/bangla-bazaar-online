@@ -13,8 +13,15 @@ import { supabase } from "@/integrations/supabase/client";
 import { useBotProtection, useFormRateLimit } from "@/hooks/useBotProtection";
 import HoneypotField from "@/components/HoneypotField";
 
+const PROVIDER_INFO: Record<string, { label: string; desc: string; Icon: typeof CreditCard }> = {
+  stripe: { label: "Credit / Debit Card", desc: "Visa, Mastercard, Amex (Stripe)", Icon: CreditCard },
+  paypal: { label: "PayPal", desc: "Pay securely with PayPal", Icon: Wallet },
+  afterpay: { label: "Afterpay / Clearpay", desc: "Buy now, pay in 4 installments", Icon: Clock },
+  klarna: { label: "Klarna", desc: "Buy now, pay later", Icon: Clock },
+  cod: { label: "Cash on Delivery", desc: "Pay when you receive", Icon: Truck },
+};
+
 const Checkout = () => {
-  // eslint-disable-next-line
   const { items, updateQuantity, removeFromCart, totalPrice, clearCart } = useCart();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
