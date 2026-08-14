@@ -8,6 +8,7 @@ import { ThemeProvider } from "next-themes";
 import { AuthProvider } from "@/contexts/AuthContext";
 import { HelmetProvider } from "react-helmet-async";
 import CartSidebar from "@/components/CartSidebar";
+import LiveChatWidget from "@/components/LiveChatWidget";
 import Index from "./pages/Index";
 import CategoryPage from "./pages/CategoryPage";
 import Checkout from "./pages/Checkout";
@@ -41,6 +42,7 @@ const App = () => (
               <Sonner />
               <BrowserRouter>
                 <CartSidebar />
+                <LiveChatWidget />
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/shop" element={<Shop />} />
