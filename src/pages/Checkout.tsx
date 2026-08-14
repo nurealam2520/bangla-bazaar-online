@@ -360,7 +360,7 @@ const Checkout = () => {
 
                   <Button
                     type="submit"
-                    disabled={loading}
+                    disabled={loading || !paymentMethod}
                     className="w-full mt-6 bg-gradient-green text-primary-foreground font-semibold shadow-emerald hover:opacity-90"
                   >
                     {loading ? "Processing..." : `Place Order — $${total.toFixed(2)}`}
