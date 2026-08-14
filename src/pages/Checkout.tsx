@@ -154,9 +154,8 @@ const Checkout = () => {
           return;
         }
       } else {
-        // Cash on Delivery
         const { data, error } = await supabase.functions.invoke("place-order", {
-          body: { ...orderData, payment_method: "cod" },
+          body: { ...orderData, payment_method: paymentMethod },
         });
 
         if (error) throw error;
@@ -251,35 +250,35 @@ const Checkout = () => {
                   <h2 className="font-display font-semibold text-lg mb-6 flex items-center gap-2">
                     <CreditCard className="h-5 w-5 text-primary" /> Payment Method
                   </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("card")}
-                      className={`p-4 rounded-xl border-2 text-left transition-all ${
-                        paymentMethod === "card"
-                          ? "border-primary bg-primary/5"
-                          : "border-border hover:border-muted-foreground/30"
-                      }`}
-                    >
-                      <CreditCard className="h-5 w-5 text-primary mb-2" />
-                      <p className="font-medium text-sm">Credit / Debit Card</p>
-                      <p className="text-xs text-muted-foreground">Visa, Mastercard, Amex (Stripe)</p>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => setPaymentMethod("cod")}
-                      className={`p-4 rounded-xl border-2 text-left transition-all ${
-                        paymentMethod === "cod"
-                          ? "border-primary bg-primary/5"
-                          : "border-border hover:border-muted-foreground/30"
-                      }`}
-                    >
-                      <Truck className="h-5 w-5 text-primary mb-2" />
-                      <p className="font-medium text-sm">Cash on Delivery</p>
-                      <p className="text-xs text-muted-foreground">Pay when you receive</p>
-                    </button>
-                  </div>
-                  {paymentMethod === "card" && (
+                  {methodsLoading ? (
+                    <p className="text-sm text-muted-foreground">Loading payment methods...</p>
+                  ) : methods.length === 0 ? (
+                    <p className="text-sm text-muted-foreground">No payment method is currently available. Please contact support.</p>
+                  ) : (
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                      {methods.map((m) => {
+                        const info = PROVIDER_INFO[m.provider] || { label: m.provider, desc: "", Icon: Wallet };
+                        const Icon = info.Icon;
+                        return (
+                          <button
+                            key={m.provider}
+                            type="button"
+                            onClick={() => setPaymentMethod(m.provider)}
+                            className={`p-4 rounded-xl border-2 text-left transition-all ${
+                              paymentMethod === m.provider
+                                ? "border-primary bg-primary/5"
+                                : "border-border hover:border-muted-foreground/30"
+                            }`}
+                          >
+                            <Icon className="h-5 w-5 text-primary mb-2" />
+                            <p className="font-medium text-sm">{info.label}</p>
+                            <p className="text-xs text-muted-foreground">{info.desc}</p>
+                          </button>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {paymentMethod === "stripe" && (
                     <p className="text-xs text-muted-foreground mt-4 bg-secondary/50 rounded-lg p-3">
                       💳 You will be redirected to Stripe's secure checkout page for card payment.
                     </p>
