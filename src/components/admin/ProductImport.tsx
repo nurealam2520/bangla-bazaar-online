@@ -201,8 +201,32 @@ const ProductImport = () => {
   const [preview, setPreview] = useState<ProductInsert[]>([]);
   const [isCJFile, setIsCJFile] = useState(false);
   const [result, setResult] = useState<ImportResult | null>(null);
+  const [categoryOpen, setCategoryOpen] = useState(false);
+  const [category, setCategory] = useState("");
+  const [newCategory, setNewCategory] = useState("");
+  const [subcategory, setSubcategory] = useState("");
+  const [newSubcategory, setNewSubcategory] = useState("");
   const fileRef = useRef<HTMLInputElement>(null);
   const createProduct = useCreateProduct();
+  const { data: allProducts } = useAllProducts();
+
+  const categories = useMemo(() => {
+    const set = new Set<string>(["dogs", "cats"]);
+    (allProducts || []).forEach((p) => p.category && set.add(p.category));
+    return Array.from(set).sort();
+  }, [allProducts]);
+
+  const subcategories = useMemo(() => {
+    const base = category === "__new__" ? newCategory.trim().toLowerCase() : category;
+    const set = new Set<string>();
+    (allProducts || []).forEach((p) => {
+      if (p.subcategory && (!base || p.category === base)) set.add(p.subcategory);
+    });
+    return Array.from(set).sort();
+  }, [allProducts, category, newCategory]);
+
+  const finalCategory = (category === "__new__" ? newCategory.trim().toLowerCase() : category).trim();
+  const finalSubcategory = (subcategory === "__new__" ? newSubcategory.trim() : subcategory).trim();
 
   const applyParsed = (products: ProductInsert[], isCJ: boolean) => {
     if (products.length === 0) {
@@ -246,12 +270,16 @@ const ProductImport = () => {
   };
 
   const handleImport = async () => {
+    if (!finalCategory) {
+      toast.error("Please select or enter a category");
+      return;
+    }
     setImporting(true);
     const res: ImportResult = { success: 0, failed: 0, errors: [] };
 
     for (const product of preview) {
       try {
-        await createProduct.mutateAsync(product);
+        await createProduct.mutateAsync({ ...product, category: finalCategory as any, subcategory: finalSubcategory || product.subcategory || "" });
         res.success++;
       } catch (err: any) {
         res.failed++;
@@ -262,8 +290,11 @@ const ProductImport = () => {
     setResult(res);
     setPreview([]);
     setImporting(false);
+    setCategoryOpen(false);
     if (res.success > 0)
-      toast.success(`Successfully imported ${res.success} products${isCJFile ? " from CJDropshipping file" : ""}`);
+      toast.success(
+        `Successfully imported ${res.success} products into "${finalCategory}${finalSubcategory ? ` / ${finalSubcategory}` : ""}"${isCJFile ? " from CJDropshipping file" : ""}`,
+      );
     if (res.failed > 0) toast.error(`${res.failed} products failed to import`);
   };
 
@@ -310,12 +341,65 @@ const ProductImport = () => {
               <p className="text-xs text-muted-foreground text-center">...and {preview.length - 10} more</p>
             )}
           </div>
-          <Button onClick={handleImport} disabled={importing} className="w-full gap-2 bg-gradient-warm text-primary-foreground">
+          <Button onClick={() => setCategoryOpen(true)} className="w-full gap-2 bg-gradient-warm text-primary-foreground">
             <Upload className="h-4 w-4" />
-            {importing ? "Importing..." : `Import ${preview.length} products`}
+            {`Continue — choose category for ${preview.length} products`}
           </Button>
         </div>
       )}
+
+      <Dialog open={categoryOpen} onOpenChange={(o) => !importing && setCategoryOpen(o)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Select category for this batch</DialogTitle>
+            <DialogDescription>
+              The chosen category and subcategory will be applied to all {preview.length} products.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label>Category</Label>
+              <Select value={category} onValueChange={(v) => { setCategory(v); setSubcategory(""); }}>
+                <SelectTrigger><SelectValue placeholder="Choose a category" /></SelectTrigger>
+                <SelectContent>
+                  {categories.map((c) => (
+                    <SelectItem key={c} value={c}>{c}</SelectItem>
+                  ))}
+                  <SelectItem value="__new__">+ New category…</SelectItem>
+                </SelectContent>
+              </Select>
+              {category === "__new__" && (
+                <Input placeholder="New category name" value={newCategory} onChange={(e) => setNewCategory(e.target.value)} />
+              )}
+            </div>
+
+            <div className="space-y-2">
+              <Label>Subcategory</Label>
+              <Select value={subcategory} onValueChange={setSubcategory}>
+                <SelectTrigger><SelectValue placeholder="Choose a subcategory (optional)" /></SelectTrigger>
+                <SelectContent>
+                  {subcategories.map((s) => (
+                    <SelectItem key={s} value={s}>{s}</SelectItem>
+                  ))}
+                  <SelectItem value="__new__">+ New subcategory…</SelectItem>
+                </SelectContent>
+              </Select>
+              {subcategory === "__new__" && (
+                <Input placeholder="New subcategory name" value={newSubcategory} onChange={(e) => setNewSubcategory(e.target.value)} />
+              )}
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button variant="ghost" onClick={() => setCategoryOpen(false)} disabled={importing}>Cancel</Button>
+            <Button onClick={handleImport} disabled={importing || !finalCategory} className="gap-2 bg-gradient-warm text-primary-foreground">
+              <Upload className="h-4 w-4" />
+              {importing ? "Importing..." : `Confirm & Import Products`}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       {result && (
         <div className="rounded-lg border border-border p-4 space-y-2">
