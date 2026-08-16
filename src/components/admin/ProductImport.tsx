@@ -306,6 +306,8 @@ const ProductImport = () => {
       <p className="text-xs text-muted-foreground">
         CJDropshipping export files (.csv / .xlsx) are supported directly — no manual editing needed. Metadata rows on top
         are skipped automatically and only items marked <span className="text-primary">On Sale</span> are imported.
+        Selling price is calculated automatically with a <span className="text-primary">40% mark-up</span> over the
+        supplier price, and you pick the category/subcategory for the whole batch before saving.
         <br />
         Required fields: <code className="text-primary">Product Title, Product Base Price ($), Product Image</code>
         <br />
