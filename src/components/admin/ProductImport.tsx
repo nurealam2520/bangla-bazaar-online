@@ -1,9 +1,13 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Upload, FileJson, AlertTriangle, CheckCircle, X } from "lucide-react";
 import { toast } from "sonner";
 import * as XLSX from "xlsx";
-import { useCreateProduct, type ProductInsert } from "@/hooks/useProducts";
+import { useCreateProduct, useAllProducts, type ProductInsert } from "@/hooks/useProducts";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 interface ImportResult {
   success: number;
@@ -104,8 +108,10 @@ const findHeaderRow = (rows: unknown[][]): number => {
 
 const rowToProduct = (row: Record<string, string>): (ProductInsert & { sku?: string }) | null => {
   const name = clean(row.name);
-  const price = toNumber(row.price ?? row.supplier_price);
-  if (!name || price <= 0) return null;
+  const cost = toNumber(row.supplier_price ?? row.price) || toNumber(row.price);
+  if (!name || cost <= 0) return null;
+  // 40% mark-up over the supplier/base price
+  const price = Math.round(cost * 1.4 * 100) / 100;
 
   // CJ status filter: only import items that are on sale, when a status column exists
   const status = clean(row.status).toLowerCase();
@@ -130,7 +136,7 @@ const rowToProduct = (row: Record<string, string>): (ProductInsert & { sku?: str
     reviews: row.reviews ? Math.round(toNumber(row.reviews)) : 0,
     supplier_name: clean(row.supplier_name) || undefined,
     supplier_url: clean(row.supplier_url) || undefined,
-    supplier_price: row.supplier_price ? toNumber(row.supplier_price) : toNumber(row.price) || undefined,
+    supplier_price: cost,
   } as any;
 };
 
