@@ -78,8 +78,6 @@ serve(async (req: Request) => {
       sendEmail(adminEmailData),
     ]);
 
-    console.log("Customer email:", JSON.stringify(customerResult));
-    console.log("Admin email:", JSON.stringify(adminResult));
 
     return new Response(
       JSON.stringify({ success: true, message: `Order updated to ${new_status}`, email_sent: true }),
