@@ -125,10 +125,15 @@ const Contact = () => {
                       <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                         <item.icon className="h-5 w-5 text-primary" />
                       </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">{item.label}</p>
-                        <p className="font-medium">{item.value}</p>
-                      </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">{item.label}</p>
+                      <EditableText
+                        contentKey={item.contentKey}
+                        fallback={item.fallback}
+                        as="p"
+                        className="font-medium"
+                      />
+                    </div>
                     </div>
                   ))}
                 </div>
