@@ -142,8 +142,7 @@ const Contact = () => {
                   <h3 className="font-display font-semibold text-lg mb-2">Need urgent help?</h3>
                   <p className="text-sm text-primary-foreground/80 mb-4">Chat with us on WhatsApp — available 24/7 for all your pet product inquiries.</p>
                   <Button
-                    variant="outline"
-                    className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 gap-2"
+                    className="bg-primary-foreground text-primary hover:bg-primary-foreground/90 gap-2 shadow-lg"
                     onClick={handleLiveChat}
                   >
                     <MessageCircle className="h-4 w-4" />
