@@ -1,7 +1,15 @@
 {
-  "name": "vite_react_shadcn_ts",
+  "name": "pawnest",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "Pawnest — premium dog & cat products storefront with shop, blog and admin dashboard.",
+  "author": "Pawnest",
+  "license": "UNLICENSED",
+  "homepage": "https://compawnest.com",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pawnest/pawnest-store.git"
+  },
   "type": "module",
   "scripts": {
     "dev": "vite",
