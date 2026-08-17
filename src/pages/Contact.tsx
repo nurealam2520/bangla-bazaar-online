@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
+import EditableText from "@/components/EditableText";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,10 +14,10 @@ import HoneypotField from "@/components/HoneypotField";
 import { supabase } from "@/integrations/supabase/client";
 
 const contactInfo = [
-  { icon: Mail, label: "Email", value: "support@compawnest.com" },
-  { icon: Phone, label: "Phone", value: "+1 (800) 555-PETS" },
-  { icon: MapPin, label: "Headquarters", value: "Shipping worldwide to US, CA, AU & NZ" },
-  { icon: Clock, label: "Support Hours", value: "24/7 — We're always here" },
+  { icon: Mail, label: "Email", contentKey: "contact_email", fallback: "support@compawnest.com" },
+  { icon: Phone, label: "Phone", contentKey: "contact_phone", fallback: "+1 (800) 555-PETS" },
+  { icon: MapPin, label: "Headquarters", contentKey: "contact_address", fallback: "Shipping worldwide to US, CA, AU & NZ" },
+  { icon: Clock, label: "Support Hours", contentKey: "contact_hours", fallback: "24/7 — We're always here" },
 ];
 
 const Contact = () => {
@@ -124,10 +125,15 @@ const Contact = () => {
                       <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center shrink-0">
                         <item.icon className="h-5 w-5 text-primary" />
                       </div>
-                      <div>
-                        <p className="text-sm text-muted-foreground">{item.label}</p>
-                        <p className="font-medium">{item.value}</p>
-                      </div>
+                    <div>
+                      <p className="text-sm text-muted-foreground">{item.label}</p>
+                      <EditableText
+                        contentKey={item.contentKey}
+                        fallback={item.fallback}
+                        as="p"
+                        className="font-medium"
+                      />
+                    </div>
                     </div>
                   ))}
                 </div>
