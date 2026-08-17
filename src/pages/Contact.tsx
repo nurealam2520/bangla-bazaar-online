@@ -3,6 +3,7 @@ import { motion } from "framer-motion";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
+import EditableText from "@/components/EditableText";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -13,10 +14,10 @@ import HoneypotField from "@/components/HoneypotField";
 import { supabase } from "@/integrations/supabase/client";
 
 const contactInfo = [
-  { icon: Mail, label: "Email", value: "support@compawnest.com" },
-  { icon: Phone, label: "Phone", value: "+1 (800) 555-PETS" },
-  { icon: MapPin, label: "Headquarters", value: "Shipping worldwide to US, CA, AU & NZ" },
-  { icon: Clock, label: "Support Hours", value: "24/7 — We're always here" },
+  { icon: Mail, label: "Email", contentKey: "contact_email", fallback: "support@compawnest.com" },
+  { icon: Phone, label: "Phone", contentKey: "contact_phone", fallback: "+1 (800) 555-PETS" },
+  { icon: MapPin, label: "Headquarters", contentKey: "contact_address", fallback: "Shipping worldwide to US, CA, AU & NZ" },
+  { icon: Clock, label: "Support Hours", contentKey: "contact_hours", fallback: "24/7 — We're always here" },
 ];
 
 const Contact = () => {
