@@ -44,6 +44,7 @@ const App = () => (
               <BrowserRouter>
                 <CartSidebar />
                 <LiveChatWidget />
+                <FloatingWhatsApp />
                 <Routes>
                   <Route path="/" element={<Index />} />
                   <Route path="/shop" element={<Shop />} />
