@@ -9,6 +9,7 @@ import { AuthProvider } from "@/contexts/AuthContext";
 import { HelmetProvider } from "react-helmet-async";
 import CartSidebar from "@/components/CartSidebar";
 import LiveChatWidget from "@/components/LiveChatWidget";
+import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import Index from "./pages/Index";
 import CategoryPage from "./pages/CategoryPage";
 import Checkout from "./pages/Checkout";
