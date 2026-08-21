@@ -11,12 +11,22 @@ const MAX_ORDERS_PER_IP = 5;
 const MAX_ORDERS_PER_EMAIL = 3;
 
 interface OrderRequest {
-  items: { product_name: string; product_image: string; price: number; quantity: number }[];
+  items: {
+    product_id?: string;
+    product_name: string;
+    product_image: string;
+    price: number;
+    quantity: number;
+    cj_variant_id?: string | null;
+    cj_sku?: string | null;
+  }[];
   payment_method: "card" | "cod";
   shipping_name: string;
   shipping_email: string;
+  shipping_phone?: string;
   shipping_address: string;
   shipping_city: string;
+  shipping_state?: string;
   shipping_postal_code: string;
   shipping_country: string;
   subtotal: number;
