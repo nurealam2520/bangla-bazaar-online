@@ -148,28 +148,37 @@ export type Database = {
       }
       order_items: {
         Row: {
+          cj_sku: string | null
+          cj_variant_id: string | null
           created_at: string
           id: string
           order_id: string
           price: number
+          product_id: string | null
           product_image: string | null
           product_name: string
           quantity: number
         }
         Insert: {
+          cj_sku?: string | null
+          cj_variant_id?: string | null
           created_at?: string
           id?: string
           order_id: string
           price: number
+          product_id?: string | null
           product_image?: string | null
           product_name: string
           quantity?: number
         }
         Update: {
+          cj_sku?: string | null
+          cj_variant_id?: string | null
           created_at?: string
           id?: string
           order_id?: string
           price?: number
+          product_id?: string | null
           product_image?: string | null
           product_name?: string
           quantity?: number
@@ -213,6 +222,10 @@ export type Database = {
       }
       orders: {
         Row: {
+          cj_error: string | null
+          cj_order_id: string | null
+          cj_sync_status: string
+          cj_synced_at: string | null
           created_at: string
           fraud_reasons: string[] | null
           fraud_score: number
@@ -228,7 +241,9 @@ export type Database = {
           shipping_country: string
           shipping_email: string
           shipping_name: string
+          shipping_phone: string | null
           shipping_postal_code: string
+          shipping_state: string | null
           status: string
           subtotal: number
           supplier_order_id: string | null
@@ -240,6 +255,10 @@ export type Database = {
           user_id: string | null
         }
         Insert: {
+          cj_error?: string | null
+          cj_order_id?: string | null
+          cj_sync_status?: string
+          cj_synced_at?: string | null
           created_at?: string
           fraud_reasons?: string[] | null
           fraud_score?: number
@@ -255,7 +274,9 @@ export type Database = {
           shipping_country: string
           shipping_email: string
           shipping_name: string
+          shipping_phone?: string | null
           shipping_postal_code: string
+          shipping_state?: string | null
           status?: string
           subtotal: number
           supplier_order_id?: string | null
@@ -267,6 +288,10 @@ export type Database = {
           user_id?: string | null
         }
         Update: {
+          cj_error?: string | null
+          cj_order_id?: string | null
+          cj_sync_status?: string
+          cj_synced_at?: string | null
           created_at?: string
           fraud_reasons?: string[] | null
           fraud_score?: number
@@ -282,7 +307,9 @@ export type Database = {
           shipping_country?: string
           shipping_email?: string
           shipping_name?: string
+          shipping_phone?: string | null
           shipping_postal_code?: string
+          shipping_state?: string | null
           status?: string
           subtotal?: number
           supplier_order_id?: string | null
@@ -335,6 +362,8 @@ export type Database = {
         Row: {
           badge: string | null
           category: string
+          cj_sku: string | null
+          cj_variant_id: string | null
           created_at: string
           description: string
           id: string
@@ -355,6 +384,8 @@ export type Database = {
         Insert: {
           badge?: string | null
           category: string
+          cj_sku?: string | null
+          cj_variant_id?: string | null
           created_at?: string
           description?: string
           id?: string
@@ -375,6 +406,8 @@ export type Database = {
         Update: {
           badge?: string | null
           category?: string
+          cj_sku?: string | null
+          cj_variant_id?: string | null
           created_at?: string
           description?: string
           id?: string
