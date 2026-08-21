@@ -244,6 +244,9 @@ serve(async (req: Request) => {
               </table>
               <h3 style="margin-top:20px;">Items:</h3>
               <ul>${order.items.map((i: any) => `<li>${i.product_name} x${i.quantity} — $${Number(i.price).toFixed(2)}</li>`).join("")}</ul>
+              <p style="margin-top:16px;padding:12px;background:${cjResult.success ? "#f0fdf4" : "#fef2f2"};border-radius:8px;">
+                <strong>CJDropshipping:</strong> ${cjResult.success ? `Synced (CJ Order ${cjResult.cj_order_id ?? "n/a"})` : `Sync failed — ${cjResult.error ?? "unknown error"}`}
+              </p>
               ${isSuspicious ? '<p style="margin-top:16px;padding:12px;background:#fef2f2;border-radius:8px;color:#dc2626;font-weight:bold;">⚠️ FLAGGED — Fraud Score: ' + score + '</p>' : ''}
             </div>
           `,
