@@ -161,8 +161,10 @@ serve(async (req: Request) => {
         total: order.total,
         shipping_name: order.shipping_name,
         shipping_email: order.shipping_email,
+        shipping_phone: order.shipping_phone || null,
         shipping_address: order.shipping_address,
         shipping_city: order.shipping_city,
+        shipping_state: order.shipping_state || null,
         shipping_postal_code: order.shipping_postal_code,
         shipping_country: order.shipping_country,
         ip_address: ip,
@@ -179,10 +181,13 @@ serve(async (req: Request) => {
     // Insert order items
     const orderItems = order.items.map((item) => ({
       order_id: orderData.id,
+      product_id: item.product_id || null,
       product_name: item.product_name,
       product_image: item.product_image,
       price: item.price,
       quantity: item.quantity,
+      cj_variant_id: item.cj_variant_id || null,
+      cj_sku: item.cj_sku || null,
     }));
 
     const { error: itemsError } = await supabase.from("order_items").insert(orderItems);
@@ -194,6 +199,27 @@ serve(async (req: Request) => {
       { identifier: order.shipping_email.toLowerCase(), identifier_type: "email", window_start: new Date().toISOString() },
     ]);
 
+    // Auto-sync the order with CJDropshipping (non-blocking failure)
+    let cjResult: { success?: boolean; error?: string; cj_order_id?: string | null } = {};
+    try {
+      const cjRes = await fetch(`${supabaseUrl}/functions/v1/cj-sync-order`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${serviceRoleKey}` },
+        body: JSON.stringify({ order_id: orderData.id }),
+      });
+      cjResult = await cjRes.json();
+    } catch (cjErr) {
+      console.error("CJ sync invocation failed:", cjErr);
+    }
+
+    // Resolve the admin notification email from settings
+    const { data: adminCfg } = await supabase
+      .from("app_config")
+      .select("value")
+      .eq("key", "admin_notification_email")
+      .maybeSingle();
+    const adminEmail = adminCfg?.value?.trim() || "neworder@compawnest.com";
+
     // Send new order notification email to admin
     try {
       await fetch(`${supabaseUrl}/functions/v1/send-email`, {
@@ -203,7 +229,7 @@ serve(async (req: Request) => {
           Authorization: `Bearer ${serviceRoleKey}`,
         },
         body: JSON.stringify({
-          to: "neworder@compawnest.com",
+          to: adminEmail,
           subject: `🐾 New Order #${orderData.id.slice(0, 8)} — $${Number(order.total).toFixed(2)}`,
           html: `
             <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;padding:20px;">
