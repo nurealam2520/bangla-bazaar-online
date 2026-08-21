@@ -235,9 +235,13 @@ const Checkout = () => {
                       <Label htmlFor="lastName">Last Name</Label>
                       <Input id="lastName" name="lastName" placeholder="Doe" required className="mt-1" />
                     </div>
-                    <div className="sm:col-span-2">
+                    <div>
                       <Label htmlFor="email">Email</Label>
                       <Input id="email" name="email" type="email" placeholder="john@example.com" required className="mt-1" />
+                    </div>
+                    <div>
+                      <Label htmlFor="phone">Phone Number</Label>
+                      <Input id="phone" name="phone" type="tel" placeholder="+1 555 123 4567" required className="mt-1" />
                     </div>
                     <div className="sm:col-span-2">
                       <Label htmlFor="address">Address</Label>
@@ -248,10 +252,14 @@ const Checkout = () => {
                       <Input id="city" name="city" placeholder="New York" required className="mt-1" />
                     </div>
                     <div>
+                      <Label htmlFor="state">State / Province</Label>
+                      <Input id="state" name="state" placeholder="New York" required className="mt-1" />
+                    </div>
+                    <div>
                       <Label htmlFor="zip">ZIP / Postal Code</Label>
                       <Input id="zip" name="zip" placeholder="10001" required className="mt-1" />
                     </div>
-                    <div className="sm:col-span-2">
+                    <div>
                       <Label htmlFor="country">Country</Label>
                       <Input id="country" name="country" placeholder="United States" required className="mt-1" />
                     </div>
