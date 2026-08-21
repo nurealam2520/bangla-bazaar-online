@@ -119,15 +119,20 @@ const Checkout = () => {
     const formData = new FormData(e.target as HTMLFormElement);
     const orderData = {
       items: items.map((i) => ({
+        product_id: i.product.id,
         product_name: i.product.name,
         product_image: i.product.image,
         price: i.product.price,
         quantity: i.quantity,
+        cj_variant_id: (i.product as { cj_variant_id?: string | null }).cj_variant_id ?? null,
+        cj_sku: (i.product as { cj_sku?: string | null }).cj_sku ?? null,
       })),
       shipping_name: `${formData.get("firstName")} ${formData.get("lastName")}`,
       shipping_email: formData.get("email") as string,
+      shipping_phone: formData.get("phone") as string,
       shipping_address: formData.get("address") as string,
       shipping_city: formData.get("city") as string,
+      shipping_state: formData.get("state") as string,
       shipping_postal_code: formData.get("zip") as string,
       shipping_country: formData.get("country") as string,
       subtotal: totalPrice,
