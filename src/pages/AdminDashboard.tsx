@@ -30,6 +30,7 @@ import DataBackup from "@/components/admin/DataBackup";
 import ContactMessages from "@/components/admin/ContactMessages";
 import LiveChatSettings from "@/components/admin/LiveChatSettings";
 import SmtpSettings from "@/components/admin/SmtpSettings";
+import EmailSettings from "@/components/admin/EmailSettings";
 
 interface Order {
   id: string;
@@ -48,6 +49,9 @@ interface Order {
   tracking_url: string | null;
   supplier_order_id: string | null;
   fulfillment_status: string;
+  cj_order_id: string | null;
+  cj_sync_status: string;
+  cj_error: string | null;
 }
 
 interface OrderItem {
@@ -191,6 +195,7 @@ const AdminDashboard = () => {
   const [rateLimits, setRateLimits] = useState<RateLimit[]>([]);
   const [fetching, setFetching] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [cjRetrying, setCjRetrying] = useState<string | null>(null);
 
   // Product management state
   const { data: products = [], isLoading: productsLoading } = useAllProducts();
@@ -439,6 +444,20 @@ const AdminDashboard = () => {
       } catch (e) { console.error("Notification failed:", e); }
       fetchAll();
     }
+  };
+
+  const retryCjSync = async (orderId: string) => {
+    setCjRetrying(orderId);
+    try {
+      const { data, error } = await supabase.functions.invoke("cj-sync-order", { body: { order_id: orderId } });
+      if (error) throw error;
+      if (data?.success) toast.success("Order synced with CJDropshipping");
+      else toast.error("CJ sync failed: " + (data?.error || "Unknown error"));
+    } catch (e: any) {
+      toast.error("CJ sync failed: " + (e?.message || "Unknown error"));
+    }
+    setCjRetrying(null);
+    fetchAll();
   };
 
   useEffect(() => {
@@ -845,6 +864,16 @@ const AdminDashboard = () => {
                               <AlertTriangle className="h-3 w-3" /> Fraud: {order.fraud_score}
                             </span>
                           )}
+                          {order.cj_sync_status === "synced" && (
+                            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-primary/15 text-primary">
+                              CJ SYNCED
+                            </span>
+                          )}
+                          {order.cj_sync_status === "failed" && (
+                            <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-destructive/15 text-destructive">
+                              CJ SYNC FAILED
+                            </span>
+                          )}
                         </div>
                         <p className="font-medium mt-1">{order.shipping_name}</p>
                         <p className="text-sm text-muted-foreground">{order.shipping_email}</p>
@@ -961,6 +990,41 @@ const AdminDashboard = () => {
                                 }}
                               />
                             </div>
+                          </div>
+                          {/* CJDropshipping sync */}
+                          <div className="rounded-lg border border-border p-3 space-y-2">
+                            <div className="flex items-center justify-between gap-2 flex-wrap">
+                              <p className="text-xs font-semibold flex items-center gap-1.5">
+                                <Package className="h-3.5 w-3.5 text-primary" /> CJDropshipping Auto-Order
+                              </p>
+                              <div className="flex items-center gap-2">
+                                <span className={`text-[11px] font-bold px-2 py-0.5 rounded-full ${
+                                  order.cj_sync_status === "synced" ? "bg-primary/15 text-primary" :
+                                  order.cj_sync_status === "failed" ? "bg-destructive/15 text-destructive" :
+                                  "bg-muted text-muted-foreground"
+                                }`}>
+                                  {(order.cj_sync_status || "not_synced").replace(/_/g, " ").toUpperCase()}
+                                </span>
+                                {order.cj_sync_status !== "synced" && (
+                                  <Button
+                                    size="sm"
+                                    variant="outline"
+                                    className="h-7 text-xs gap-1"
+                                    disabled={cjRetrying === order.id}
+                                    onClick={() => retryCjSync(order.id)}
+                                  >
+                                    {cjRetrying === order.id ? <Loader2 className="h-3 w-3 animate-spin" /> : <RefreshCw className="h-3 w-3" />}
+                                    {order.cj_sync_status === "failed" ? "Retry CJ Sync" : "Sync to CJ"}
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                            {order.cj_order_id && (
+                              <p className="text-xs text-muted-foreground">CJ Order ID: <span className="font-mono">{order.cj_order_id}</span></p>
+                            )}
+                            {order.cj_sync_status === "failed" && order.cj_error && (
+                              <p className="text-xs text-destructive bg-destructive/10 rounded-md px-2 py-1.5">{order.cj_error}</p>
+                            )}
                           </div>
                           {/* Quick supplier link */}
                           {order.status === "confirmed" && (
@@ -1324,6 +1388,7 @@ const AdminDashboard = () => {
           {/* Settings Tab */}
           <TabsContent value="settings" className="space-y-6">
             <h3 className="font-display font-bold text-lg">Store Settings</h3>
+            <EmailSettings />
             <SmtpSettings />
             <LiveChatSettings />
             <PaymentSettings />

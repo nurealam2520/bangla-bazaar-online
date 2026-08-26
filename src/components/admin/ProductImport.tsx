@@ -60,10 +60,17 @@ const HEADER_MAP: Record<string, string> = {
   main_image: "image",
   img: "image",
   image: "image",
+  // CJ variant id
+  variant_id: "cj_variant_id",
+  cj_variant_id: "cj_variant_id",
+  product_variant_id: "cj_variant_id",
+  vid: "cj_variant_id",
   // sku
-  sku: "sku",
-  product_sku: "sku",
-  variant_sku: "sku",
+  sku: "cj_sku",
+  cj_sku: "cj_sku",
+  product_sku: "cj_sku",
+  variant_sku: "cj_sku",
+  cj_product_sku: "cj_sku",
   // specification / subcategory
   specification: "subcategory",
   variant: "subcategory",
@@ -118,7 +125,8 @@ const rowToProduct = (row: Record<string, string>): (ProductInsert & { sku?: str
   if (status && !status.includes("on sale") && !status.includes("active")) return null;
 
   const image = clean(row.image) || PLACEHOLDER_IMAGE;
-  const sku = clean(row.sku);
+  const sku = clean(row.cj_sku);
+  const variantId = clean(row.cj_variant_id);
   const spec = clean(row.subcategory);
   const description = clean(row.description) || [spec && `Specification: ${spec}`, sku && `SKU: ${sku}`].filter(Boolean).join(" • ");
   const category = clean(row.category).toLowerCase() === "cats" ? "cats" : "dogs";
@@ -137,6 +145,8 @@ const rowToProduct = (row: Record<string, string>): (ProductInsert & { sku?: str
     supplier_name: clean(row.supplier_name) || undefined,
     supplier_url: clean(row.supplier_url) || undefined,
     supplier_price: cost,
+    cj_variant_id: variantId || undefined,
+    cj_sku: sku || undefined,
   } as any;
 };
 
@@ -311,7 +321,7 @@ const ProductImport = () => {
         <br />
         Required fields: <code className="text-primary">Product Title, Product Base Price ($), Product Image</code>
         <br />
-        Also supported: <code className="text-primary">name, price, image, category, subcategory, description, badge, supplier_name, supplier_url, supplier_price, original_price</code>
+        Also supported: <code className="text-primary">name, price, image, category, subcategory, description, badge, supplier_name, supplier_url, supplier_price, original_price, variant_id, sku</code> — CJ Variant ID / SKU are saved automatically for auto-order sync.
       </p>
 
       <input ref={fileRef} type="file" accept=".csv,.json,.xlsx,.xls" onChange={handleFile} className="hidden" />
