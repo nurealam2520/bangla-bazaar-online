@@ -1,0 +1,5 @@
+ALTER TABLE public.blog_posts
+  ADD COLUMN IF NOT EXISTS meta_title text NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS meta_description text NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS keywords text NOT NULL DEFAULT '',
+  ADD COLUMN IF NOT EXISTS category text NOT NULL DEFAULT '';
