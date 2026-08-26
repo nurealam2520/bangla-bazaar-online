@@ -445,6 +445,20 @@ const AdminDashboard = () => {
     }
   };
 
+  const retryCjSync = async (orderId: string) => {
+    setCjRetrying(orderId);
+    try {
+      const { data, error } = await supabase.functions.invoke("cj-sync-order", { body: { order_id: orderId } });
+      if (error) throw error;
+      if (data?.success) toast.success("Order synced with CJDropshipping");
+      else toast.error("CJ sync failed: " + (data?.error || "Unknown error"));
+    } catch (e: any) {
+      toast.error("CJ sync failed: " + (e?.message || "Unknown error"));
+    }
+    setCjRetrying(null);
+    fetchAll();
+  };
+
   useEffect(() => {
     if (user && isAdmin) {
       fetchAll();
