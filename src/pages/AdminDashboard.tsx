@@ -30,6 +30,7 @@ import DataBackup from "@/components/admin/DataBackup";
 import ContactMessages from "@/components/admin/ContactMessages";
 import LiveChatSettings from "@/components/admin/LiveChatSettings";
 import SmtpSettings from "@/components/admin/SmtpSettings";
+import EmailSettings from "@/components/admin/EmailSettings";
 
 interface Order {
   id: string;
@@ -48,6 +49,9 @@ interface Order {
   tracking_url: string | null;
   supplier_order_id: string | null;
   fulfillment_status: string;
+  cj_order_id: string | null;
+  cj_sync_status: string;
+  cj_error: string | null;
 }
 
 interface OrderItem {
