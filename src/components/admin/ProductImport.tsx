@@ -321,7 +321,7 @@ const ProductImport = () => {
         <br />
         Required fields: <code className="text-primary">Product Title, Product Base Price ($), Product Image</code>
         <br />
-        Also supported: <code className="text-primary">name, price, image, category, subcategory, description, badge, supplier_name, supplier_url, supplier_price, original_price</code>
+        Also supported: <code className="text-primary">name, price, image, category, subcategory, description, badge, supplier_name, supplier_url, supplier_price, original_price, variant_id, sku</code> — CJ Variant ID / SKU are saved automatically for auto-order sync.
       </p>
 
       <input ref={fileRef} type="file" accept=".csv,.json,.xlsx,.xls" onChange={handleFile} className="hidden" />

@@ -47,9 +47,16 @@ serve(async (req: Request) => {
       body: getEmailBody(order, new_status),
     };
 
-    // Send email to admin for new orders
+    // Send email to admin for new orders — fetch the address saved in Email Settings
+    const { data: adminCfg } = await supabase
+      .from("app_config")
+      .select("value")
+      .eq("key", "admin_notification_email")
+      .maybeSingle();
+    const adminEmail = adminCfg?.value || "neworder@compawnest.com";
+
     const adminEmailData = {
-      to: "neworder@compawnest.com",
+      to: adminEmail,
       subject: `🐾 Order #${order.id.slice(0, 8)} — ${new_status.toUpperCase()}`,
       html: getAdminEmailHtml(order, new_status),
       body: `Order #${order.id.slice(0, 8)} status: ${new_status}\nCustomer: ${order.shipping_name} (${order.shipping_email})\nTotal: $${Number(order.total).toFixed(2)}`,
