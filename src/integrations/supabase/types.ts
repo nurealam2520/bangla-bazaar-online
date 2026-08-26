@@ -38,12 +38,16 @@ export type Database = {
       blog_posts: {
         Row: {
           author_id: string
+          category: string
           content: string
           cover_image: string
           created_at: string
           excerpt: string
           id: string
           is_published: boolean
+          keywords: string
+          meta_description: string
+          meta_title: string
           published_at: string | null
           slug: string
           title: string
@@ -51,12 +55,16 @@ export type Database = {
         }
         Insert: {
           author_id: string
+          category?: string
           content?: string
           cover_image?: string
           created_at?: string
           excerpt?: string
           id?: string
           is_published?: boolean
+          keywords?: string
+          meta_description?: string
+          meta_title?: string
           published_at?: string | null
           slug: string
           title: string
@@ -64,12 +72,16 @@ export type Database = {
         }
         Update: {
           author_id?: string
+          category?: string
           content?: string
           cover_image?: string
           created_at?: string
           excerpt?: string
           id?: string
           is_published?: boolean
+          keywords?: string
+          meta_description?: string
+          meta_title?: string
           published_at?: string | null
           slug?: string
           title?: string
