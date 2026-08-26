@@ -195,6 +195,7 @@ const AdminDashboard = () => {
   const [rateLimits, setRateLimits] = useState<RateLimit[]>([]);
   const [fetching, setFetching] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState<string | null>(null);
+  const [cjRetrying, setCjRetrying] = useState<string | null>(null);
 
   // Product management state
   const { data: products = [], isLoading: productsLoading } = useAllProducts();
