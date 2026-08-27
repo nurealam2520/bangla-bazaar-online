@@ -212,6 +212,7 @@ const AdminDashboard = () => {
   const [editingPost, setEditingPost] = useState<(Partial<BlogPost> & { isNew?: boolean }) | null>(null);
   const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
   const [aiPublishing, setAiPublishing] = useState(false);
+  const queryClient = useQueryClient();
 
   const handleAiPublish = async () => {
     setAiPublishing(true);
