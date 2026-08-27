@@ -10,7 +10,7 @@ import {
   LogOut, ArrowLeft, RefreshCw, Eye, CheckCircle, XCircle,
   Clock, Plus, Pencil, Trash2, X, Save, FileText, Globe, EyeOff,
   UserCog, UserPlus, UserMinus, Settings, Upload, ImageIcon, Loader2, Database,
-  Mail, MessageCircle
+  Mail, MessageCircle, Sparkles
 } from "lucide-react";
 import { optimizeImage, formatFileSize } from "@/lib/imageOptimizer";
 import { getStorageUrl } from "@/lib/imageUrl";
