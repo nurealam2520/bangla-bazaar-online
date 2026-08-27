@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -10,7 +11,7 @@ import {
   LogOut, ArrowLeft, RefreshCw, Eye, CheckCircle, XCircle,
   Clock, Plus, Pencil, Trash2, X, Save, FileText, Globe, EyeOff,
   UserCog, UserPlus, UserMinus, Settings, Upload, ImageIcon, Loader2, Database,
-  Mail, MessageCircle
+  Mail, MessageCircle, Sparkles
 } from "lucide-react";
 import { optimizeImage, formatFileSize } from "@/lib/imageOptimizer";
 import { getStorageUrl } from "@/lib/imageUrl";
@@ -211,6 +212,24 @@ const AdminDashboard = () => {
   const deleteBlogPost = useDeleteBlogPost();
   const [editingPost, setEditingPost] = useState<(Partial<BlogPost> & { isNew?: boolean }) | null>(null);
   const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
+  const [aiPublishing, setAiPublishing] = useState(false);
+  const queryClient = useQueryClient();
+
+  const handleAiPublish = async () => {
+    setAiPublishing(true);
+    const toastId = toast.loading("AI is researching a trending pet topic...");
+    try {
+      const { data, error } = await supabase.functions.invoke("ai-blog-generator", { body: {} });
+      if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
+      toast.success(`Published: ${(data as any)?.post?.title ?? "New post"}`, { id: toastId });
+      queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
+    } catch (err) {
+      toast.error(`AI publish failed: ${(err as Error).message}`, { id: toastId });
+    } finally {
+      setAiPublishing(false);
+    }
+  };
 
   // Auto-save draft to localStorage
   const DRAFT_KEY = "blog_draft_autosave";
@@ -1052,6 +1071,16 @@ const AdminDashboard = () => {
                 className="gap-1.5 bg-gradient-warm text-primary-foreground"
               >
                 <Plus className="h-4 w-4" /> New Post
+              </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={aiPublishing}
+                onClick={handleAiPublish}
+                className="gap-1.5 border-primary/40 text-primary"
+              >
+                {aiPublishing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                {aiPublishing ? "Generating..." : "AI Publish"}
               </Button>
               {localStorage.getItem(DRAFT_KEY) && !editingPost && (
                 <>
