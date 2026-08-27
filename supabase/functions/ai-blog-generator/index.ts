@@ -10,20 +10,27 @@ const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
 const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
 
 const SYSTEM_PROMPT = `You are an expert pet-care blog writer and SEO specialist for an e-commerce pet supplies brand.
-Pick a UNIQUE, currently trending topic strictly about pets (dogs or cats): care, health, nutrition, training, behaviour or accessories.
 Return ONLY valid JSON (no markdown fences) with exactly these keys:
 {
   "title": "catchy SEO title, max 65 chars",
   "slug": "url-friendly-slug",
-  "category": "one of: Dog Care, Cat Care, Pet Health, Nutrition, Training, Accessories",
+  "category": "the topic category you were given",
   "excerpt": "engaging summary, max 150 chars",
   "meta_title": "SEO title, max 60 chars",
   "meta_description": "SEO description, max 155 chars",
   "keywords": "comma separated keywords",
   "image_search_prompt": "2-4 word photo search query, e.g. golden retriever puppy",
-  "content": "full article in clean semantic HTML, 800-1200 words, using <h2>, <h3>, <p>, <ul><li>, <strong>. No <html>/<body> tags, no H1."
+  "content": "full article in clean semantic HTML, 900-1400 words. No <html>/<body> tags, no H1."
 }
-Write in English only.`;
+
+WRITING RULES (very important):
+- Articles must NOT all look the same. Vary structure, tone and opening every time.
+- The article must be mostly flowing PARAGRAPHS (<p>), not a wall of bullet points.
+- Use <ul>/<ol> ONLY where a list genuinely helps (e.g. checklists, symptoms, steps) — at most one or two short lists.
+- Include an HTML <table> ONLY when the topic really benefits from comparison data (e.g. price/feeding/breed/nutrient comparison). Otherwise omit it.
+- Allowed tags: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <blockquote>, <table>, <thead>, <tbody>, <tr>, <th>, <td>.
+- SEO: natural keyword usage, descriptive H2/H3 subheadings, a strong intro hook and a practical conclusion. Never keyword-stuff.
+- Write in English only, friendly expert tone, factual and useful.`;
 
 function extractJson(text: string): Record<string, unknown> {
   const cleaned = text.replace(/```json/gi, "").replace(/```/g, "").trim();
@@ -33,10 +40,29 @@ function extractJson(text: string): Record<string, unknown> {
   return JSON.parse(cleaned.slice(start, end + 1));
 }
 
-async function generatePost(avoidTitles: string[]): Promise<Record<string, any>> {
-  const userPrompt = `Write today's post. Do NOT reuse any of these existing titles/topics: ${
-    avoidTitles.length ? avoidTitles.join(" | ") : "none yet"
-  }`;
+const STYLES = [
+  "a narrative, story-led article that opens with a real-life pet owner scenario",
+  "a practical how-to guide with clear step-by-step explanation written in prose",
+  "a myth-busting article that corrects common misconceptions",
+  "a comparison-focused article that includes one helpful HTML comparison table",
+  "an expert Q&A-flavoured deep dive written mostly as paragraphs",
+  "a seasonal / timely advice article with actionable takeaways",
+  "a beginner-friendly explainer that gradually builds up to advanced tips",
+];
+
+
+async function generatePost(
+  avoidTitles: string[],
+  topicCategory: string,
+  customTopic: string,
+): Promise<Record<string, any>> {
+  const style = STYLES[Math.floor(Math.random() * STYLES.length)];
+  const userPrompt = `Topic category: "${topicCategory}". The article MUST be strictly about this category.
+${customTopic ? `Specific topic requested by the editor: "${customTopic}". Build the article around it.` : `Pick a unique, currently trending, specific angle inside this category.`}
+Write it as ${style}.
+Do NOT reuse any of these existing titles/topics: ${avoidTitles.length ? avoidTitles.join(" | ") : "none yet"}
+Set the JSON "category" field to "${topicCategory}".`;
+
 
   const geminiKey = Deno.env.get("GEMINI_API_KEY");
   if (geminiKey) {
@@ -148,13 +174,23 @@ serve(async (req: Request) => {
       });
     }
 
+    let body: any = {};
+    try { body = await req.json(); } catch (_) { /* empty body allowed */ }
+    const topicCategory = String(body?.category || "Pet Care").slice(0, 80);
+    const customTopic = String(body?.topic || "").slice(0, 200);
+
     const { data: existing } = await supabase
       .from("blog_posts")
       .select("title, slug")
       .order("created_at", { ascending: false })
       .limit(25);
 
-    const post = await generatePost((existing ?? []).map((p: { title: string }) => p.title));
+    const post = await generatePost(
+      (existing ?? []).map((p: { title: string }) => p.title),
+      topicCategory,
+      customTopic,
+    );
+
 
     const baseSlug = String(post.slug || post.title || "post")
       .toLowerCase()
