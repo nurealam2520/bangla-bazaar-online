@@ -211,6 +211,23 @@ const AdminDashboard = () => {
   const deleteBlogPost = useDeleteBlogPost();
   const [editingPost, setEditingPost] = useState<(Partial<BlogPost> & { isNew?: boolean }) | null>(null);
   const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
+  const [aiPublishing, setAiPublishing] = useState(false);
+
+  const handleAiPublish = async () => {
+    setAiPublishing(true);
+    const toastId = toast.loading("AI is researching a trending pet topic...");
+    try {
+      const { data, error } = await supabase.functions.invoke("ai-blog-generator", { body: {} });
+      if (error) throw error;
+      if ((data as any)?.error) throw new Error((data as any).error);
+      toast.success(`Published: ${(data as any)?.post?.title ?? "New post"}`, { id: toastId });
+      queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
+    } catch (err) {
+      toast.error(`AI publish failed: ${(err as Error).message}`, { id: toastId });
+    } finally {
+      setAiPublishing(false);
+    }
+  };
 
   // Auto-save draft to localStorage
   const DRAFT_KEY = "blog_draft_autosave";
