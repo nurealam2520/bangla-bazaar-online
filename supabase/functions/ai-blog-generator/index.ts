@@ -174,13 +174,23 @@ serve(async (req: Request) => {
       });
     }
 
+    let body: any = {};
+    try { body = await req.json(); } catch (_) { /* empty body allowed */ }
+    const topicCategory = String(body?.category || "Pet Care").slice(0, 80);
+    const customTopic = String(body?.topic || "").slice(0, 200);
+
     const { data: existing } = await supabase
       .from("blog_posts")
       .select("title, slug")
       .order("created_at", { ascending: false })
       .limit(25);
 
-    const post = await generatePost((existing ?? []).map((p: { title: string }) => p.title));
+    const post = await generatePost(
+      (existing ?? []).map((p: { title: string }) => p.title),
+      topicCategory,
+      customTopic,
+    );
+
 
     const baseSlug = String(post.slug || post.title || "post")
       .toLowerCase()
