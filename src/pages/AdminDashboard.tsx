@@ -1072,6 +1072,16 @@ const AdminDashboard = () => {
               >
                 <Plus className="h-4 w-4" /> New Post
               </Button>
+              <Button
+                size="sm"
+                variant="outline"
+                disabled={aiPublishing}
+                onClick={handleAiPublish}
+                className="gap-1.5 border-primary/40 text-primary"
+              >
+                {aiPublishing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
+                {aiPublishing ? "Generating..." : "AI Publish"}
+              </Button>
               {localStorage.getItem(DRAFT_KEY) && !editingPost && (
                 <>
                   <Button size="sm" variant="outline" onClick={loadDraft} className="gap-1.5">
