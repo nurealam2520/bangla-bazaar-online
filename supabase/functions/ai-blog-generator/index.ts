@@ -51,10 +51,18 @@ const STYLES = [
 ];
 
 
-async function generatePost(avoidTitles: string[]): Promise<Record<string, any>> {
-  const userPrompt = `Write today's post. Do NOT reuse any of these existing titles/topics: ${
-    avoidTitles.length ? avoidTitles.join(" | ") : "none yet"
-  }`;
+async function generatePost(
+  avoidTitles: string[],
+  topicCategory: string,
+  customTopic: string,
+): Promise<Record<string, any>> {
+  const style = STYLES[Math.floor(Math.random() * STYLES.length)];
+  const userPrompt = `Topic category: "${topicCategory}". The article MUST be strictly about this category.
+${customTopic ? `Specific topic requested by the editor: "${customTopic}". Build the article around it.` : `Pick a unique, currently trending, specific angle inside this category.`}
+Write it as ${style}.
+Do NOT reuse any of these existing titles/topics: ${avoidTitles.length ? avoidTitles.join(" | ") : "none yet"}
+Set the JSON "category" field to "${topicCategory}".`;
+
 
   const geminiKey = Deno.env.get("GEMINI_API_KEY");
   if (geminiKey) {
