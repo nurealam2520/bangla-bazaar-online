@@ -213,16 +213,30 @@ const AdminDashboard = () => {
   const [editingPost, setEditingPost] = useState<(Partial<BlogPost> & { isNew?: boolean }) | null>(null);
   const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
   const [aiPublishing, setAiPublishing] = useState(false);
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
+  const [aiCategory, setAiCategory] = useState("Dog");
+  const [aiTopic, setAiTopic] = useState("");
   const queryClient = useQueryClient();
 
+  const aiCategories = Array.from(
+    new Set([
+      "Dog", "Cat", "Dog Food", "Cat Food",
+      ...products.flatMap((p: any) => [p.category, p.subcategory].filter(Boolean) as string[]),
+    ])
+  );
+
   const handleAiPublish = async () => {
+    setAiDialogOpen(false);
     setAiPublishing(true);
-    const toastId = toast.loading("AI is researching a trending pet topic...");
+    const toastId = toast.loading(`AI is writing about ${aiCategory}...`);
     try {
-      const { data, error } = await supabase.functions.invoke("ai-blog-generator", { body: {} });
+      const { data, error } = await supabase.functions.invoke("ai-blog-generator", {
+        body: { category: aiCategory, topic: aiTopic.trim() || undefined },
+      });
       if (error) throw error;
       if ((data as any)?.error) throw new Error((data as any).error);
       toast.success(`Published: ${(data as any)?.post?.title ?? "New post"}`, { id: toastId });
+      setAiTopic("");
       queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
     } catch (err) {
       toast.error(`AI publish failed: ${(err as Error).message}`, { id: toastId });
@@ -230,6 +244,7 @@ const AdminDashboard = () => {
       setAiPublishing(false);
     }
   };
+
 
   // Auto-save draft to localStorage
   const DRAFT_KEY = "blog_draft_autosave";
