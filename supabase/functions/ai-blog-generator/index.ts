@@ -64,27 +64,7 @@ Do NOT reuse any of these existing titles/topics: ${avoidTitles.length ? avoidTi
 Set the JSON "category" field to "${topicCategory}".`;
 
 
-  const geminiKey = Deno.env.get("GEMINI_API_KEY");
-  if (geminiKey) {
-    const res = await fetch(
-      `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${geminiKey}`,
-      {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
-          contents: [{ role: "user", parts: [{ text: userPrompt }] }],
-          generationConfig: { temperature: 0.9, responseMimeType: "application/json" },
-        }),
-      },
-    );
-    const json = await res.json();
-    const text = json?.candidates?.[0]?.content?.parts?.[0]?.text;
-    if (!res.ok || !text) throw new Error(json?.error?.message || "Gemini generation failed");
-    return extractJson(text);
-  }
-
-  // Fallback: built-in AI gateway (no key setup required)
+  // Built-in AI gateway (no key setup required)
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -92,7 +72,8 @@ Set the JSON "category" field to "${topicCategory}".`;
       Authorization: `Bearer ${Deno.env.get("LOVABLE_API_KEY")}`,
     },
     body: JSON.stringify({
-      model: "google/gemini-2.5-flash",
+      model: "openai/gpt-5.6-sol",
+      reasoning_effort: "none",
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: userPrompt },
