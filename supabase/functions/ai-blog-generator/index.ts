@@ -72,7 +72,8 @@ Set the JSON "category" field to "${topicCategory}".`;
       Authorization: `Bearer ${Deno.env.get("LOVABLE_API_KEY")}`,
     },
     body: JSON.stringify({
-      model: "google/gemini-2.5-flash",
+      model: "openai/gpt-5.6-sol",
+      reasoning_effort: "none",
       messages: [
         { role: "system", content: SYSTEM_PROMPT },
         { role: "user", content: userPrompt },
