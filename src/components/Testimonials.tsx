@@ -91,7 +91,7 @@ const Testimonials = () => {
                     <div className="flex items-center gap-3 pt-4 border-t border-border">
                       <Avatar className="h-10 w-10">
                         {t.user_avatar ? (
-                          <AvatarImage src={t.user_avatar} alt={t.user_name} />
+                          <AvatarImage src={t.user_avatar} alt={t.user_name} loading="lazy" />
                         ) : null}
                         <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
                           {getInitials(t.user_name)}
