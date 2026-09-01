@@ -50,7 +50,7 @@ const CategorySection = () => {
                 <div className="relative rounded-2xl overflow-hidden border border-border h-[320px]">
                   <img
                     src={cat.image}
-                    alt={cat.nameFallback}
+                    alt={`Shop premium ${cat.nameFallback.toLowerCase()} products at Pawnest`}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                     loading="lazy"
                   />
