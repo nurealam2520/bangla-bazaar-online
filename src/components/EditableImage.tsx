@@ -12,6 +12,7 @@ interface EditableImageProps {
   alt: string;
   className?: string;
   overlayClassName?: string;
+  loading?: "eager" | "lazy";
 }
 
 const EditableImage = ({
@@ -20,6 +21,7 @@ const EditableImage = ({
   alt,
   className = "",
   overlayClassName = "",
+  loading,
 }: EditableImageProps) => {
   const { isAdmin } = useAuth();
   const { get, update } = useSiteContent();
@@ -73,12 +75,12 @@ const EditableImage = ({
   };
 
   if (!isAdmin) {
-    return <img src={currentSrc} alt={alt} className={className} />;
+    return <img src={currentSrc} alt={alt} className={className} loading={loading} />;
   }
 
   return (
     <div className={`relative group/img ${overlayClassName}`}>
-      <img src={currentSrc} alt={alt} className={className} />
+      <img src={currentSrc} alt={alt} className={className} loading={loading} />
       <input
         ref={fileRef}
         type="file"
