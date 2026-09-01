@@ -1091,12 +1091,57 @@ const AdminDashboard = () => {
                 size="sm"
                 variant="outline"
                 disabled={aiPublishing}
-                onClick={handleAiPublish}
+                onClick={() => setAiDialogOpen(true)}
                 className="gap-1.5 border-primary/40 text-primary"
               >
                 {aiPublishing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                 {aiPublishing ? "Generating..." : "AI Publish"}
               </Button>
+
+              <Dialog open={aiDialogOpen} onOpenChange={setAiDialogOpen}>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="font-display">AI Blog Publish</DialogTitle>
+                    <DialogDescription>Choose a category — the article will be written around it.</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Category</label>
+                      <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
+                        {aiCategories.map((c) => (
+                          <button
+                            key={c}
+                            type="button"
+                            onClick={() => setAiCategory(c)}
+                            className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                              aiCategory === c
+                                ? "bg-primary text-primary-foreground border-primary"
+                                : "border-border text-muted-foreground hover:border-primary/50"
+                            }`}
+                          >
+                            {c}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Custom topic (optional)</label>
+                      <Input
+                        value={aiTopic}
+                        onChange={(e) => setAiTopic(e.target.value)}
+                        placeholder="e.g. Best winter care routine for senior dogs"
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setAiDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handleAiPublish} className="gap-1.5 bg-gradient-warm text-primary-foreground">
+                      <Sparkles className="h-4 w-4" /> Generate & Publish
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+
               {localStorage.getItem(DRAFT_KEY) && !editingPost && (
                 <>
                   <Button size="sm" variant="outline" onClick={loadDraft} className="gap-1.5">
