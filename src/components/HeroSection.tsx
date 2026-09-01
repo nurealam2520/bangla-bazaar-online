@@ -11,6 +11,11 @@ import heroSlide2 from "@/assets/hero-slide-2.jpg";
 import heroSlide3 from "@/assets/hero-slide-3.jpg";
 
 const slideImages = [heroSlide1, heroSlide2, heroSlide3];
+const slideAlts = [
+  "Pawnest premium pet store hero banner",
+  "Pawnest curated cat products collection banner",
+  "Pawnest pet grooming essentials banner",
+];
 const slideLinks = [
   { ctaLink: "/shop", secondaryLink: "/category/dogs" },
   { ctaLink: "/category/cats", secondaryLink: "/shop" },
@@ -83,9 +88,10 @@ const HeroSection = () => {
           <EditableImage
             contentKey={`hero_slide_${current + 1}_image`}
             fallbackSrc={slideImages[current]}
-            alt={`Hero slide ${current + 1}`}
+            alt={slideAlts[current]}
             className="w-full h-full object-cover"
             overlayClassName="w-full h-full"
+            loading="eager"
           />
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/20" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
@@ -108,7 +114,7 @@ const HeroSection = () => {
                 <EditableText contentKey={`hero_slide_${n}_badge`} fallback={fb.badge} className="text-primary font-medium text-sm" />
               </motion.div>
 
-              <motion.div custom={1} variants={textVariants} initial="enter" animate="center" exit="exit" className="text-4xl md:text-7xl font-display font-bold leading-[1.1] mb-6">
+              <motion.h1 custom={1} variants={textVariants} initial="enter" animate="center" exit="exit" className="text-4xl md:text-7xl font-display font-bold leading-[1.1] mb-6">
                 <EditableText contentKey={`hero_slide_${n}_title`} fallback={fb.title} as="span" />
                 {" "}
                 <br className="hidden sm:block" />
@@ -118,7 +124,7 @@ const HeroSection = () => {
                   </>
                 )}
                 <EditableText contentKey={`hero_slide_${n}_highlight`} fallback={fb.highlight} as="span" className="text-gradient-green" />
-              </motion.div>
+              </motion.h1>
 
               <motion.div custom={2} variants={textVariants} initial="enter" animate="center" exit="exit">
                 <EditableText contentKey={`hero_slide_${n}_description`} fallback={fb.description} as="p" className="text-lg text-muted-foreground mb-10 max-w-lg leading-relaxed" multiline />
