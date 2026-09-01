@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   ShoppingCart, Users, Shield, AlertTriangle, Package,
@@ -213,16 +214,30 @@ const AdminDashboard = () => {
   const [editingPost, setEditingPost] = useState<(Partial<BlogPost> & { isNew?: boolean }) | null>(null);
   const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
   const [aiPublishing, setAiPublishing] = useState(false);
+  const [aiDialogOpen, setAiDialogOpen] = useState(false);
+  const [aiCategory, setAiCategory] = useState("Dog");
+  const [aiTopic, setAiTopic] = useState("");
   const queryClient = useQueryClient();
 
+  const aiCategories = Array.from(
+    new Set([
+      "Dog", "Cat", "Dog Food", "Cat Food",
+      ...products.flatMap((p: any) => [p.category, p.subcategory].filter(Boolean) as string[]),
+    ])
+  );
+
   const handleAiPublish = async () => {
+    setAiDialogOpen(false);
     setAiPublishing(true);
-    const toastId = toast.loading("AI is researching a trending pet topic...");
+    const toastId = toast.loading(`AI is writing about ${aiCategory}...`);
     try {
-      const { data, error } = await supabase.functions.invoke("ai-blog-generator", { body: {} });
+      const { data, error } = await supabase.functions.invoke("ai-blog-generator", {
+        body: { category: aiCategory, topic: aiTopic.trim() || undefined },
+      });
       if (error) throw error;
       if ((data as any)?.error) throw new Error((data as any).error);
       toast.success(`Published: ${(data as any)?.post?.title ?? "New post"}`, { id: toastId });
+      setAiTopic("");
       queryClient.invalidateQueries({ queryKey: ["blog-posts"] });
     } catch (err) {
       toast.error(`AI publish failed: ${(err as Error).message}`, { id: toastId });
@@ -230,6 +245,7 @@ const AdminDashboard = () => {
       setAiPublishing(false);
     }
   };
+
 
   // Auto-save draft to localStorage
   const DRAFT_KEY = "blog_draft_autosave";
@@ -1076,12 +1092,57 @@ const AdminDashboard = () => {
                 size="sm"
                 variant="outline"
                 disabled={aiPublishing}
-                onClick={handleAiPublish}
+                onClick={() => setAiDialogOpen(true)}
                 className="gap-1.5 border-primary/40 text-primary"
               >
                 {aiPublishing ? <Loader2 className="h-4 w-4 animate-spin" /> : <Sparkles className="h-4 w-4" />}
                 {aiPublishing ? "Generating..." : "AI Publish"}
               </Button>
+
+              <Dialog open={aiDialogOpen} onOpenChange={setAiDialogOpen}>
+                <DialogContent className="sm:max-w-md">
+                  <DialogHeader>
+                    <DialogTitle className="font-display">AI Blog Publish</DialogTitle>
+                    <DialogDescription>Choose a category — the article will be written around it.</DialogDescription>
+                  </DialogHeader>
+                  <div className="space-y-4">
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Category</label>
+                      <div className="flex flex-wrap gap-2 max-h-48 overflow-y-auto">
+                        {aiCategories.map((c) => (
+                          <button
+                            key={c}
+                            type="button"
+                            onClick={() => setAiCategory(c)}
+                            className={`px-3 py-1.5 rounded-full text-xs border transition-colors ${
+                              aiCategory === c
+                                ? "bg-primary text-primary-foreground border-primary"
+                                : "border-border text-muted-foreground hover:border-primary/50"
+                            }`}
+                          >
+                            {c}
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                    <div className="space-y-2">
+                      <label className="text-sm font-medium">Custom topic (optional)</label>
+                      <Input
+                        value={aiTopic}
+                        onChange={(e) => setAiTopic(e.target.value)}
+                        placeholder="e.g. Best winter care routine for senior dogs"
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button variant="outline" onClick={() => setAiDialogOpen(false)}>Cancel</Button>
+                    <Button onClick={handleAiPublish} className="gap-1.5 bg-gradient-warm text-primary-foreground">
+                      <Sparkles className="h-4 w-4" /> Generate & Publish
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
+
               {localStorage.getItem(DRAFT_KEY) && !editingPost && (
                 <>
                   <Button size="sm" variant="outline" onClick={loadDraft} className="gap-1.5">
