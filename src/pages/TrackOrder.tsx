@@ -304,7 +304,7 @@ const TrackOrder = () => {
                   {orderItems.map((item) => (
                     <div key={item.id} className="flex items-center gap-3">
                       {item.product_image && (
-                        <img src={item.product_image} alt={item.product_name} className="w-12 h-12 rounded-lg object-cover" />
+                        <img src={item.product_image} alt={item.product_name} className="w-12 h-12 rounded-lg object-cover" loading="lazy" decoding="async" />
                       )}
                       <div className="flex-1 min-w-0">
                         <p className="text-sm font-medium truncate">{item.product_name}</p>

@@ -29,7 +29,10 @@ const CartSidebar = () => {
                     src={product.image}
                     alt={product.name}
                     className="w-16 h-16 rounded-lg object-cover shrink-0"
+                    loading="lazy"
+                    decoding="async"
                   />
+
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-medium line-clamp-1">{product.name}</p>
                     <p className="text-sm font-bold text-primary mt-1">${product.price}</p>

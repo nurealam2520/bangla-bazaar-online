@@ -6,11 +6,16 @@ import { Link } from "react-router-dom";
 import EditableText from "@/components/EditableText";
 import EditableImage from "@/components/EditableImage";
 import { useSiteContent } from "@/hooks/useSiteContent";
-import heroSlide1 from "@/assets/hero-slide-1.jpg";
-import heroSlide2 from "@/assets/hero-slide-2.jpg";
-import heroSlide3 from "@/assets/hero-slide-3.jpg";
+import heroSlide1 from "@/assets/hero-slide-1.jpg?format=webp&w=1600&quality=70";
+import heroSlide2 from "@/assets/hero-slide-2.jpg?format=webp&w=1600&quality=70";
+import heroSlide3 from "@/assets/hero-slide-3.jpg?format=webp&w=1600&quality=70";
+import heroSlide1Set from "@/assets/hero-slide-1.jpg?format=webp&quality=70&w=480;768;1200;1600&as=srcset";
+import heroSlide2Set from "@/assets/hero-slide-2.jpg?format=webp&quality=70&w=480;768;1200;1600&as=srcset";
+import heroSlide3Set from "@/assets/hero-slide-3.jpg?format=webp&quality=70&w=480;768;1200;1600&as=srcset";
 
 const slideImages = [heroSlide1, heroSlide2, heroSlide3];
+const slideSrcSets = [heroSlide1Set, heroSlide2Set, heroSlide3Set];
+
 const slideAlts = [
   "Pawnest premium pet store hero banner",
   "Pawnest curated cat products collection banner",
@@ -88,11 +93,15 @@ const HeroSection = () => {
           <EditableImage
             contentKey={`hero_slide_${current + 1}_image`}
             fallbackSrc={slideImages[current]}
+            fallbackSrcSet={slideSrcSets[current]}
+            sizes="100vw"
             alt={slideAlts[current]}
             className="w-full h-full object-cover"
             overlayClassName="w-full h-full"
             loading="eager"
+            fetchPriority="high"
           />
+
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/20" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
         </motion.div>

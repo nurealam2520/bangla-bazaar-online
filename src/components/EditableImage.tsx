@@ -9,27 +9,36 @@ import { getStorageUrl, getImageUrl } from "@/lib/imageUrl";
 interface EditableImageProps {
   contentKey: string;
   fallbackSrc: string;
+  fallbackSrcSet?: string;
+  sizes?: string;
   alt: string;
   className?: string;
   overlayClassName?: string;
   loading?: "eager" | "lazy";
+  fetchPriority?: "high" | "low" | "auto";
 }
 
 const EditableImage = ({
   contentKey,
   fallbackSrc,
+  fallbackSrcSet,
+  sizes,
   alt,
   className = "",
   overlayClassName = "",
   loading,
+  fetchPriority,
 }: EditableImageProps) => {
   const { isAdmin } = useAuth();
   const { get, update } = useSiteContent();
   const [uploading, setUploading] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const rawSrc = get(contentKey, "") || fallbackSrc;
+  const stored = get(contentKey, "");
+  const rawSrc = stored || fallbackSrc;
   const currentSrc = getImageUrl(rawSrc);
+  const srcSet = stored ? undefined : fallbackSrcSet;
+
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -75,12 +84,12 @@ const EditableImage = ({
   };
 
   if (!isAdmin) {
-    return <img src={currentSrc} alt={alt} className={className} loading={loading} />;
+    return <img src={currentSrc} srcSet={srcSet} sizes={sizes} alt={alt} className={className} loading={loading} decoding={loading === "eager" ? "sync" : "async"} fetchPriority={fetchPriority} />;
   }
 
   return (
     <div className={`relative group/img ${overlayClassName}`}>
-      <img src={currentSrc} alt={alt} className={className} loading={loading} />
+      <img src={currentSrc} srcSet={srcSet} sizes={sizes} alt={alt} className={className} loading={loading} decoding={loading === "eager" ? "sync" : "async"} fetchPriority={fetchPriority} />
       <input
         ref={fileRef}
         type="file"
