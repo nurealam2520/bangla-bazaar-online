@@ -84,12 +84,12 @@ const EditableImage = ({
   };
 
   if (!isAdmin) {
-    return <img src={currentSrc} alt={alt} className={className} loading={loading} />;
+    return <img src={currentSrc} srcSet={srcSet} sizes={sizes} alt={alt} className={className} loading={loading} decoding={loading === "eager" ? "sync" : "async"} fetchPriority={fetchPriority} />;
   }
 
   return (
     <div className={`relative group/img ${overlayClassName}`}>
-      <img src={currentSrc} alt={alt} className={className} loading={loading} />
+      <img src={currentSrc} srcSet={srcSet} sizes={sizes} alt={alt} className={className} loading={loading} decoding={loading === "eager" ? "sync" : "async"} fetchPriority={fetchPriority} />
       <input
         ref={fileRef}
         type="file"
