@@ -1,3 +1,4 @@
+import { lazy, Suspense } from "react";
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -11,26 +12,34 @@ import CartSidebar from "@/components/CartSidebar";
 import LiveChatWidget from "@/components/LiveChatWidget";
 import FloatingWhatsApp from "@/components/FloatingWhatsApp";
 import Index from "./pages/Index";
-import CategoryPage from "./pages/CategoryPage";
-import Checkout from "./pages/Checkout";
-import Shop from "./pages/Shop";
-import ProductDetail from "./pages/ProductDetail";
-import About from "./pages/About";
-import Contact from "./pages/Contact";
-import Auth from "./pages/Auth";
-import AdminDashboard from "./pages/AdminDashboard";
-import Blog from "./pages/Blog";
-import BlogPost from "./pages/BlogPost";
-import TrackOrder from "./pages/TrackOrder";
-import Wishlist from "./pages/Wishlist";
-import Profile from "./pages/Profile";
-import NotFound from "./pages/NotFound";
-import ReturnPolicy from "./pages/ReturnPolicy";
-import PrivacyPolicy from "./pages/PrivacyPolicy";
-import TermsOfService from "./pages/TermsOfService";
-import FAQ from "./pages/FAQ";
+
+const CategoryPage = lazy(() => import("./pages/CategoryPage"));
+const Checkout = lazy(() => import("./pages/Checkout"));
+const Shop = lazy(() => import("./pages/Shop"));
+const ProductDetail = lazy(() => import("./pages/ProductDetail"));
+const About = lazy(() => import("./pages/About"));
+const Contact = lazy(() => import("./pages/Contact"));
+const Auth = lazy(() => import("./pages/Auth"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const Blog = lazy(() => import("./pages/Blog"));
+const BlogPost = lazy(() => import("./pages/BlogPost"));
+const TrackOrder = lazy(() => import("./pages/TrackOrder"));
+const Wishlist = lazy(() => import("./pages/Wishlist"));
+const Profile = lazy(() => import("./pages/Profile"));
+const NotFound = lazy(() => import("./pages/NotFound"));
+const ReturnPolicy = lazy(() => import("./pages/ReturnPolicy"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const TermsOfService = lazy(() => import("./pages/TermsOfService"));
+const FAQ = lazy(() => import("./pages/FAQ"));
+
+const PageFallback = () => (
+  <div className="min-h-screen flex items-center justify-center bg-background">
+    <div className="h-8 w-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+  </div>
+);
 
 const queryClient = new QueryClient();
+
 
 const App = () => (
   <HelmetProvider>

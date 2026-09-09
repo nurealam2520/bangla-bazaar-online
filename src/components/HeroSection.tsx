@@ -93,11 +93,15 @@ const HeroSection = () => {
           <EditableImage
             contentKey={`hero_slide_${current + 1}_image`}
             fallbackSrc={slideImages[current]}
+            fallbackSrcSet={slideSrcSets[current]}
+            sizes="100vw"
             alt={slideAlts[current]}
             className="w-full h-full object-cover"
             overlayClassName="w-full h-full"
             loading="eager"
+            fetchPriority="high"
           />
+
           <div className="absolute inset-0 bg-gradient-to-r from-background via-background/80 to-background/20" />
           <div className="absolute inset-0 bg-gradient-to-t from-background/50 via-transparent to-transparent" />
         </motion.div>
