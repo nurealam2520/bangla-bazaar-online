@@ -215,13 +215,15 @@ const AdminDashboard = () => {
   const [draftSavedAt, setDraftSavedAt] = useState<string | null>(null);
   const [aiPublishing, setAiPublishing] = useState(false);
   const [aiDialogOpen, setAiDialogOpen] = useState(false);
-  const [aiCategory, setAiCategory] = useState("Dog");
+  const [aiCategory, setAiCategory] = useState("Dog Nutrition");
   const [aiTopic, setAiTopic] = useState("");
   const queryClient = useQueryClient();
 
   const aiCategories = Array.from(
     new Set([
-      "Dog", "Cat", "Dog Food", "Cat Food",
+      "Dog Nutrition", "Dog Health", "Dog Training", "Dog Grooming", "Dog Products",
+      "Cat Diet", "Cat Behavior", "Cat Health", "Cat Grooming", "Cat Essentials",
+      "Pet Parenting", "Pet Safety", "Seasonal Care", "Pet Myths vs Facts",
       ...products.flatMap((p: any) => [p.category, p.subcategory].filter(Boolean) as string[]),
     ])
   );
