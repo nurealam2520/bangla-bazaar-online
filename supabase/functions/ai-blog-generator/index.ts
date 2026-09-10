@@ -44,13 +44,10 @@ function extractJson(text: string): Record<string, unknown> {
 }
 
 const STYLES = [
-  "a narrative, story-led article that opens with a real-life pet owner scenario",
-  "a practical how-to guide with clear step-by-step explanation written in prose",
-  "a myth-busting article that corrects common misconceptions",
-  "a comparison-focused article that includes one helpful HTML comparison table",
-  "an expert Q&A-flavoured deep dive written mostly as paragraphs",
-  "a seasonal / timely advice article with actionable takeaways",
-  "a beginner-friendly explainer that gradually builds up to advanced tips",
+  "a Step-by-Step Guide, written mostly in prose with clearly ordered stages",
+  "a Listicle built around numbered, well-explained points (each point gets real paragraphs, not one-liners)",
+  "a Q&A / FAQ style article where each H2 is a real question pet owners ask",
+  "a story-like practical advice article that opens with a real-life pet owner scenario and draws lessons from it",
 ];
 
 
@@ -60,9 +57,16 @@ async function generatePost(
   customTopic: string,
 ): Promise<Record<string, any>> {
   const style = STYLES[Math.floor(Math.random() * STYLES.length)];
+  const deepDive = Math.random() < 0.3;
+  const lengthRule = deepDive
+    ? "1200-1500 words (deep-dive format: more sections, more depth per section)"
+    : "700-800 words (concise format: tight, high-value, no padding)";
   const userPrompt = `Topic category: "${topicCategory}". The article MUST be strictly about this category.
 ${customTopic ? `Specific topic requested by the editor: "${customTopic}". Build the article around it.` : `Pick a unique, currently trending, specific angle inside this category.`}
 Write it as ${style}.
+Target length: ${lengthRule}.
+Never use the banned robotic phrases listed in your instructions.
+Also return one main cover image prompt (image_search_prompt) and two sub-image prompts (sub_image_prompt_1, sub_image_prompt_2) that match two different H2 sections of the article.
 Do NOT reuse any of these existing titles/topics: ${avoidTitles.length ? avoidTitles.join(" | ") : "none yet"}
 Set the JSON "category" field to "${topicCategory}".`;
 
