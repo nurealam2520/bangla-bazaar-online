@@ -35,6 +35,35 @@ WRITING RULES (very important):
 - NATURAL TONE: never write robotic AI phrases. The phrases "In conclusion", "Furthermore", "It is important to note", "In summary", "Moreover", "Additionally," as a sentence opener are strictly banned.
 - Write in English only, friendly expert tone, factual and useful.`;
 
+function figure(url: string, alt: string): string {
+  const safeAlt = alt.replace(/"/g, "&quot;");
+  return `\n<figure style="margin:2rem 0;">
+  <img src="${url}" alt="${safeAlt}" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:12px;display:block;" />
+  <figcaption style="text-align:center;font-size:0.875rem;opacity:0.7;margin-top:0.5rem;">${safeAlt}</figcaption>
+</figure>\n`;
+}
+
+// Places sub-images before the 2nd and 3rd <h2> sections (falls back to appending)
+function insertSubImages(html: string, images: { url: string; alt: string }[]): string {
+  const valid = images.filter((i) => i.url);
+  if (!valid.length) return html;
+
+  const parts = html.split(/(?=<h2)/i);
+  if (parts.length >= 3) {
+    const targets = [2, 3].slice(0, valid.length);
+    let out = "";
+    parts.forEach((part, idx) => {
+      const pos = targets.indexOf(idx);
+      if (pos !== -1 && valid[pos]) out += figure(valid[pos].url, valid[pos].alt);
+      out += part;
+    });
+    // any leftover images that had no matching section
+    valid.slice(targets.length).forEach((i) => { out += figure(i.url, i.alt); });
+    return out;
+  }
+  return html + valid.map((i) => figure(i.url, i.alt)).join("");
+}
+
 function extractJson(text: string): Record<string, unknown> {
   const cleaned = text.replace(/```json/gi, "").replace(/```/g, "").trim();
   const start = cleaned.indexOf("{");
