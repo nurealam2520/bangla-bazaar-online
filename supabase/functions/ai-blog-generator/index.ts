@@ -19,18 +19,50 @@ Return ONLY valid JSON (no markdown fences) with exactly these keys:
   "meta_title": "SEO title, max 60 chars",
   "meta_description": "SEO description, max 155 chars",
   "keywords": "comma separated keywords",
-  "image_search_prompt": "2-4 word photo search query, e.g. golden retriever puppy",
-  "content": "full article in clean semantic HTML, 900-1400 words. No <html>/<body> tags, no H1."
+  "image_search_prompt": "2-4 word photo search query for the MAIN cover image",
+  "sub_image_prompt_1": "2-4 word photo search query matching an inner section topic",
+  "sub_image_prompt_2": "2-4 word photo search query matching another inner section topic",
+  "content": "full article in clean semantic HTML. No <html>/<body> tags, no H1."
 }
 
 WRITING RULES (very important):
 - Articles must NOT all look the same. Vary structure, tone and opening every time.
 - The article must be mostly flowing PARAGRAPHS (<p>), not a wall of bullet points.
-- Use <ul>/<ol> ONLY where a list genuinely helps (e.g. checklists, symptoms, steps) — at most one or two short lists.
-- Include an HTML <table> ONLY when the topic really benefits from comparison data (e.g. price/feeding/breed/nutrient comparison). Otherwise omit it.
+- Use <ul>/<ol> ONLY where a list genuinely helps. Include an HTML <table> only when comparison data truly helps.
 - Allowed tags: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <blockquote>, <table>, <thead>, <tbody>, <tr>, <th>, <td>.
-- SEO: natural keyword usage, descriptive H2/H3 subheadings, a strong intro hook and a practical conclusion. Never keyword-stuff.
+- Use at least 3 <h2> sections so images can be placed between them.
+- SEO: natural keyword usage, descriptive H2/H3 subheadings, a strong intro hook and a practical ending. Never keyword-stuff.
+- NATURAL TONE: never write robotic AI phrases. The phrases "In conclusion", "Furthermore", "It is important to note", "In summary", "Moreover", "Additionally," as a sentence opener are strictly banned.
 - Write in English only, friendly expert tone, factual and useful.`;
+
+function figure(url: string, alt: string): string {
+  const safeAlt = alt.replace(/"/g, "&quot;");
+  return `\n<figure style="margin:2rem 0;">
+  <img src="${url}" alt="${safeAlt}" loading="lazy" decoding="async" style="width:100%;height:auto;border-radius:12px;display:block;" />
+  <figcaption style="text-align:center;font-size:0.875rem;opacity:0.7;margin-top:0.5rem;">${safeAlt}</figcaption>
+</figure>\n`;
+}
+
+// Places sub-images before the 2nd and 3rd <h2> sections (falls back to appending)
+function insertSubImages(html: string, images: { url: string; alt: string }[]): string {
+  const valid = images.filter((i) => i.url);
+  if (!valid.length) return html;
+
+  const parts = html.split(/(?=<h2)/i);
+  if (parts.length >= 3) {
+    const targets = [2, 3].slice(0, valid.length);
+    let out = "";
+    parts.forEach((part, idx) => {
+      const pos = targets.indexOf(idx);
+      if (pos !== -1 && valid[pos]) out += figure(valid[pos].url, valid[pos].alt);
+      out += part;
+    });
+    // any leftover images that had no matching section
+    valid.slice(targets.length).forEach((i) => { out += figure(i.url, i.alt); });
+    return out;
+  }
+  return html + valid.map((i) => figure(i.url, i.alt)).join("");
+}
 
 function extractJson(text: string): Record<string, unknown> {
   const cleaned = text.replace(/```json/gi, "").replace(/```/g, "").trim();
@@ -41,13 +73,10 @@ function extractJson(text: string): Record<string, unknown> {
 }
 
 const STYLES = [
-  "a narrative, story-led article that opens with a real-life pet owner scenario",
-  "a practical how-to guide with clear step-by-step explanation written in prose",
-  "a myth-busting article that corrects common misconceptions",
-  "a comparison-focused article that includes one helpful HTML comparison table",
-  "an expert Q&A-flavoured deep dive written mostly as paragraphs",
-  "a seasonal / timely advice article with actionable takeaways",
-  "a beginner-friendly explainer that gradually builds up to advanced tips",
+  "a Step-by-Step Guide, written mostly in prose with clearly ordered stages",
+  "a Listicle built around numbered, well-explained points (each point gets real paragraphs, not one-liners)",
+  "a Q&A / FAQ style article where each H2 is a real question pet owners ask",
+  "a story-like practical advice article that opens with a real-life pet owner scenario and draws lessons from it",
 ];
 
 
@@ -57,9 +86,16 @@ async function generatePost(
   customTopic: string,
 ): Promise<Record<string, any>> {
   const style = STYLES[Math.floor(Math.random() * STYLES.length)];
+  const deepDive = Math.random() < 0.3;
+  const lengthRule = deepDive
+    ? "1200-1500 words (deep-dive format: more sections, more depth per section)"
+    : "700-800 words (concise format: tight, high-value, no padding)";
   const userPrompt = `Topic category: "${topicCategory}". The article MUST be strictly about this category.
 ${customTopic ? `Specific topic requested by the editor: "${customTopic}". Build the article around it.` : `Pick a unique, currently trending, specific angle inside this category.`}
 Write it as ${style}.
+Target length: ${lengthRule}.
+Never use the banned robotic phrases listed in your instructions.
+Also return one main cover image prompt (image_search_prompt) and two sub-image prompts (sub_image_prompt_1, sub_image_prompt_2) that match two different H2 sections of the article.
 Do NOT reuse any of these existing titles/topics: ${avoidTitles.length ? avoidTitles.join(" | ") : "none yet"}
 Set the JSON "category" field to "${topicCategory}".`;
 
@@ -181,13 +217,26 @@ serve(async (req: Request) => {
     const taken = new Set((existing ?? []).map((p: { slug: string }) => p.slug));
     const slug = taken.has(baseSlug) ? `${baseSlug}-${Date.now().toString(36)}` : baseSlug;
 
-    const cover = await fetchImage(String(post.image_search_prompt || post.title || "cute pet"));
+    const title = String(post.title || "Untitled").slice(0, 200);
+    const sub1Query = String(post.sub_image_prompt_1 || "");
+    const sub2Query = String(post.sub_image_prompt_2 || "");
+
+    const [cover, sub1, sub2] = await Promise.all([
+      fetchImage(String(post.image_search_prompt || post.title || "cute pet")),
+      sub1Query ? fetchImage(sub1Query) : Promise.resolve(""),
+      sub2Query ? fetchImage(sub2Query) : Promise.resolve(""),
+    ]);
+
+    const content = insertSubImages(String(post.content || ""), [
+      { url: sub1, alt: sub1Query || title },
+      { url: sub2, alt: sub2Query || title },
+    ]);
 
     const row = {
-      title: String(post.title || "Untitled").slice(0, 200),
+      title,
       slug,
       excerpt: String(post.excerpt || "").slice(0, 300),
-      content: String(post.content || ""),
+      content,
       cover_image: cover,
       category: String(post.category || "Pet Care"),
       meta_title: String(post.meta_title || post.title || "").slice(0, 120),
