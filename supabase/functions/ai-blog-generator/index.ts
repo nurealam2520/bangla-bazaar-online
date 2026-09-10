@@ -188,13 +188,26 @@ serve(async (req: Request) => {
     const taken = new Set((existing ?? []).map((p: { slug: string }) => p.slug));
     const slug = taken.has(baseSlug) ? `${baseSlug}-${Date.now().toString(36)}` : baseSlug;
 
-    const cover = await fetchImage(String(post.image_search_prompt || post.title || "cute pet"));
+    const title = String(post.title || "Untitled").slice(0, 200);
+    const sub1Query = String(post.sub_image_prompt_1 || "");
+    const sub2Query = String(post.sub_image_prompt_2 || "");
+
+    const [cover, sub1, sub2] = await Promise.all([
+      fetchImage(String(post.image_search_prompt || post.title || "cute pet")),
+      sub1Query ? fetchImage(sub1Query) : Promise.resolve(""),
+      sub2Query ? fetchImage(sub2Query) : Promise.resolve(""),
+    ]);
+
+    const content = insertSubImages(String(post.content || ""), [
+      { url: sub1, alt: sub1Query || title },
+      { url: sub2, alt: sub2Query || title },
+    ]);
 
     const row = {
-      title: String(post.title || "Untitled").slice(0, 200),
+      title,
       slug,
       excerpt: String(post.excerpt || "").slice(0, 300),
-      content: String(post.content || ""),
+      content,
       cover_image: cover,
       category: String(post.category || "Pet Care"),
       meta_title: String(post.meta_title || post.title || "").slice(0, 120),
