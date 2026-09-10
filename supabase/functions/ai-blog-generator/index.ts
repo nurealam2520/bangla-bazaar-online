@@ -19,17 +19,20 @@ Return ONLY valid JSON (no markdown fences) with exactly these keys:
   "meta_title": "SEO title, max 60 chars",
   "meta_description": "SEO description, max 155 chars",
   "keywords": "comma separated keywords",
-  "image_search_prompt": "2-4 word photo search query, e.g. golden retriever puppy",
-  "content": "full article in clean semantic HTML, 900-1400 words. No <html>/<body> tags, no H1."
+  "image_search_prompt": "2-4 word photo search query for the MAIN cover image",
+  "sub_image_prompt_1": "2-4 word photo search query matching an inner section topic",
+  "sub_image_prompt_2": "2-4 word photo search query matching another inner section topic",
+  "content": "full article in clean semantic HTML. No <html>/<body> tags, no H1."
 }
 
 WRITING RULES (very important):
 - Articles must NOT all look the same. Vary structure, tone and opening every time.
 - The article must be mostly flowing PARAGRAPHS (<p>), not a wall of bullet points.
-- Use <ul>/<ol> ONLY where a list genuinely helps (e.g. checklists, symptoms, steps) — at most one or two short lists.
-- Include an HTML <table> ONLY when the topic really benefits from comparison data (e.g. price/feeding/breed/nutrient comparison). Otherwise omit it.
+- Use <ul>/<ol> ONLY where a list genuinely helps. Include an HTML <table> only when comparison data truly helps.
 - Allowed tags: <h2>, <h3>, <p>, <ul>, <ol>, <li>, <strong>, <em>, <blockquote>, <table>, <thead>, <tbody>, <tr>, <th>, <td>.
-- SEO: natural keyword usage, descriptive H2/H3 subheadings, a strong intro hook and a practical conclusion. Never keyword-stuff.
+- Use at least 3 <h2> sections so images can be placed between them.
+- SEO: natural keyword usage, descriptive H2/H3 subheadings, a strong intro hook and a practical ending. Never keyword-stuff.
+- NATURAL TONE: never write robotic AI phrases. The phrases "In conclusion", "Furthermore", "It is important to note", "In summary", "Moreover", "Additionally," as a sentence opener are strictly banned.
 - Write in English only, friendly expert tone, factual and useful.`;
 
 function extractJson(text: string): Record<string, unknown> {
