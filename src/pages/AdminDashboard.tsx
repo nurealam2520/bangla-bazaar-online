@@ -1273,6 +1273,9 @@ const AdminDashboard = () => {
               )}
             </AnimatePresence>
 
+            <BlogAutomationSettings />
+
+
             {blogLoading ? (
               <div className="flex justify-center py-16">
                 <RefreshCw className="h-8 w-8 animate-spin text-primary" />
