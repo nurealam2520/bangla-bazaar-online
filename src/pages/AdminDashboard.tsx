@@ -31,6 +31,7 @@ import RichTextEditor from "@/components/admin/RichTextEditor";
 import DataBackup from "@/components/admin/DataBackup";
 import ContactMessages from "@/components/admin/ContactMessages";
 import LiveChatSettings from "@/components/admin/LiveChatSettings";
+import BlogAutomationSettings from "@/components/admin/BlogAutomationSettings";
 import SmtpSettings from "@/components/admin/SmtpSettings";
 import EmailSettings from "@/components/admin/EmailSettings";
 
