@@ -2,6 +2,7 @@ import { motion } from "framer-motion";
 import { Dog, Cat } from "lucide-react";
 import { Link } from "react-router-dom";
 import EditableText from "@/components/EditableText";
+import { optimizeImageUrl } from "@/lib/imageUrl";
 
 const categories = [
   {
