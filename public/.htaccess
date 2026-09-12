@@ -2,6 +2,9 @@
   RewriteEngine On
   RewriteBase /
 
+  # Serve the dynamic sitemap through this domain
+  RewriteRule ^sitemap\.xml$ /sitemap.php [L]
+
   # Proxy uploaded images through your domain
   RewriteRule ^uploads/(.+)$ /image-proxy.php [L,QSA]
 
