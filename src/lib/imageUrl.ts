@@ -28,6 +28,22 @@ export function getImageUrl(url: string): string {
 }
 
 /**
+ * Appends compression/resizing parameters to external image URLs
+ * (Unsplash imgix params) for faster mobile loading.
+ */
+export function optimizeImageUrl(url: string, width = 600, quality = 75): string {
+  if (!url) return url;
+  if (url.includes('images.unsplash.com')) {
+    const sep = url.includes('?') ? '&' : '?';
+    // Keep existing params, append/override sizing params
+    const base = url.replace(/([?&])(w|q|auto|fit|crop)=[^&]*/g, '');
+    const joiner = base.includes('?') ? '&' : '?';
+    return `${base}${joiner}auto=format&fit=crop&w=${width}&q=${quality}`;
+  }
+  return url;
+}
+
+/**
  * Gets the storage URL to save in the database (always full Supabase URL).
  */
 export function getStorageUrl(fileName: string): string {

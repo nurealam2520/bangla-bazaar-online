@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, ArrowLeft, Calendar, User, Clock, Search, Mail, Tag } from "lucide-react";
 import { motion } from "framer-motion";
-import { getImageUrl } from "@/lib/imageUrl";
+import { getImageUrl, optimizeImageUrl } from "@/lib/imageUrl";
 import { toast } from "sonner";
 
 const BlogPost = () => {
@@ -132,10 +132,14 @@ const BlogPost = () => {
             >
               {post.cover_image && (
                 <img
-                  src={getImageUrl(post.cover_image)}
+                  src={optimizeImageUrl(getImageUrl(post.cover_image), 1200)}
                   alt={post.title}
                   className="w-full aspect-video object-cover rounded-2xl mb-8 shadow-lg"
-                  loading="lazy"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                  width={1280}
+                  height={720}
                 />
               )}
 

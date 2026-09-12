@@ -5,7 +5,7 @@ import Footer from "@/components/Footer";
 import SEOHead from "@/components/SEOHead";
 import { RefreshCw, Calendar, ArrowRight } from "lucide-react";
 import { motion } from "framer-motion";
-import { getImageUrl } from "@/lib/imageUrl";
+import { getImageUrl, optimizeImageUrl } from "@/lib/imageUrl";
 
 const Blog = () => {
   const { data: posts = [], isLoading } = usePublishedPosts();
@@ -68,11 +68,13 @@ const Blog = () => {
                 {post.cover_image && (
                   <div className="aspect-video overflow-hidden">
                     <img
-                      src={getImageUrl(post.cover_image)}
+                      src={optimizeImageUrl(getImageUrl(post.cover_image), 600)}
                       alt={post.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                       loading="lazy"
                       decoding="async"
+                      width={640}
+                      height={360}
                     />
 
                   </div>
