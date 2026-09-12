@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { RefreshCw, ArrowLeft, Calendar, User, Clock, Search, Mail, Tag } from "lucide-react";
 import { motion } from "framer-motion";
-import { getImageUrl } from "@/lib/imageUrl";
+import { getImageUrl, optimizeImageUrl } from "@/lib/imageUrl";
 import { toast } from "sonner";
 
 const BlogPost = () => {
