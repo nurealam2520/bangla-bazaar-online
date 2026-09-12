@@ -13,4 +13,4 @@ Allow: /
 User-agent: *
 Allow: /
 
-Sitemap: https://compawnest.com/sitemap.xml
+Sitemap: https://www.compawnest.com/sitemap.xml
