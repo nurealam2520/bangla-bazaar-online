@@ -6,15 +6,12 @@ import { Link } from "react-router-dom";
 import EditableText from "@/components/EditableText";
 import EditableImage from "@/components/EditableImage";
 import { useSiteContent } from "@/hooks/useSiteContent";
-import heroSlide1 from "@/assets/hero-slide-1.jpg?format=webp&w=1600&quality=70";
-import heroSlide2 from "@/assets/hero-slide-2.jpg?format=webp&w=1600&quality=70";
-import heroSlide3 from "@/assets/hero-slide-3.jpg?format=webp&w=1600&quality=70";
-import heroSlide1Set from "@/assets/hero-slide-1.jpg?format=webp&quality=70&w=480;768;1200;1600&as=srcset";
-import heroSlide2Set from "@/assets/hero-slide-2.jpg?format=webp&quality=70&w=480;768;1200;1600&as=srcset";
-import heroSlide3Set from "@/assets/hero-slide-3.jpg?format=webp&quality=70&w=480;768;1200;1600&as=srcset";
-
-const slideImages = [heroSlide1, heroSlide2, heroSlide3];
-const slideSrcSets = [heroSlide1Set, heroSlide2Set, heroSlide3Set];
+// Optimized responsive WebP hero images served from /public/hero (preloaded in index.html for LCP)
+const slideImages = [1, 2, 3].map((i) => `/hero/slide-${i}-1600.webp`);
+const slideSrcSets = [1, 2, 3].map(
+  (i) =>
+    `/hero/slide-${i}-480.webp 480w, /hero/slide-${i}-768.webp 768w, /hero/slide-${i}-1200.webp 1200w, /hero/slide-${i}-1600.webp 1600w`
+);
 
 const slideAlts = [
   "Pawnest premium pet store hero banner",
