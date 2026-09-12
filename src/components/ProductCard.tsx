@@ -8,7 +8,7 @@ import { useWishlist } from "@/hooks/useWishlist";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import type { Product } from "@/hooks/useProducts";
-import { getImageUrl } from "@/lib/imageUrl";
+import { getImageUrl, optimizeImageUrl } from "@/lib/imageUrl";
 
 const item = {
   hidden: { opacity: 0, y: 30 },
@@ -60,10 +60,13 @@ const ProductCard = ({ product }: { product: Product }) => {
           onMouseLeave={() => setShowQuick(false)}
         >
           <img
-            src={getImageUrl(product.image)}
+            src={optimizeImageUrl(getImageUrl(product.image), 600)}
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
             loading="lazy"
+            decoding="async"
+            width={400}
+            height={500}
           />
           <div className="absolute inset-0 bg-gradient-to-t from-foreground/40 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
           <div className="absolute top-3 left-3 flex flex-col gap-2">

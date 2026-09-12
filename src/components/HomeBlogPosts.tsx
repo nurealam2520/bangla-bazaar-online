@@ -3,7 +3,7 @@ import { usePublishedPosts } from "@/hooks/useBlogPosts";
 import { motion } from "framer-motion";
 import { ArrowRight, Calendar } from "lucide-react";
 import { format } from "date-fns";
-import { getImageUrl } from "@/lib/imageUrl";
+import { getImageUrl, optimizeImageUrl } from "@/lib/imageUrl";
 
 const HomeBlogPosts = () => {
   const { data: posts = [] } = usePublishedPosts();
@@ -34,10 +34,13 @@ const HomeBlogPosts = () => {
                 <Link to={`/blog/${post.slug}`}>
                   <div className="aspect-video overflow-hidden">
                     <img
-                      src={getImageUrl(post.cover_image)}
+                      src={optimizeImageUrl(getImageUrl(post.cover_image), 600)}
                       alt={post.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                       loading="lazy"
+                      decoding="async"
+                      width={640}
+                      height={360}
                     />
                   </div>
                 </Link>

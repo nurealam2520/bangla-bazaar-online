@@ -132,10 +132,14 @@ const BlogPost = () => {
             >
               {post.cover_image && (
                 <img
-                  src={getImageUrl(post.cover_image)}
+                  src={optimizeImageUrl(getImageUrl(post.cover_image), 1200)}
                   alt={post.title}
                   className="w-full aspect-video object-cover rounded-2xl mb-8 shadow-lg"
-                  loading="lazy"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
+                  width={1280}
+                  height={720}
                 />
               )}
 
