@@ -49,10 +49,13 @@ const CategorySection = () => {
               <Link to={`/category/${cat.slug}`} className="group block">
                 <div className="relative rounded-2xl overflow-hidden border border-border h-[320px]">
                   <img
-                    src={cat.image}
+                    src={optimizeImageUrl(cat.image, 800)}
                     alt={`Shop premium ${cat.nameFallback.toLowerCase()} products at Pawnest`}
                     className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
                     loading="lazy"
+                    decoding="async"
+                    width={800}
+                    height={320}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
 
