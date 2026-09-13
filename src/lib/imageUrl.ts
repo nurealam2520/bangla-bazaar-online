@@ -33,14 +33,20 @@ export function getImageUrl(url: string): string {
  */
 export function optimizeImageUrl(url: string, width = 600, quality = 75): string {
   if (!url) return url;
-  if (url.includes('images.unsplash.com')) {
-    const sep = url.includes('?') ? '&' : '?';
-    // Keep existing params, append/override sizing params
-    const base = url.replace(/([?&])(w|q|auto|fit|crop)=[^&]*/g, '');
-    const joiner = base.includes('?') ? '&' : '?';
-    return `${base}${joiner}auto=format&fit=crop&w=${width}&q=${quality}`;
+  if (!url.includes('images.unsplash.com')) return url;
+
+  try {
+    const u = new URL(url);
+    // Drop any existing sizing params, then set our own
+    ['w', 'h', 'q', 'auto', 'fit', 'crop', 'dpr'].forEach((p) => u.searchParams.delete(p));
+    u.searchParams.set('auto', 'format');
+    u.searchParams.set('fit', 'crop');
+    u.searchParams.set('w', String(width));
+    u.searchParams.set('q', String(quality));
+    return u.toString();
+  } catch {
+    return url;
   }
-  return url;
 }
 
 /**
