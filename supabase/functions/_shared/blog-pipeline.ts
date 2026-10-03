@@ -114,6 +114,33 @@ Also return one main cover image prompt (image_search_prompt) and two sub-image 
 Do NOT reuse any of these existing titles/topics: ${avoidTitles.length ? avoidTitles.join(" | ") : "none yet"}
 Set the JSON "category" field to "${topicCategory}".`;
 
+  // 1) Prefer the owner's own Gemini key (avoids workspace AI credit limits)
+  const geminiKey = Deno.env.get("GEMINI_API_KEY");
+  let geminiError = "";
+  if (geminiKey) {
+    try {
+      const r = await fetch(
+        "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "x-goog-api-key": geminiKey },
+          body: JSON.stringify({
+            systemInstruction: { parts: [{ text: SYSTEM_PROMPT }] },
+            contents: [{ role: "user", parts: [{ text: userPrompt }] }],
+            generationConfig: { responseMimeType: "application/json", temperature: 0.9 },
+          }),
+        },
+      );
+      const j = await r.json().catch(() => ({}));
+      const t = j?.candidates?.[0]?.content?.parts?.map((p: any) => p.text || "").join("");
+      if (r.ok && t) return extractJson(t);
+      geminiError = j?.error?.message || `Gemini request failed (${r.status})`;
+    } catch (e) {
+      geminiError = (e as Error).message;
+    }
+  }
+
+  // 2) Fallback: built-in AI gateway
   const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
     headers: {
@@ -132,23 +159,46 @@ Set the JSON "category" field to "${topicCategory}".`;
   const json = await res.json().catch(() => ({}));
   const text = json?.choices?.[0]?.message?.content;
   if (!res.ok) {
-    throw new AiGatewayError(res.status, json?.error?.message || `AI request failed (${res.status})`);
+    const msg = json?.error?.message || `AI request failed (${res.status})`;
+    throw new AiGatewayError(res.status, geminiError ? `Gemini: ${geminiError} | Fallback: ${msg}` : msg);
   }
   if (!text) throw new AiGatewayError(500, "AI generation failed");
   return extractJson(text);
 }
 
-export async function fetchImage(query: string): Promise<string> {
+/** Detects the main animal for a category so image searches stay on-topic. */
+export function subjectFor(category: string): string {
+  const c = category.toLowerCase();
+  if (c.includes("puppy")) return "puppy";
+  if (c.includes("kitten")) return "kitten";
+  if (c.includes("dog")) return "dog";
+  if (c.includes("cat")) return "cat";
+  return "pet";
+}
+
+function withSubject(query: string, subject: string): string {
+  const q = query.toLowerCase();
+  const animalWords = ["dog", "puppy", "cat", "kitten", "pet"];
+  return animalWords.some((w) => q.includes(w)) ? query : `${subject} ${query}`;
+}
+
+const usedImages = new Set<string>();
+
+export async function fetchImage(rawQuery: string, subject = "pet"): Promise<string> {
+  const query = withSubject(rawQuery.trim() || subject, subject);
+  const pick = (urls: string[]) => urls.find((u) => u && !usedImages.has(u)) || "";
+  const remember = (u: string) => { if (u) usedImages.add(u); return u; };
+
   const pexelsKey = Deno.env.get("PEXELS_API_KEY");
   if (pexelsKey) {
     try {
       const r = await fetch(
-        `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape`,
+        `https://api.pexels.com/v1/search?query=${encodeURIComponent(query)}&per_page=5&orientation=landscape`,
         { headers: { Authorization: pexelsKey } },
       );
       const j = await r.json();
-      const url = j?.photos?.[0]?.src?.large2x || j?.photos?.[0]?.src?.large;
-      if (url) return url;
+      const url = pick((j?.photos ?? []).map((p: any) => p?.src?.large2x || p?.src?.large));
+      if (url) return remember(url);
     } catch (_) { /* fall through */ }
   }
 
@@ -156,25 +206,32 @@ export async function fetchImage(query: string): Promise<string> {
   if (unsplashKey) {
     try {
       const r = await fetch(
-        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=1&orientation=landscape`,
+        `https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=5&orientation=landscape`,
         { headers: { Authorization: `Client-ID ${unsplashKey}` } },
       );
       const j = await r.json();
-      const url = j?.results?.[0]?.urls?.regular;
-      if (url) return url;
+      const url = pick((j?.results ?? []).map((p: any) => p?.urls?.regular));
+      if (url) return remember(url);
     } catch (_) { /* fall through */ }
   }
 
-  try {
-    const r = await fetch(
-      `https://api.openverse.org/v1/images/?q=${encodeURIComponent(query)}&license_type=commercial&page_size=1`,
-    );
-    const j = await r.json();
-    const url = j?.results?.[0]?.url;
-    if (url) return url;
-  } catch (_) { /* ignore */ }
+  // Openverse: only accept photos whose title/tags actually mention the animal
+  const openverse = async (q: string) => {
+    try {
+      const r = await fetch(
+        `https://api.openverse.org/v1/images/?q=${encodeURIComponent(q)}&license_type=commercial&category=photograph&aspect_ratio=wide&page_size=20`,
+      );
+      const j = await r.json();
+      const matches = (j?.results ?? []).filter((it: any) => {
+        const hay = `${it?.title || ""} ${(it?.tags ?? []).map((t: any) => t?.name).join(" ")}`.toLowerCase();
+        return subject === "pet" ? /(dog|cat|puppy|kitten|pet)/.test(hay) : hay.includes(subject);
+      });
+      return pick(matches.map((it: any) => it?.url));
+    } catch (_) { return ""; }
+  };
 
-  return "";
+  const url = (await openverse(query)) || (await openverse(`${subject} ${rawQuery.split(" ").slice(-1)[0] || ""}`)) || (await openverse(subject));
+  return remember(url);
 }
 
 /** Runs the full pipeline and inserts a published post. Returns the inserted row. */
@@ -206,11 +263,11 @@ export async function generateAndPublish(
   const sub1Query = String(post.sub_image_prompt_1 || "");
   const sub2Query = String(post.sub_image_prompt_2 || "");
 
-  const [cover, sub1, sub2] = await Promise.all([
-    fetchImage(String(post.image_search_prompt || post.title || "cute pet")),
-    sub1Query ? fetchImage(sub1Query) : Promise.resolve(""),
-    sub2Query ? fetchImage(sub2Query) : Promise.resolve(""),
-  ]);
+  const subject = subjectFor(`${opts.category} ${title}`);
+  // Sequential so the same photo is never reused within one article
+  const cover = await fetchImage(String(post.image_search_prompt || title), subject);
+  const sub1 = sub1Query ? await fetchImage(sub1Query, subject) : "";
+  const sub2 = sub2Query ? await fetchImage(sub2Query, subject) : "";
 
   const content = insertSubImages(String(post.content || ""), [
     { url: sub1, alt: sub1Query || title },
